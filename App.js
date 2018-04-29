@@ -3,47 +3,33 @@ import {
 	Platform,
 	StyleSheet,
 	Text,
-	View
+	View,
+	YellowBox
 } from 'react-native';
-import { SwitchNavigator } from 'react-navigation';
+import { SwitchNavigator, StackNavigator } from 'react-navigation';
 import LoginScreen from './components/LoginScreen';
+import RegisterScreen from './components/RegisterScreen';
+import HomeScreen from './components/HomeScreen';
+import QRScannerModal from './components/QRScannerModal';
+
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 export default SwitchNavigator({
-	Login: LoginScreen
+	LoginRegister: StackNavigator({
+		Login: LoginScreen,
+		Register: RegisterScreen
+	}, {
+		initialRouteName: 'Login'
+	}),
+	Main1: StackNavigator({
+		Main2: StackNavigator({
+			Home: HomeScreen
+		}),
+		QRScanner: QRScannerModal
+	}, {
+		mode: 'modal',
+		headerMode: 'none'
+	})
 }, {
-	initialRouteName: 'Login'
+	initialRouteName: 'LoginRegister'
 });
-
-// export default class App extends Component {
-// 	render() {
-// 		return (
-// 			<View style={styles.container}>
-// 				<Text style={styles.welcome}>
-// 					Welcome to React Native!
-// 				</Text>
-// 				<Text style={styles.instructions}>
-// 					To get started, edit App.js
-// 				</Text>
-// 			</View>
-// 		);
-// 	}
-// }
-
-// const styles = StyleSheet.create({
-// 	container: {
-// 		flex: 1,
-// 		justifyContent: 'center',
-// 		alignItems: 'center',
-// 		backgroundColor: '#F5FCFF',
-// 	},
-// 	welcome: {
-// 		fontSize: 20,
-// 		textAlign: 'center',
-// 		margin: 10,
-// 	},
-// 	instructions: {
-// 		textAlign: 'center',
-// 		color: '#333333',
-// 		marginBottom: 5,
-// 	},
-// });

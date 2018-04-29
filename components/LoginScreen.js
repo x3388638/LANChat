@@ -15,6 +15,10 @@ export default class LoginScreen extends React.Component {
 		}
 	}
 
+	static navigationOptions = {
+		title: '登入'
+	}
+
 	render() {
 		return (
 			<View style={ styles.container }>
@@ -28,12 +32,12 @@ export default class LoginScreen extends React.Component {
 				<Button
 					title="登入"
 					buttonStyle={ styles.loginBtn }
-					onPress={() => {}}
+					onPress={() => { this.props.navigation.navigate('Home') }}
 				/>
 				<Button
 					title="註冊"
 					buttonStyle={styles.registerBtn}
-					onPress={() => { }}
+					onPress={() => { this.props.navigation.navigate('Register') }}
 					color="#111"
 				/>
 			</View>
@@ -53,9 +57,9 @@ const styles = StyleSheet.create({
 		fontSize: 30,
 		textAlign: 'center',
 		backgroundColor: '#f3f3f3',
+		borderColor: '#f3f3f3',
 		borderWidth: 1,
-		borderRadius: 10,
-		borderColor: '#fff'
+		borderRadius: 10
 	},
 	loginBtn: {
 		width: 300,
@@ -67,6 +71,6 @@ const styles = StyleSheet.create({
 		width: 300,
 		borderRadius: 5,
 		marginTop: 5,
-		backgroundColor: '#d3d3d3',
+		backgroundColor: '#d3d3d3'
 	}
 });
