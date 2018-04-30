@@ -14,14 +14,20 @@ export default class RegisterScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			pass: ''
+			pass: '',
+			storedPass: null
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.getStoredPass = this.getStoredPass.bind(this);
 	}
 
 	static navigationOptions = {
 		title: '註冊'
+	}
+
+	componentDidMount() {
+		this.props.navigation.addListener('didFocus', this.getStoredPass);
 	}
 
 	handleSubmit() {
@@ -31,14 +37,14 @@ export default class RegisterScreen extends React.Component {
 			return;
 		}
 
-		if (this.isRegistered()) {
+		if (!!this.state.storedPass) {
 			Alert.alert('已設定過密碼!', null, [{ text: '返回', onPress: () => this.props.navigation.goBack() }]);
 			return;
 		}
 
 		this.savePass(pass, (err) => {
 			if (err) {
-				alert(err);
+				Alert.alert('Something wrong.', err);
 				return;
 			}
 
@@ -50,9 +56,11 @@ export default class RegisterScreen extends React.Component {
 		AsyncStorage.setItem('@LANChat:pass', sha256(pass), callback);
 	}
 
-	async isRegistered() {
+	async getStoredPass() {
 		const pass = await AsyncStorage.getItem('@LANChat:pass');
-		return !!pass;
+		this.setState({
+			storedPass: typeof pass === 'string' ? pass : null
+		});
 	}
 
 	render() {

@@ -3,20 +3,59 @@ import {
 	View,
 	Text,
 	TextInput,
+	Alert,
+	AsyncStorage,
 	StyleSheet
 } from 'react-native';
 import { Button } from 'react-native-elements';
+import sha256 from 'sha256';
 
 export default class LoginScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			pass: ''
-		}
+			pass: '',
+			storedPass: null
+		};
+
+		this.handleLogin = this.handleLogin.bind(this);
+		this.handleRegister = this.handleRegister.bind(this);
+		this.getStoredPass = this.getStoredPass.bind(this);
+		// AsyncStorage.removeItem('@LANChat:pass');
 	}
 
 	static navigationOptions = {
 		title: '登入'
+	}
+
+	componentDidMount() {
+		this.props.navigation.addListener('didFocus', this.getStoredPass);
+	}
+
+	handleLogin() {
+		const pass = this.state.pass;
+		if (sha256(pass) !== this.state.storedPass) {
+			Alert.alert('密碼錯誤');
+			return;
+		}
+
+		this.props.navigation.navigate('Main1');
+	}
+
+	handleRegister() {
+		if (!!this.state.storedPass) {
+			Alert.alert('此裝置已註冊');
+			return;
+		}
+
+		this.props.navigation.navigate('Register');
+	}
+
+	async getStoredPass() {
+		const pass = await AsyncStorage.getItem('@LANChat:pass');
+		this.setState({
+			storedPass: typeof pass === 'string' ? pass : null
+		});
 	}
 
 	render() {
@@ -32,12 +71,12 @@ export default class LoginScreen extends React.Component {
 				<Button
 					title="登入"
 					buttonStyle={ styles.loginBtn }
-					onPress={() => { this.props.navigation.navigate('Main1') }}
+					onPress={ this.handleLogin }
 				/>
 				<Button
 					title="註冊"
-					buttonStyle={styles.registerBtn}
-					onPress={() => { this.props.navigation.navigate('Register') }}
+					buttonStyle={ styles.registerBtn }
+					onPress={ this.handleRegister }
 					color="#111"
 				/>
 			</View>
