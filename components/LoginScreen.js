@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import sha256 from 'sha256';
+import DeviceInfo from 'react-native-device-info';
 
 export default class LoginScreen extends React.Component {
 	constructor(props) {
@@ -30,6 +31,7 @@ export default class LoginScreen extends React.Component {
 
 	componentDidMount() {
 		this.props.navigation.addListener('didFocus', this.getStoredPass);
+		Alert.alert(DeviceInfo.getBrand());
 	}
 
 	handleLogin() {

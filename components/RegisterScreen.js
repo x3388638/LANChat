@@ -93,7 +93,8 @@ const styles = StyleSheet.create({
 	title: {
 		marginBottom: 20,
 		fontSize: 25,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		color: '#111'
 	},
 	password: {
 		width: 300,
