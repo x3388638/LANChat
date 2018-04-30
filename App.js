@@ -4,7 +4,8 @@ import {
 	StyleSheet,
 	Text,
 	View,
-	YellowBox
+	YellowBox,
+	AsyncStorage
 } from 'react-native';
 import { SwitchNavigator, StackNavigator } from 'react-navigation';
 import LoginScreen from './components/LoginScreen';
@@ -13,6 +14,8 @@ import HomeScreen from './components/HomeScreen';
 import QRScannerModal from './components/QRScannerModal';
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+
+AsyncStorage.setItem('lalala', '123456889');
 
 export default SwitchNavigator({
 	LoginRegister: StackNavigator({
@@ -24,6 +27,8 @@ export default SwitchNavigator({
 	Main1: StackNavigator({
 		Main2: StackNavigator({
 			Home: HomeScreen
+		}, {
+			initialRouteName: 'Home'
 		}),
 		QRScanner: QRScannerModal
 	}, {

@@ -32,7 +32,7 @@ export default class LoginScreen extends React.Component {
 				<Button
 					title="登入"
 					buttonStyle={ styles.loginBtn }
-					onPress={() => { this.props.navigation.navigate('Home') }}
+					onPress={() => { this.props.navigation.navigate('Main1') }}
 				/>
 				<Button
 					title="註冊"
