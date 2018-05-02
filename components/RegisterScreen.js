@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import sha256 from 'sha256';
+import Util from '../modules/util.js';
 
 export default class RegisterScreen extends React.Component {
 	constructor(props) {
@@ -53,7 +54,7 @@ export default class RegisterScreen extends React.Component {
 	}
 
 	savePass(pass, callback) {
-		AsyncStorage.setItem('@LANChat:pass', sha256(pass), callback);
+		AsyncStorage.setItem('@LANChat:pass', Util.genPass(pass), callback);
 	}
 
 	async getStoredPass() {

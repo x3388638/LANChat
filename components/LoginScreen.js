@@ -7,9 +7,11 @@ import {
 	AsyncStorage,
 	StyleSheet
 } from 'react-native';
-import { Button } from 'react-native-elements';
+import {
+	Button
+} from 'react-native-elements';
 import sha256 from 'sha256';
-import DeviceInfo from 'react-native-device-info';
+import Util from '../modules/util.js';
 
 export default class LoginScreen extends React.Component {
 	constructor(props) {
@@ -31,12 +33,11 @@ export default class LoginScreen extends React.Component {
 
 	componentDidMount() {
 		this.props.navigation.addListener('didFocus', this.getStoredPass);
-		Alert.alert(DeviceInfo.getBrand());
 	}
 
 	handleLogin() {
 		const pass = this.state.pass;
-		if (sha256(pass) !== this.state.storedPass) {
+		if (Util.genPass(pass) !== this.state.storedPass) {
 			Alert.alert('密碼錯誤');
 			return;
 		}
@@ -62,7 +63,7 @@ export default class LoginScreen extends React.Component {
 
 	render() {
 		return (
-			<View style={ styles.container }>
+			<View style={ styles.container }>>
 				<TextInput
 					style={ styles.password }
 					placeholder="Password"
