@@ -25,6 +25,7 @@ export default class LoginScreen extends React.Component {
 		this.handleRegister = this.handleRegister.bind(this);
 		this.getStoredPass = this.getStoredPass.bind(this);
 		// AsyncStorage.removeItem('@LANChat:pass');
+		// AsyncStorage.removeItem('@LANChat:lastLogin');
 	}
 
 	static navigationOptions = {
@@ -32,6 +33,15 @@ export default class LoginScreen extends React.Component {
 	}
 
 	componentDidMount() {
+		Util.checkLogin().then((isLogin) => {
+			if (isLogin) {
+				setTimeout(() => {
+					Util.login();
+					this.props.navigation.navigate('Main1');
+				}, 300);
+			}
+		});
+
 		this.props.navigation.addListener('didFocus', this.getStoredPass);
 	}
 
@@ -42,6 +52,7 @@ export default class LoginScreen extends React.Component {
 			return;
 		}
 
+		Util.login();
 		this.props.navigation.navigate('Main1');
 	}
 
