@@ -58,30 +58,44 @@ export default class LoginScreen extends React.Component {
 		const pass = await AsyncStorage.getItem('@LANChat:pass');
 		this.setState({
 			storedPass: typeof pass === 'string' ? pass : null
+		}, () => {
+			if (!this.state.storedPass) {
+				this.props.navigation.navigate('Register');
+			}
 		});
 	}
 
 	render() {
+		const registered = !!this.state.storedPass;
 		return (
-			<View style={ styles.container }>>
-				<TextInput
-					style={ styles.password }
-					placeholder="Password"
-					maxLength={4}
-					keyboardType="numeric"
-					onChangeText={(text) => this.setState({ pass: text })}
-				/>
-				<Button
-					title="登入"
-					buttonStyle={ styles.loginBtn }
-					onPress={ this.handleLogin }
-				/>
-				<Button
-					title="註冊"
-					buttonStyle={ styles.registerBtn }
-					onPress={ this.handleRegister }
-					color="#111"
-				/>
+			<View style={ styles.container }>
+				{ !!registered ?
+				[
+					<TextInput
+						key="password"
+						style={styles.password}
+						placeholder="Password"
+						maxLength={4}
+						keyboardType="numeric"
+						onChangeText={(text) => this.setState({ pass: text })}
+					/>,
+					<Button
+						key="loginBtn"
+						title="登入"
+						buttonStyle={styles.loginBtn}
+						onPress={this.handleLogin}
+					/>
+				] : [
+					<Text key="registerAlert" style={ styles.registerAlert }>請設定密碼</Text>,
+					<Button
+						key="registerBtn"
+						title="設定"
+						buttonStyle={styles.registerBtn}
+						onPress={this.handleRegister}
+						color="#111"
+					/>
+				]
+				}
 			</View>
 		)
 	}
@@ -108,6 +122,12 @@ const styles = StyleSheet.create({
 		backgroundColor: '#000',
 		marginTop: 20,
 		borderRadius: 5
+	},
+	registerAlert: {
+		marginBottom: 20,
+		fontSize: 25,
+		fontWeight: 'bold',
+		color: '#111'
 	},
 	registerBtn: {
 		width: 300,
