@@ -1,14 +1,17 @@
 import React from 'react';
 import {
 	View,
-	Text
+	Text,
+	Button as NativeBtn
 } from 'react-native';
 import { Button } from 'react-native-elements';
 
 export default class HomeScreen extends React.Component {
-	static navigationOptions = {
-		title: '～～～ＨＯＭＥ'
-	}
+	static navigationOptions = ({ navigation }) => ({
+		title: '訊息',
+		headerRight: <NativeBtn title="New" onPress={() => {}} />,
+		headerLeft: <NativeBtn title="設定" onPress={() => {}} />
+	});
 
 	render() {
 		return (
