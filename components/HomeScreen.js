@@ -19,8 +19,20 @@ export default class HomeScreen extends React.Component {
 
 	static navigationOptions = ({ navigation }) => ({
 		title: '訊息',
-		headerRight: <Icon size={24} color="#37474F" name="pencil-square-o" style={ styles.newGroupBtn } onPress={this.handlePressNewGroup} />
+		headerRight: (
+			<Icon
+				size={24}
+				color="#37474F"
+				name="pencil-square-o"
+				style={ styles.newGroupBtn }
+				onPress={ () => navigation.state.params.handlePressNewGroup() }
+			/>
+		)
 	});
+
+	componentDidMount() {
+		this.props.navigation.setParams({ handlePressNewGroup: this.handlePressNewGroup });
+	}
 
 	handleTabChange(index) {
 		switch (index) {
