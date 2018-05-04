@@ -16,11 +16,13 @@ export default class HomeScreen extends React.Component {
 
 	onRead(e) {
 		alert(e.data);
+		this.scanner.reactivate();
 	}
 
 	render() {
 		return (
 			<QRCodeScanner
+				ref={(node) => { this.scanner = node }}
 				onRead={ this.onRead }
 				topContent={
 					<Text style={ styles.title }>掃描群組 QR Code</Text>
