@@ -67,7 +67,7 @@ export default class RegisterScreen extends React.Component {
 	render() {
 		return (
 			<View style={ styles.container }>
-				<Text style={ styles.title }>請設定 4 位數密碼</Text>
+				<Text style={ styles.title }>設定 4 位數密碼</Text>
 				<TextInput
 					style={ styles.password }
 					placeholder="Password"

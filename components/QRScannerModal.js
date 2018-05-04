@@ -2,37 +2,37 @@ import React from 'react';
 import {
 	View,
 	Text,
-	TouchableOpacity,
-	Linking,
 	StyleSheet,
 	AsyncStorage
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);
+		this.onRead = this.onRead.bind(this);
 	}
 
-	onSuccess(e) {
-		Linking
-			.openURL(e.data)
-			.catch(err => console.error('An error occured', err));
+	onRead(e) {
+		alert(e.data);
 	}
 
 	render() {
 		return (
 			<QRCodeScanner
-				onRead={this.onSuccess.bind(this)}
+				onRead={ this.onRead }
 				topContent={
-					<Text style={styles.centerText}>
-						Go to <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan the QR code.
-          			</Text>
+					<Text style={ styles.title }>掃描群組 QR Code</Text>
 				}
 				bottomContent={
-					<TouchableOpacity style={styles.buttonTouchable}>
-						<Text style={styles.buttonText}>OK. Got it!</Text>
-					</TouchableOpacity>
+					<Icon
+						size={16}
+						color="#37474F"
+						name="chevron-left"
+						style={styles.newGroupBtn}
+						onPress={() => this.props.navigation.goBack()}
+					> 返回</Icon>
 				}
 			/>
 		)
@@ -40,21 +40,15 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-	centerText: {
+	title: {
 		flex: 1,
-		fontSize: 18,
-		padding: 32,
-		color: '#777',
+		fontSize: 24,
+		fontWeight: 'bold',
+		marginTop: 100,
+		color: '#111',
 	},
 	textBold: {
 		fontWeight: '500',
 		color: '#000',
-	},
-	buttonText: {
-		fontSize: 21,
-		color: 'rgb(0,122,255)',
-	},
-	buttonTouchable: {
-		padding: 16,
 	},
 });
