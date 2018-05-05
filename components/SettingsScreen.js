@@ -12,10 +12,15 @@ import {
 	Divider
 } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import DatePicker from 'react-native-datepicker'
 
 export default class SettingsScreen extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			birth: '1900-01-01'
+		};
+
 		this.handleSave = this.handleSave.bind(this);
 	}
 
@@ -40,10 +45,6 @@ export default class SettingsScreen extends React.Component {
 					<View style={ styles.formContainer }>
 						<FormLabel>姓名*</FormLabel>
 						<FormInput onChangeText={() => {}} />
-						<FormLabel>生日</FormLabel>
-						<FormInput onChangeText={() => { }} />
-						<FormLabel>電話</FormLabel>
-						<FormInput onChangeText={() => { }} />
 						<FormLabel>簡介</FormLabel>
 						<FormInput onChangeText={() => { }} />
 					</View>
@@ -53,7 +54,16 @@ export default class SettingsScreen extends React.Component {
 						<FormLabel>真實姓名</FormLabel>
 						<FormInput onChangeText={() => { }} />
 						<FormLabel>生日</FormLabel>
-						<FormInput onChangeText={() => { }} />
+						<View style={ styles.birthContainer }>
+							<DatePicker
+								style={ styles.birth }
+								date={ this.state.birth }
+								showIcon={false}
+								format="YYYY-MM-DD"
+								confirmBtnText="確定"
+								onDateChange={(date) => { this.setState({ birth: date }) }}
+							/>
+						</View>
 						<FormLabel>電話</FormLabel>
 						<FormInput onChangeText={() => { }} />
 						<FormLabel>性別</FormLabel>
@@ -85,6 +95,14 @@ const styles = StyleSheet.create({
 	formTitle: {
 		fontSize: 24,
 		fontWeight: 'bold'
+	},
+	birthContainer: {
+		flex: 1,
+		alignItems: 'center'
+	},
+	birth: {
+		marginTop: 5,
+		width: '90%'
 	},
 	divider: {
 		marginTop: 20,
