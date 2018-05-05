@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		fontSize: 24,
 		fontWeight: 'bold',
-		marginTop: 100,
+		marginTop: '15%',
 		color: '#111',
 	},
 	textBold: {
