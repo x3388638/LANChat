@@ -17,6 +17,7 @@
     "react-native-qrcode-scanner": "^1.0.1",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^1.5.11",
+    "sha1": "^1.1.1",
     "sha256": "^0.2.0"
   },
   "devDependencies": {

@@ -10,6 +10,8 @@ import BottomNavigation, { Tab } from 'react-native-material-bottom-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 
+import Storage from '../modules/Storage.js';
+
 export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);

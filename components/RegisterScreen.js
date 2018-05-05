@@ -54,6 +54,7 @@ export default class RegisterScreen extends React.Component {
 	}
 
 	savePass(pass, callback) {
+		Storage.setPersonalInfo();
 		Storage.setPass(Util.genPass(pass), callback);
 	}
 

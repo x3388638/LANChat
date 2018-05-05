@@ -2,6 +2,8 @@ import {
 	AsyncStorage
 } from 'react-native';
 
+import Util from './util.js';
+
 export default (() => {
 	function setLastLogin(time) {
 		AsyncStorage.setItem('@LANChat:lastLogin', time);
@@ -19,6 +21,27 @@ export default (() => {
 		return await AsyncStorage.getItem('@LANChat:pass');
 	}
 
+	async function setPersonalInfo(data = { normal: {}, emergency: {} }) {
+		let personalInfo = await getPersonalInfo();
+
+		personalInfo = personalInfo || {
+			normal: {},
+			emergency: {}
+		};
+
+		personalInfo = {
+			normal: Object.assign({}, personalInfo.normal || {}, data.normal || {}, { uid: Util.getUid() }),
+			emergency: Object.assign({}, personalInfo.emergency || {}, data.emergency || {})
+		};
+
+		AsyncStorage.setItem('@LANChat:personalInfo', JSON.stringify(personalInfo));
+	}
+
+	async function getPersonalInfo() {
+		const info = await AsyncStorage.getItem('@LANChat:personalInfo')
+		return info ? JSON.parse(info) : undefined;
+	}
+
 	function removeItem(key) {
 		AsyncStorage.removeItem(`@LANChat:${key}`);
 	}
@@ -28,6 +51,8 @@ export default (() => {
 		getLastLogin,
 		setPass,
 		getPass,
+		setPersonalInfo,
+		getPersonalInfo,
 		removeItem
 	};
 })();

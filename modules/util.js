@@ -1,4 +1,5 @@
 import sha256 from 'sha256';
+import sha1 from 'sha1';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
 
@@ -34,10 +35,21 @@ export default (() => {
 
 		return true;
 	}
+
+	function getDeviceID() {
+		return DeviceInfo.getUniqueID();
+	}
+
+	function getUid() {
+		const deviceID = getDeviceID();
+		return sha1(deviceID);
+	}
 	
 	return {
 		genPass,
 		login,
-		checkLogin
+		checkLogin,
+		getDeviceID,
+		getUid
 	}
 })();
