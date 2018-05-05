@@ -4,12 +4,12 @@ import {
 	Text,
 	TextInput,
 	Alert,
-	AsyncStorage,
 	StyleSheet
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import sha256 from 'sha256';
 import Util from '../modules/util.js';
+import Storage from '../modules/Storage.js';
 
 export default class RegisterScreen extends React.Component {
 	constructor(props) {
@@ -54,11 +54,11 @@ export default class RegisterScreen extends React.Component {
 	}
 
 	savePass(pass, callback) {
-		AsyncStorage.setItem('@LANChat:pass', Util.genPass(pass), callback);
+		Storage.setPass(Util.genPass(pass), callback);
 	}
 
 	async getStoredPass() {
-		const pass = await AsyncStorage.getItem('@LANChat:pass');
+		const pass = await Storage.getPass();
 		this.setState({
 			storedPass: typeof pass === 'string' ? pass : null
 		});

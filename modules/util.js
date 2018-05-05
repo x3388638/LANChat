@@ -1,9 +1,8 @@
-import {
-	AsyncStorage
-} from 'react-native';
 import sha256 from 'sha256';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
+
+import Storage from './Storage.js';
 
 export default (() => {
 	const _expireTime = 5;
@@ -17,11 +16,11 @@ export default (() => {
 	}
 
 	function login() {
-		AsyncStorage.setItem('@LANChat:lastLogin', moment().format('YYYY-MM-DD HH:mm:ss'));
+		Storage.setLastLogin(moment().format('YYYY-MM-DD HH:mm:ss'));
 	}
 
 	async function checkLogin() {
-		let lastLogin = await AsyncStorage.getItem('@LANChat:lastLogin');
+		let lastLogin = await Storage.getLastLogin();
 		lastLogin = typeof lastLogin === 'string' ? lastLogin : null;
 		if (!lastLogin) {
 			return false;
@@ -29,7 +28,7 @@ export default (() => {
 
 		if (!moment(lastLogin).isValid() ||
 			moment().diff(moment(lastLogin), 'minutes') > _expireTime) {
-			AsyncStorage.removeItem('@LANChat:lastLogin');
+			Storage.removeItem('lastLogin');
 			return false;
 		}
 

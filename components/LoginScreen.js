@@ -4,7 +4,6 @@ import {
 	Text,
 	TextInput,
 	Alert,
-	AsyncStorage,
 	StyleSheet
 } from 'react-native';
 import {
@@ -12,6 +11,7 @@ import {
 } from 'react-native-elements';
 import sha256 from 'sha256';
 import Util from '../modules/util.js';
+import Storage from '../modules/Storage.js';
 
 export default class LoginScreen extends React.Component {
 	constructor(props) {
@@ -24,8 +24,8 @@ export default class LoginScreen extends React.Component {
 		this.handleLogin = this.handleLogin.bind(this);
 		this.handleRegister = this.handleRegister.bind(this);
 		this.getStoredPass = this.getStoredPass.bind(this);
-		// AsyncStorage.removeItem('@LANChat:pass');
-		// AsyncStorage.removeItem('@LANChat:lastLogin');
+		// Storage.removeItem('pass');
+		// Storage.removeItem('lastLogin');
 	}
 
 	static navigationOptions = {
@@ -66,7 +66,7 @@ export default class LoginScreen extends React.Component {
 	}
 
 	async getStoredPass() {
-		const pass = await AsyncStorage.getItem('@LANChat:pass');
+		const pass = await Storage.getPass();
 		this.setState({
 			storedPass: typeof pass === 'string' ? pass : null
 		}, () => {
