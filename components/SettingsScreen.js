@@ -4,7 +4,10 @@ import {
 	Text,
 	Button,
 	Alert,
-	StyleSheet
+	TextInput,
+	StyleSheet,
+	Platform,
+	Keyboard
 } from 'react-native';
 import {
 	FormLabel,
@@ -33,6 +36,7 @@ export default class SettingsScreen extends React.Component {
 		};
 
 		this.handleSave = this.handleSave.bind(this);
+		this.handleChangeText = this.handleChangeText.bind(this);
 		this.getPersonalInfo = this.getPersonalInfo.bind(this);
 	}
 
@@ -47,29 +51,35 @@ export default class SettingsScreen extends React.Component {
 	}
 
 	handleSave() {
+		if (TextInput.State.currentlyFocusedField()) {
+			Keyboard.dismiss();
+		}
+
 		if (this.state.username.length === 0) {
 			Alert.alert('姓名為必填');
 			return;
 		}
 
-		const { username, selfIntro, name, birth, phone, gender, bloodType, address, memo } = this.state;
-		Storage.setPersonalInfo({
-			normal: {
-				username,
-				selfIntro
-			},
-			emergency: {
-				name,
-				birth,
-				phone,
-				gender,
-				bloodType,
-				address,
-				memo
-			}
-		});
+		setTimeout(() => {
+			const { username, selfIntro, name, birth, phone, gender, bloodType, address, memo } = this.state;
+			Storage.setPersonalInfo({
+				normal: {
+					username,
+					selfIntro
+				},
+				emergency: {
+					name,
+					birth,
+					phone,
+					gender,
+					bloodType,
+					address,
+					memo
+				}
+			});
 
-		Alert.alert('儲存成功');
+			Alert.alert('儲存成功');
+		}, 300);
 	}
 
 	async getPersonalInfo() {
@@ -87,6 +97,20 @@ export default class SettingsScreen extends React.Component {
 		});
 	}
 
+	handleChangeText(key, value, eventType) {
+		if (eventType === 1 && Platform.OS === 'ios') {
+			return;
+		}
+
+		if (eventType === 2 && Platform.OS !== 'ios') {
+			return;
+		}
+
+		this.setState({
+			[key]: value
+		});
+	}
+
 	render() {
 		return (
 			<KeyboardAwareScrollView>
@@ -94,15 +118,30 @@ export default class SettingsScreen extends React.Component {
 					<Text style={ styles.formTitle }>公開資訊</Text>
 					<View style={ styles.formContainer }>
 						<FormLabel>姓名*</FormLabel>
-						<FormInput value={ this.state.username } maxLength={10} onChangeText={(username) => {this.setState({ username })}} />
+						<FormInput
+							value={ this.state.username }
+							maxLength={10}
+							onChangeText={(text) => { this.handleChangeText('username', text, 1) }}
+							onEndEditing={(e) => { this.handleChangeText('username', e.nativeEvent.text, 2) }}
+						/>
 						<FormLabel>簡介</FormLabel>
-						<FormInput value={ this.state.selfIntro } maxLength={150} onChangeText={(selfIntro) => {this.setState({ selfIntro })}} />
+						<FormInput
+							value={ this.state.selfIntro }
+							maxLength={150}
+							onChangeText={(text) => { this.handleChangeText('selfIntro', text, 1) }}
+							onEndEditing={(e) => { this.handleChangeText('selfIntro', e.nativeEvent.text, 2) }}
+						/>
 					</View>
 					<Divider style={ styles.divider } />
 					<Text style={ styles.formTitle }>私密資訊 <Text style={ styles.note }>*僅使用於緊急求助通報</Text></Text>
 					<View style={ styles.formContainer }>
 						<FormLabel>真實姓名</FormLabel>
-						<FormInput value={ this.state.name } maxLength={15} onChangeText={(name) => {this.setState({ name })}} />
+						<FormInput
+							value={ this.state.name }
+							maxLength={15}
+							onChangeText={(text) => { this.handleChangeText('name', text, 1) }}
+							onEndEditing={(e) => { this.handleChangeText('name', e.nativeEvent.text, 2) }}
+						/>
 						<FormLabel>生日</FormLabel>
 						<View style={ styles.birthContainer }>
 							<DatePicker
@@ -184,9 +223,19 @@ export default class SettingsScreen extends React.Component {
 							</View>
 						</View>
 						<FormLabel>住址</FormLabel>
-						<FormInput value={ this.state.address } maxLength={30} onChangeText={(address) => {this.setState({ address })}} />
+						<FormInput
+							value={ this.state.address }
+							maxLength={30}
+							onChangeText={(text) => { this.handleChangeText('address', text, 1) }}
+							onEndEditing={(e) => { this.handleChangeText('address', e.nativeEvent.text, 2) }}
+						/>
 						<FormLabel>補充資訊</FormLabel>
-						<FormInput value={ this.state.memo } maxLength={150} onChangeText={(memo) => {this.setState({ memo })}} />
+						<FormInput
+							value={ this.state.memo }
+							maxLength={150}
+							onChangeText={(text) => { this.handleChangeText('memo', text, 1) }}
+							onEndEditing={(e) => { this.handleChangeText('memo', e.nativeEvent.text, 2) }}
+						/>
 					</View>
 				</View>
 			</KeyboardAwareScrollView>
