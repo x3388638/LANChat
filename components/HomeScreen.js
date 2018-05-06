@@ -61,7 +61,7 @@ export default class HomeScreen extends React.Component {
 
 	async renderGroups() {
 		const joinedGroups = await Storage.getJoinedGroups();
-		console.warn(joinedGroups);
+		console.warn(JSON.stringify(joinedGroups, null, 4));
 	}
 
 	render() {

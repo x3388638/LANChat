@@ -51,7 +51,7 @@ export default (() => {
 
 		const [ssid, bssid] = await Util.getWifi();
 		const joinedGroups = await getJoinedGroups();
-		AsyncStorage.setItem('@LANChat:joinedGroups', JSON.stringify(Object.assign({}, joinedGroups, {
+		joinedGroups[bssid] = Object.assign({}, joinedGroups[bssid] || {}, {
 			[groupID]: {
 				groupID,
 				groupName,
@@ -62,7 +62,9 @@ export default (() => {
 					bssid
 				}
 			}
-		})), () => {
+		});
+
+		AsyncStorage.setItem('@LANChat:joinedGroups', JSON.stringify(joinedGroups), () => {
 			callback(null);
 		});
 	}
