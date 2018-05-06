@@ -55,12 +55,12 @@ export default class SettingsScreen extends React.Component {
 			Keyboard.dismiss();
 		}
 
-		if (this.state.username.length === 0) {
-			Alert.alert('姓名為必填');
-			return;
-		}
-
 		setTimeout(() => {
+			if (this.state.username.length === 0) {
+				Alert.alert('姓名為必填');
+				return;
+			}
+
 			const { username, selfIntro, name, birth, phone, gender, bloodType, address, memo } = this.state;
 			Storage.setPersonalInfo({
 				normal: {
