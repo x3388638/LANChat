@@ -1,7 +1,6 @@
 import {
 	AsyncStorage
 } from 'react-native';
-import { NetworkInfo } from 'react-native-network-info';
 
 import Util from './util.js';
 
@@ -50,29 +49,21 @@ export default (() => {
 			return;
 		}
 
-		new Promise((resolve, reject) => {
-			NetworkInfo.getSSID(resolve);
-		}).then((ssid) => {
-			return new Promise((resolve, reject) => {
-				NetworkInfo.getBSSID(bssid => {
-					resolve({ ssid, bssid });
-				});
-			})
-		}).then(async (net) => {
-			const joinedGroups = await getJoinedGroups();
-			AsyncStorage.setItem('@LANChat:joinedGroups', JSON.stringify(Object.assign({}, joinedGroups, {
-				[groupID]: {
-					groupID,
-					groupName,
-					key,
-					createdTime,
-					net
+		const [ssid, bssid] = await Util.getWifi();
+		const joinedGroups = await getJoinedGroups();
+		AsyncStorage.setItem('@LANChat:joinedGroups', JSON.stringify(Object.assign({}, joinedGroups, {
+			[groupID]: {
+				groupID,
+				groupName,
+				key,
+				createdTime,
+				net: {
+					ssid,
+					bssid
 				}
-			})), () => {
-				callback(null);
-			});
-		}).catch((err) => {
-			callback(err);
+			}
+		})), () => {
+			callback(null);
 		});
 	}
 

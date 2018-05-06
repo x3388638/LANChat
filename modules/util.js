@@ -5,6 +5,7 @@ import moment from 'moment';
 import '../shim.js';
 import crypto from 'crypto';
 import UUID from 'uuid/v4';
+import { NetworkInfo } from 'react-native-network-info';
 
 import Storage from './Storage.js';
 
@@ -56,6 +57,13 @@ export default (() => {
 	function genUUID() {
 		return UUID();
 	}
+
+	function getWifi() {
+		return Promise.all([
+			new Promise((resolve) => NetworkInfo.getSSID(resolve)),
+			new Promise((resolve) => NetworkInfo.getBSSID(resolve))
+		]);
+	}
 	
 	return {
 		genPass,
@@ -64,6 +72,7 @@ export default (() => {
 		getDeviceID,
 		getUid,
 		genGroupKey,
-		genUUID
+		genUUID,
+		getWifi
 	}
 })();

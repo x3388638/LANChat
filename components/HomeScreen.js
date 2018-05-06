@@ -17,6 +17,7 @@ export default class HomeScreen extends React.Component {
 		super(props);
 		this.handleTabChange = this.handleTabChange.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
+		this.renderGroups = this.renderGroups.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -34,7 +35,10 @@ export default class HomeScreen extends React.Component {
 
 	componentDidMount() {
 		this.props.navigation.setParams({ handlePressNewGroup: this.handlePressNewGroup });
-		this.props.navigation.addListener('didFocus', this.checkPersonalInfo);
+		this.props.navigation.addListener('didFocus', () => {
+			this.checkPersonalInfo();
+			this.renderGroups();
+		});
 	}
 
 	handleTabChange(index) {
@@ -53,6 +57,11 @@ export default class HomeScreen extends React.Component {
 		if (!info.normal.username) {
 			Alert.alert('請先填寫個人資料', null, [{ text: 'OK', onPress: () => this.props.navigation.navigate('Settings') }]);
 		}
+	}
+
+	async renderGroups() {
+		const joinedGroups = await Storage.getJoinedGroups();
+		console.warn(joinedGroups);
 	}
 
 	render() {
