@@ -13,6 +13,7 @@ import RegisterScreen from './components/RegisterScreen';
 import HomeScreen from './components/HomeScreen';
 import QRScannerModal from './components/QRScannerModal';
 import SettingsScreen from './components/SettingsScreen';
+import CreateGroupScreen from './components/CreateGroupScreen';
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
@@ -28,7 +29,8 @@ export default SwitchNavigator({
 	Main1: StackNavigator({
 		Main2: StackNavigator({
 			Home: HomeScreen,
-			Settings: SettingsScreen
+			Settings: SettingsScreen,
+			CreateGroup: CreateGroupScreen
 		}, {
 			initialRouteName: 'Home'
 		}),

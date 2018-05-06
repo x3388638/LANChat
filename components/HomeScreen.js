@@ -16,7 +16,6 @@ export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleTabChange = this.handleTabChange.bind(this);
-		this.handlePressNewGroup = this.handlePressNewGroup.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 	}
 
@@ -28,7 +27,7 @@ export default class HomeScreen extends React.Component {
 				color="#37474F"
 				name="pencil-square-o"
 				style={ styles.newGroupBtn }
-				onPress={ () => navigation.state.params.handlePressNewGroup() }
+				onPress={ () => navigation.navigate('CreateGroup') }
 			/>
 		)
 	});
@@ -47,10 +46,6 @@ export default class HomeScreen extends React.Component {
 				this.props.navigation.navigate('QRScanner');
 				break;
 		}
-	}
-
-	handlePressNewGroup() {
-		alert('to create group');
 	}
 
 	async checkPersonalInfo() {

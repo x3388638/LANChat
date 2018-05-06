@@ -261,7 +261,8 @@ const styles = StyleSheet.create({
 	},
 	formTitle: {
 		fontSize: 24,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		color: '#37474F'
 	},
 	birthContainer: {
 		flex: 1,
