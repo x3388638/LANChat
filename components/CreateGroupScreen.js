@@ -13,6 +13,8 @@ import {
 } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+import Util from '../modules/util.js';
+
 export default class CreateGroupScreen extends React.Component {
 	constructor(props) {
 		super(props);
@@ -49,6 +51,8 @@ export default class CreateGroupScreen extends React.Component {
 			Alert.alert('欄位不得為空');
 			return;
 		}
+
+		Util.genGroupKey(groupName, pass);
 	}
 
 	render() {
