@@ -9,7 +9,8 @@ import {
 import {
 	FormLabel,
 	FormInput,
-	Divider
+	Divider,
+	CheckBox
 } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DatePicker from 'react-native-datepicker';
@@ -118,7 +119,50 @@ export default class SettingsScreen extends React.Component {
 						<FormLabel>性別</FormLabel>
 						<FormInput value={ this.state.gender } onChangeText={(gender) => {this.setState({ gender })}} />
 						<FormLabel>血型</FormLabel>
-						<FormInput value={ this.state.bloodType } onChangeText={(bloodType) => {this.setState({ bloodType })}} />
+						{/* <FormInput value={ this.state.bloodType } onChangeText={(bloodType) => {this.setState({ bloodType })}} /> */}
+						<View style={ styles.bloodTypeContainer }>
+							<View style={ styles.bloodType }>
+								<CheckBox
+									containerStyle={ styles.bloodTypeCheckbox }
+									size={14}
+									title='A'
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checked={ this.state.bloodType === 'A' }
+									onPress={() => { this.setState({ bloodType: 'A' }) }}
+								/>
+								<CheckBox
+									containerStyle={ styles.bloodTypeCheckbox }
+									size={14}
+									center
+									title='B'
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checked={this.state.bloodType === 'B' }
+									onPress={() => { this.setState({ bloodType: 'B' }) }}
+								/>
+								<CheckBox
+									containerStyle={ styles.bloodTypeCheckbox }
+									size={14}
+									center
+									title='AB'
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checked={ this.state.bloodType === 'AB' }
+									onPress={() => { this.setState({ bloodType: 'AB' }) }}
+								/>
+								<CheckBox
+									containerStyle={ styles.bloodTypeCheckbox }
+									size={14}
+									center
+									title='O'
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checked={ this.state.bloodType === 'O' }
+									onPress={() => { this.setState({ bloodType: 'O' }) }}
+								/>
+							</View>
+						</View>
 						<FormLabel>住址</FormLabel>
 						<FormInput value={ this.state.address } maxLength={30} onChangeText={(address) => {this.setState({ address })}} />
 						<FormLabel>補充資訊</FormLabel>
@@ -161,6 +205,21 @@ const styles = StyleSheet.create({
 	divider: {
 		marginTop: 20,
 		marginBottom: 20,
+	},
+	bloodTypeContainer: {
+		alignItems: 'center'
+	},
+	bloodType: {
+		width: '90%',
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingBottom: 0
+	},
+	bloodTypeCheckbox: {
+		flex: 1,
+		marginLeft: 5,
+		marginRight: 5,
+		marginBottom: 0
 	},
 	note: {
 		fontSize: 14,
