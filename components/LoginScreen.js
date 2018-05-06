@@ -27,6 +27,7 @@ export default class LoginScreen extends React.Component {
 		// Storage.removeItem('pass');
 		// Storage.removeItem('lastLogin');
 		// Storage.removeItem('personalInfo');
+		// Storage.removeItem('joinedGroups');
 	}
 
 	static navigationOptions = {

@@ -4,7 +4,8 @@ import {
 	Text,
 	StyleSheet,
 	Platform,
-	Alert
+	Alert,
+	Keyboard
 } from 'react-native';
 import {
 	FormLabel,
@@ -12,15 +13,18 @@ import {
 	Button
 } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import moment from 'moment';
 
 import Util from '../modules/util.js';
+import Storage from '../modules/Storage.js';
 
 export default class CreateGroupScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			groupName: '',
-			pass: ''
+			pass: '',
+			generating: false
 		};
 
 		this.handleChangeText = this.handleChangeText.bind(this);
@@ -46,13 +50,43 @@ export default class CreateGroupScreen extends React.Component {
 	}
 
 	handleCreate() {
-		const { groupName, pass } = this.state;
-		if (!groupName || !pass) {
-			Alert.alert('欄位不得為空');
-			return;
-		}
+		Alert.alert('群組建立中...', null, [{ text: 'OK', onPress: Keyboard.dismiss }]);
+		this.setState({
+			generating: true
+		});
 
-		Util.genGroupKey(groupName, pass);
+		setTimeout(() => {
+			const { groupName, pass } = this.state;
+			if (!groupName || !pass) {
+				this.setState({
+					generating: false
+				});
+
+				Alert.alert('欄位不得為空');
+				return;
+			}
+			
+			const key = Util.genGroupKey(groupName, pass);
+			const groupID = Util.genUUID();
+			const createdTime = moment().format();
+			Storage.addGroup({
+				groupID,
+				groupName,
+				createdTime,
+				key
+			}, (err) => {
+				if (err) {
+					Alert.alert(err);
+					return;
+				}
+
+				Alert.alert('群組新建成功', null, [{ text: 'OK', onPress: this.props.navigation.goBack }]);
+			});
+
+			this.setState({
+				generating: false
+			});
+		}, 300);
 	}
 
 	render() {
@@ -60,6 +94,7 @@ export default class CreateGroupScreen extends React.Component {
 			<KeyboardAwareScrollView style={ styles.container }>
 				<FormLabel>群組名稱</FormLabel>
 				<FormInput
+					ref={(node) => {this.groupName = node}}
 					value={ this.state.groupName }
 					maxLength={15}
 					onChangeText={(text) => { this.handleChangeText('groupName', text, 1) }}
@@ -67,6 +102,7 @@ export default class CreateGroupScreen extends React.Component {
 				/>
 				<FormLabel>群組密碼</FormLabel>
 				<FormInput
+					ref={(node) => {this.pass = node}}
 					value={ this.state.pass }
 					maxLength={20}
 					onChangeText={(text) => { this.handleChangeText('pass', text, 1) }}
@@ -74,8 +110,10 @@ export default class CreateGroupScreen extends React.Component {
 				/>
 				<View style={ styles.btnContainer }>
 					<Button
-						title="建立"
+						title={this.state.generating ? '金鑰產生中...' : '建立'}
 						backgroundColor="#37474F"
+						disabled={ this.state.generating }
+						loading={ this.state.generating }
 						onPress={ this.handleCreate }
 					/>
 				</View>

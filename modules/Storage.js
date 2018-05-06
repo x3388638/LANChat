@@ -1,6 +1,7 @@
 import {
 	AsyncStorage
 } from 'react-native';
+import { NetworkInfo } from 'react-native-network-info';
 
 import Util from './util.js';
 
@@ -42,6 +43,44 @@ export default (() => {
 		return info ? JSON.parse(info) : undefined;
 	}
 
+	async function addGroup(groupInfo = {}, callback) {
+		const { groupName, createdTime, groupID, key } = groupInfo;
+		if (!groupName || !createdTime || !groupID || !key) {
+			callback('missing param');
+			return;
+		}
+
+		new Promise((resolve, reject) => {
+			NetworkInfo.getSSID(resolve);
+		}).then((ssid) => {
+			return new Promise((resolve, reject) => {
+				NetworkInfo.getBSSID(bssid => {
+					resolve({ ssid, bssid });
+				});
+			})
+		}).then(async (net) => {
+			const joinedGroups = await getJoinedGroups();
+			AsyncStorage.setItem('@LANChat:joinedGroups', JSON.stringify(Object.assign({}, joinedGroups, {
+				[groupID]: {
+					groupID,
+					groupName,
+					key,
+					createdTime,
+					net
+				}
+			})), () => {
+				callback(null);
+			});
+		}).catch((err) => {
+			callback(err);
+		});
+	}
+
+	async function getJoinedGroups() {
+		const groups = await AsyncStorage.getItem('@LANChat:joinedGroups');
+		return groups ? JSON.parse(groups) : {};
+	}
+
 	function removeItem(key) {
 		AsyncStorage.removeItem(`@LANChat:${key}`);
 	}
@@ -53,6 +92,8 @@ export default (() => {
 		getPass,
 		setPersonalInfo,
 		getPersonalInfo,
+		addGroup,
+		getJoinedGroups,
 		removeItem
 	};
 })();

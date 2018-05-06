@@ -2,7 +2,9 @@ import sha256 from 'sha256';
 import sha1 from 'sha1';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
-const crypto = require('crypto');
+import '../shim.js';
+import crypto from 'crypto';
+import UUID from 'uuid/v4';
 
 import Storage from './Storage.js';
 
@@ -48,7 +50,11 @@ export default (() => {
 
 	function genGroupKey(groupName, pass) {
 		const key = crypto.pbkdf2Sync(pass, groupName, 4096, 256, 'sha1').toString('hex');
-		console.warn(key);
+		return key;
+	}
+
+	function genUUID() {
+		return UUID();
 	}
 	
 	return {
@@ -57,6 +63,7 @@ export default (() => {
 		checkLogin,
 		getDeviceID,
 		getUid,
-		genGroupKey
+		genGroupKey,
+		genUUID
 	}
 })();
