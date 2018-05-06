@@ -99,7 +99,7 @@ export default class SettingsScreen extends React.Component {
 						<FormInput value={ this.state.selfIntro } maxLength={150} onChangeText={(selfIntro) => {this.setState({ selfIntro })}} />
 					</View>
 					<Divider style={ styles.divider } />
-					<Text style={ styles.formTitle }>緊急小卡 <Text style={ styles.note }>*僅使用於緊急求助通報</Text></Text>
+					<Text style={ styles.formTitle }>私密資訊 <Text style={ styles.note }>*僅使用於緊急求助通報</Text></Text>
 					<View style={ styles.formContainer }>
 						<FormLabel>真實姓名</FormLabel>
 						<FormInput value={ this.state.name } maxLength={15} onChangeText={(name) => {this.setState({ name })}} />
@@ -117,13 +117,33 @@ export default class SettingsScreen extends React.Component {
 						<FormLabel>電話</FormLabel>
 						<FormInput value={ this.state.phone } maxLength={15} onChangeText={(phone) => {this.setState({ phone })}} />
 						<FormLabel>性別</FormLabel>
-						<FormInput value={ this.state.gender } onChangeText={(gender) => {this.setState({ gender })}} />
-						<FormLabel>血型</FormLabel>
-						{/* <FormInput value={ this.state.bloodType } onChangeText={(bloodType) => {this.setState({ bloodType })}} /> */}
-						<View style={ styles.bloodTypeContainer }>
-							<View style={ styles.bloodType }>
+						<View style={ styles.checkboxesContainer }>
+							<View style={ styles.checkboxes }>
 								<CheckBox
-									containerStyle={ styles.bloodTypeCheckbox }
+									containerStyle={ styles.checkbox }
+									size={14}
+									title='男'
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checked={ this.state.gender === 'M' }
+									onPress={() => { this.setState({ gender: 'M' }) }}
+								/>
+								<CheckBox
+									containerStyle={ styles.checkbox }
+									size={14}
+									title='女'
+									checkedIcon='dot-circle-o'
+									uncheckedIcon='circle-o'
+									checked={ this.state.gender === 'F' }
+									onPress={() => { this.setState({ gender: 'F' }) }}
+								/>
+							</View>
+						</View>
+						<FormLabel>血型</FormLabel>
+						<View style={ styles.checkboxesContainer }>
+							<View style={ styles.checkboxes }>
+								<CheckBox
+									containerStyle={ styles.checkbox }
 									size={14}
 									title='A'
 									checkedIcon='dot-circle-o'
@@ -132,7 +152,7 @@ export default class SettingsScreen extends React.Component {
 									onPress={() => { this.setState({ bloodType: 'A' }) }}
 								/>
 								<CheckBox
-									containerStyle={ styles.bloodTypeCheckbox }
+									containerStyle={ styles.checkbox }
 									size={14}
 									center
 									title='B'
@@ -142,7 +162,7 @@ export default class SettingsScreen extends React.Component {
 									onPress={() => { this.setState({ bloodType: 'B' }) }}
 								/>
 								<CheckBox
-									containerStyle={ styles.bloodTypeCheckbox }
+									containerStyle={ styles.checkbox }
 									size={14}
 									center
 									title='AB'
@@ -152,7 +172,7 @@ export default class SettingsScreen extends React.Component {
 									onPress={() => { this.setState({ bloodType: 'AB' }) }}
 								/>
 								<CheckBox
-									containerStyle={ styles.bloodTypeCheckbox }
+									containerStyle={ styles.checkbox }
 									size={14}
 									center
 									title='O'
@@ -206,16 +226,16 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		marginBottom: 20,
 	},
-	bloodTypeContainer: {
+	checkboxesContainer: {
 		alignItems: 'center'
 	},
-	bloodType: {
+	checkboxes: {
 		width: '90%',
 		flexDirection: 'row',
 		alignItems: 'center',
 		paddingBottom: 0
 	},
-	bloodTypeCheckbox: {
+	checkbox: {
 		flex: 1,
 		marginLeft: 5,
 		marginRight: 5,
