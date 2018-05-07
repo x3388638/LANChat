@@ -5,16 +5,26 @@ import {
 	Alert,
 	StyleSheet
 } from 'react-native';
-import { Button } from 'react-native-elements';
+import {
+	Button,
+	List,
+	ListItem
+} from 'react-native-elements';
 import BottomNavigation, { Tab } from 'react-native-material-bottom-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			joinedGroups: {}
+		};
+
 		this.handleTabChange = this.handleTabChange.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 		this.renderGroups = this.renderGroups.bind(this);
@@ -67,7 +77,47 @@ export default class HomeScreen extends React.Component {
 	render() {
 		return (
 			<View style={ styles.container }>
-				<Text>home screen</Text>
+				<List containerStyle={{ marginTop: 0, marginBottom: 0, borderTopWidth: 0 }}>
+					<ListItem
+						title="LOBBY"
+						subtitle="23:19  |  Y.y.: 安安你好..."
+						leftIcon={{ name: 'wifi-tethering'}}
+						hideChevron
+						titleStyle={{ fontWeight: 'bold' }}
+						badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+					/>
+				</List>
+				<KeyboardAwareScrollView style={{ marginBottom: 50}}>
+					<GroupsTitle ssid="CNC Lab" />
+					<List containerStyle={{ marginTop: 0, marginBottom: 0, borderTopWidth: 0 }}>
+						<ListItem
+							title="B11 小角落"
+							subtitle="23:19  |  Y.y.: 安安你好..."
+							hideChevron
+							titleStyle={{ fontWeight: 'bold' }}
+							badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+						/>
+					</List>
+					<List containerStyle={{ marginTop: 0, marginBottom: 0, borderTopWidth: 0 }}>
+						<ListItem
+							title="中山路三段383巷"
+							subtitle="23:19  |  Y.y.: 安安你好..."
+							hideChevron
+							titleStyle={{ fontWeight: 'bold' }}
+							badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+						/>
+					</List>
+					<GroupsTitle ssid="NCNU" />
+					<List containerStyle={{ marginTop: 0, marginBottom: 0, borderTopWidth: 0 }}>
+						<ListItem
+							title="moli"
+							subtitle="23:19  |  Y.y.: 安安你好..."
+							hideChevron
+							titleStyle={{ fontWeight: 'bold' }}
+							badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+						/>
+					</List>
+				</KeyboardAwareScrollView>
 				<BottomNavigation
 					labelColor="white"
 					rippleColor="white"
