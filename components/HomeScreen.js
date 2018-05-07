@@ -17,17 +17,20 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
+import util from '../modules/util.js';
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			joinedGroups: {}
+			joinedGroups: '{}',
+			currentNet: null
 		};
 
 		this.handleTabChange = this.handleTabChange.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 		this.renderGroups = this.renderGroups.bind(this);
+		this.handlePressGroup - this.handlePressGroup.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -71,50 +74,67 @@ export default class HomeScreen extends React.Component {
 
 	async renderGroups() {
 		const joinedGroups = await Storage.getJoinedGroups();
-		console.warn(JSON.stringify(joinedGroups, null, 4));
+		const [ssid, bssid] = await util.getWifi();
+		this.setState({
+			joinedGroups: JSON.stringify(joinedGroups),
+			currentNet: JSON.stringify({
+				ssid,
+				bssid
+			})
+		});
+	}
+
+	handlePressGroup(groupID) {
+		alert(groupID);
 	}
 
 	render() {
+		let joinedGroups = JSON.parse(this.state.joinedGroups);
+		let currentNet = this.state.currentNet ? JSON.parse(this.state.currentNet) : null;
 		return (
 			<View style={ styles.container }>
-				<List containerStyle={{ marginTop: 0, marginBottom: 0, borderTopWidth: 0 }}>
+				<List containerStyle={ styles.groupList }>
 					<ListItem
-						title="LOBBY"
-						subtitle="23:19  |  Y.y.: 安安你好..."
-						leftIcon={{ name: 'wifi-tethering'}}
 						hideChevron
-						titleStyle={{ fontWeight: 'bold' }}
+						title="LOBBY"
+						subtitle="loading..."
+						underlayColor="#d3d3d3"
+						leftIcon={{ name: 'wifi-tethering'}}
+						titleStyle={ styles.groupTitle }
 						badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+						onPress={() => { this.handlePressGroup('LOBBY') }}
 					/>
 				</List>
 				<KeyboardAwareScrollView style={{ marginBottom: 50}}>
-					<GroupsTitle ssid="CNC Lab" />
-					<List containerStyle={{ marginTop: 0, marginBottom: 0, borderTopWidth: 0 }}>
-						<ListItem
-							title="B11 小角落"
-							subtitle="23:19  |  Y.y.: 安安你好..."
-							hideChevron
-							titleStyle={{ fontWeight: 'bold' }}
-							badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
-						/>
-					</List>
-					<List containerStyle={{ marginTop: 0, marginBottom: 0, borderTopWidth: 0 }}>
-						<ListItem
-							title="中山路三段383巷"
-							subtitle="23:19  |  Y.y.: 安安你好..."
-							hideChevron
-							titleStyle={{ fontWeight: 'bold' }}
-							badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
-						/>
-					</List>
+					{ currentNet &&
+						<View>
+							<GroupsTitle ssid={ `連線中 ${currentNet.ssid}` } />
+							<List containerStyle={styles.groupList}>
+								{ joinedGroups[currentNet.bssid] && Object.keys(joinedGroups[currentNet.bssid]).map((groupID) => (
+									<ListItem
+										key={ groupID }
+										hideChevron
+										title={ joinedGroups[currentNet.bssid][groupID].groupName }
+										subtitle="l23:19  |  Y.y.: 安安你好..."
+										underlayColor="#d3d3d3"
+										titleStyle={styles.groupTitle}
+										badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+										onPress={() => { this.handlePressGroup(groupID) }}
+									/>
+								)) }
+							</List>
+						</View>
+					}
+
 					<GroupsTitle ssid="NCNU" />
-					<List containerStyle={{ marginTop: 0, marginBottom: 0, borderTopWidth: 0 }}>
+					<List containerStyle={ styles.groupList }>
 						<ListItem
 							title="moli"
 							subtitle="23:19  |  Y.y.: 安安你好..."
 							hideChevron
-							titleStyle={{ fontWeight: 'bold' }}
+							titleStyle={ styles.groupTitle }
 							badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+							underlayColor="#d3d3d3"
 						/>
 					</List>
 				</KeyboardAwareScrollView>
@@ -160,5 +180,13 @@ const styles = StyleSheet.create({
 	},
 	newGroupBtn: {
 		marginRight: 10
+	},
+	groupList: {
+		marginTop: 0,
+		marginBottom: 0,
+		borderTopWidth: 0
+	},
+	groupTitle: {
+		fontWeight: 'bold'
 	}
 });
