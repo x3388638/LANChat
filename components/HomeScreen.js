@@ -59,6 +59,9 @@ export default class HomeScreen extends React.Component {
 			case 0:
 				this.props.navigation.navigate('Settings');
 				break;
+			case 1:
+				this.renderGroups();
+				break;
 			case 2:
 				this.props.navigation.navigate('QRScanner');
 				break;
@@ -99,7 +102,7 @@ export default class HomeScreen extends React.Component {
 						title="LOBBY"
 						subtitle="loading..."
 						underlayColor="#d3d3d3"
-						leftIcon={{ name: 'wifi-tethering'}}
+						leftIcon={{ name: 'home'}}
 						titleStyle={ styles.groupTitle }
 						badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
 						onPress={() => { this.handlePressGroup('LOBBY') }}
