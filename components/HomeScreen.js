@@ -108,14 +108,14 @@ export default class HomeScreen extends React.Component {
 				<KeyboardAwareScrollView style={{ marginBottom: 50}}>
 					{ currentNet &&
 						<View>
-							<GroupsTitle ssid={ `連線中 ${currentNet.ssid}` } />
+							<GroupsTitle ssid={ `連線中 :: ${currentNet.ssid}` } />
 							<List containerStyle={styles.groupList}>
 								{ joinedGroups[currentNet.bssid] && Object.keys(joinedGroups[currentNet.bssid]).map((groupID) => (
 									<ListItem
 										key={ groupID }
 										hideChevron
 										title={ joinedGroups[currentNet.bssid][groupID].groupName }
-										subtitle="l23:19  |  Y.y.: 安安你好..."
+										subtitle="23:19  |  Y.y.: 安安你好..."
 										underlayColor="#d3d3d3"
 										titleStyle={styles.groupTitle}
 										badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
@@ -126,17 +126,28 @@ export default class HomeScreen extends React.Component {
 						</View>
 					}
 
-					<GroupsTitle ssid="NCNU" />
-					<List containerStyle={ styles.groupList }>
-						<ListItem
-							title="moli"
-							subtitle="23:19  |  Y.y.: 安安你好..."
-							hideChevron
-							titleStyle={ styles.groupTitle }
-							badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
-							underlayColor="#d3d3d3"
-						/>
-					</List>
+					{ Object.keys(joinedGroups).filter((bssid) => !currentNet || bssid !== currentNet.bssid).map((bssid) => {
+						const ssid = Object.values(joinedGroups[bssid])[0].net.ssid;
+						return (
+							<View key={ bssid }>
+								<GroupsTitle ssid={ ssid } />
+								<List containerStyle={styles.groupList}>
+									{ Object.keys(joinedGroups[bssid]).map((groupID) => (
+										<ListItem
+											key={ groupID }
+											hideChevron
+											title={ joinedGroups[bssid][groupID].groupName }
+											subtitle="23:19  |  Y.y.: 安安你好..."
+											underlayColor="#d3d3d3"
+											titleStyle={styles.groupTitle}
+											badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+											onPress={() => { this.handlePressGroup(groupID) }}
+										/>
+									)) }
+								</List>
+							</View>
+						)
+					}) }
 				</KeyboardAwareScrollView>
 				<BottomNavigation
 					labelColor="white"
