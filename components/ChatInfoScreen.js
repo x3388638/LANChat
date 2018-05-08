@@ -90,6 +90,7 @@ export default class ChatInfoScreen extends React.Component {
 				<QRCodeModal
 					open={ this.state.qrcodeModalOpen }
 					onHide={() => { this.setState({qrcodeModalOpen: false}) }}
+					groupInfo={ JSON.parse(this.props.navigation.state.params.groupInfo) }
 				/>
 			</KeyboardAwareScrollView>
 		)
