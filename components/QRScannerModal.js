@@ -2,11 +2,14 @@ import React from 'react';
 import {
 	View,
 	Text,
+	Alert,
 	StyleSheet,
 	AsyncStorage
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import Storage from '../modules/Storage.js';
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
@@ -15,8 +18,24 @@ export default class HomeScreen extends React.Component {
 	}
 
 	onRead(e) {
-		alert(e.data);
-		this.scanner.reactivate();
+		try {
+			const data = JSON.parse(e.data);
+			const { groupID, groupName, groupDesc, net, createdTime, key } = data;
+			if (!groupID || !groupName || !net || !createdTime || !key) {
+				throw 'error';
+			}
+
+			Storage.addGroup({ groupID, groupName, groupDesc, net, createdTime, key }, (err) => {
+				if (err) {
+					Alert.alert(err);
+					return;
+				}
+
+				Alert.alert('加入成功', `群組: ${groupName}`, [{ text: 'OK', onPress: this.props.navigation.goBack }]);
+			});
+		} catch (err) {
+			Alert.alert('QR Code 格式錯誤', null, [{ text: 'OK', onPress: this.scanner.reactivate }])
+		}
 	}
 
 	render() {

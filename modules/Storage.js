@@ -43,13 +43,23 @@ export default (() => {
 	}
 
 	async function addGroup(groupInfo = {}, callback) {
-		const { groupName, groupDesc, createdTime, groupID, key } = groupInfo;
+		const { groupName, groupDesc, createdTime, groupID, key, net } = groupInfo;
 		if (!groupName || !createdTime || !groupID || !key) {
 			callback('missing param');
 			return;
 		}
 
-		const [ssid, bssid] = await Util.getWifi();
+		let ssid;
+		let bssid;
+		if (net && net.ssid && net.bssid) {
+			ssid = net.ssid;
+			bssid = net.bssid
+		} else {
+			let wifi = await Util.getWifi();
+			ssid = wifi[0];
+			bssid = wifi[1];
+		}
+
 		const joinedGroups = await getJoinedGroups();
 		joinedGroups[bssid] = Object.assign({}, joinedGroups[bssid] || {}, {
 			[groupID]: {

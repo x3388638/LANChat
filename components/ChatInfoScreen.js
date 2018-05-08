@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1
 	},
 	groupName: {
+		color: '#111',
 		fontSize: 24,
 		fontWeight: 'bold',
 		marginBottom: 10
