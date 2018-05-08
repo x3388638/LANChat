@@ -87,8 +87,12 @@ export default class HomeScreen extends React.Component {
 		});
 	}
 
-	handlePressGroup(groupID) {
-		alert(groupID);
+	handlePressGroup(groupID, groupName) {
+		this.props.navigation.navigate('Chat', {
+			groupID,
+			groupName,
+			bssid: JSON.parse(this.state.currentNet).bssid
+		});
 	}
 
 	render() {
@@ -105,13 +109,13 @@ export default class HomeScreen extends React.Component {
 						leftIcon={{ name: 'home'}}
 						titleStyle={ styles.groupTitle }
 						badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
-						onPress={() => { this.handlePressGroup('LOBBY') }}
+						onPress={() => { this.handlePressGroup('LOBBY', 'LOBBY') }}
 					/>
 				</List>
 				<KeyboardAwareScrollView style={{ marginBottom: 50}}>
 					{ currentNet &&
 						<View>
-							<GroupsTitle ssid={ `連線中 :: ${currentNet.ssid}` } />
+							<GroupsTitle ssid={ `[連線中] ${currentNet.ssid}` } />
 							<List containerStyle={styles.groupList}>
 								{ joinedGroups[currentNet.bssid] && Object.keys(joinedGroups[currentNet.bssid]).map((groupID) => (
 									<ListItem
@@ -122,7 +126,7 @@ export default class HomeScreen extends React.Component {
 										underlayColor="#d3d3d3"
 										titleStyle={styles.groupTitle}
 										badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
-										onPress={() => { this.handlePressGroup(groupID) }}
+										onPress={() => { this.handlePressGroup(groupID, joinedGroups[currentNet.bssid][groupID].groupName) }}
 									/>
 								)) }
 							</List>
@@ -144,7 +148,7 @@ export default class HomeScreen extends React.Component {
 											underlayColor="#d3d3d3"
 											titleStyle={styles.groupTitle}
 											badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
-											onPress={() => { this.handlePressGroup(groupID) }}
+											onPress={() => { this.handlePressGroup(groupID, joinedGroups[bssid][groupID].groupName) }}
 										/>
 									)) }
 								</List>
