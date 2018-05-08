@@ -89,6 +89,18 @@ export default class HomeScreen extends React.Component {
 	}
 
 	handlePressGroup(groupID, groupName, bssid) {
+		if (groupID === 'LOBBY') {
+			const { ssid, bssid } = JSON.parse(this.state.currentNet);
+			this.props.navigation.navigate('Chat', {
+				groupID,
+				groupName: 'LOBBY',
+				bssid,
+				ssid
+			});
+
+			return;
+		}
+
 		const joinedGroups = JSON.parse(this.state.joinedGroups);
 		const groupInfo = JSON.stringify(joinedGroups[bssid][groupID]);
 		this.props.navigation.navigate('Chat', {
@@ -113,7 +125,7 @@ export default class HomeScreen extends React.Component {
 						leftIcon={{ name: 'home'}}
 						titleStyle={ styles.groupTitle }
 						badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
-						onPress={() => { this.handlePressGroup('LOBBY', 'LOBBY') }}
+						onPress={() => { this.handlePressGroup('LOBBY') }}
 					/>
 				</List>
 				<KeyboardAwareScrollView style={{ marginBottom: 50}}>

@@ -30,6 +30,8 @@ export default class ChatInfoScreen extends React.Component {
 	};
 
 	render() {
+		const isLobby = this.props.navigation.state.params.groupID === 'LOBBY';
+		const ssid = isLobby ? this.props.navigation.state.params.ssid : JSON.parse(this.props.navigation.state.params.groupInfo).net.ssid;
 		return (
 			<KeyboardAwareScrollView>
 				<View style={ styles.titleContainer }>
@@ -41,8 +43,9 @@ export default class ChatInfoScreen extends React.Component {
 							name="wifi"
 							style={ styles.subtitleIcon }
 						/>
-						<Text style={ styles.subtitle }>{ JSON.parse(this.props.navigation.state.params.groupInfo).net.ssid }</Text>
+						<Text style={ styles.subtitle }>{ ssid }</Text>
 					</View>
+					{ !isLobby && 
 					<View style={ styles.subtitleContainer }>
 						<MIcon
 							size={14}
@@ -52,27 +55,32 @@ export default class ChatInfoScreen extends React.Component {
 						/>
 						<Text style={ styles.subtitle }>{ moment(JSON.parse(this.props.navigation.state.params.groupInfo).createdTime).format('YYYY-MM-DD') }</Text>
 					</View>
+					}
 				</View>
-				<View style={ styles.descContainer }>
-					<Text style={ styles.descTitle }>簡介</Text>
-					<Text style={ styles.descText }>{ JSON.parse(this.props.navigation.state.params.groupInfo).groupDesc || '-' }</Text>
+				{ !isLobby &&
+				<View>
+					<View style={ styles.descContainer }>
+						<Text style={ styles.descTitle }>簡介</Text>
+						<Text style={ styles.descText }>{ JSON.parse(this.props.navigation.state.params.groupInfo).groupDesc || '-' }</Text>
+					</View>
+					<View style={ styles.QRCodeBtnContainer }>
+						<Button
+							icon={{ name: 'qrcode', type: 'font-awesome' }}
+							backgroundColor="#007dff"
+							title='QR Code'
+							onPress={() => { this.setState({ qrcodeModalOpen: true }) }}
+						/>
+					</View>
+					<View style={styles.leaveBtnContainer}>
+						<Button
+							icon={{ name: 'warning' }}
+							backgroundColor="#ff3b30"
+							title='退出群組'
+						/>
+					</View>
+					<Divider style={ styles.divider } />
 				</View>
-				<View style={ styles.QRCodeBtnContainer }>
-					<Button
-						icon={{ name: 'qrcode', type: 'font-awesome' }}
-						backgroundColor="#007dff"
-						title='QR Code'
-						onPress={() => { this.setState({ qrcodeModalOpen: true }) }}
-					/>
-				</View>
-				<View style={styles.leaveBtnContainer}>
-					<Button
-						icon={{ name: 'warning' }}
-						backgroundColor="#ff3b30"
-						title='退出群組'
-					/>
-				</View>
-				<Divider style={ styles.divider } />
+				}
 				<View style={ styles.memberContainer }>
 					<Text style={ styles.memberTitle }>30 成員</Text>
 					<List containerStyle={{ marginTop: 0 }}>
@@ -87,11 +95,13 @@ export default class ChatInfoScreen extends React.Component {
 						}
 					</List>
 				</View>
+				{ !isLobby &&
 				<QRCodeModal
 					open={ this.state.qrcodeModalOpen }
 					onHide={() => { this.setState({qrcodeModalOpen: false}) }}
 					groupInfo={ JSON.parse(this.props.navigation.state.params.groupInfo) }
 				/>
+				}
 			</KeyboardAwareScrollView>
 		)
 	}
@@ -159,9 +169,10 @@ const styles = StyleSheet.create({
 	},
 	divider: {
 		marginTop: 30,
-		marginBottom: 30
+		marginBottom: 10
 	},
 	memberContainer: {
+		marginTop: 20
 	},
 	memberTitle: {
 		marginLeft: 10,
