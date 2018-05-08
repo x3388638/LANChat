@@ -31,10 +31,10 @@ export default class HomeScreen extends React.Component {
 					return;
 				}
 
-				Alert.alert('加入成功', `群組: ${groupName}`, [{ text: 'OK', onPress: this.props.navigation.goBack }]);
+				Alert.alert('加入成功', `群組: [${net.ssid}] ${groupName}`, [{ text: 'OK', onPress: this.props.navigation.goBack }]);
 			});
 		} catch (err) {
-			Alert.alert('QR Code 格式錯誤', null, [{ text: 'OK', onPress: this.scanner.reactivate }])
+			Alert.alert('QR Code 格式錯誤', null, [{ text: 'OK', onPress: () => { this.scanner.reactivate() } }])
 		}
 	}
 
