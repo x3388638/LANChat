@@ -5,6 +5,9 @@ import {
 	StyleSheet
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import MIcon from 'react-native-vector-icons/MaterialIcons';
+import moment from 'moment';
 
 export default class ChatInfoScreen extends React.Component {
 	static navigationOptions = {
@@ -16,7 +19,24 @@ export default class ChatInfoScreen extends React.Component {
 			<KeyboardAwareScrollView>
 				<View style={ styles.titleContainer }>
 					<Text style={ styles.groupName }>{ this.props.navigation.state.params.groupName }</Text>
-					<Text>[{ JSON.parse(this.props.navigation.state.params.groupInfo).net.ssid }]</Text>
+					<View style={ styles.subtitleContainer }>
+						<MIcon
+							size={14}
+							color="#4E6068"
+							name="wifi"
+							style={ styles.subtitleIcon }
+						/>
+						<Text style={ styles.subtitle }>{ JSON.parse(this.props.navigation.state.params.groupInfo).net.ssid }</Text>
+					</View>
+					<View style={ styles.subtitleContainer }>
+						<MIcon
+							size={14}
+							color="#4E6068"
+							name="access-time"
+							style={ styles.subtitleIcon }
+						/>
+						<Text style={ styles.subtitle }>{ moment(JSON.parse(this.props.navigation.state.params.groupInfo).createdTime).format('YYYY-MM-DD') }</Text>
+					</View>
 				</View>
 				<View style={ styles.descContainer }>
 					<Text style={ styles.descTitle }>簡介</Text>
@@ -40,7 +60,18 @@ const styles = StyleSheet.create({
 	},
 	groupName: {
 		fontSize: 24,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+		marginBottom: 10
+	},
+	subtitleIcon: {
+		width: 20
+	},
+	subtitleContainer: {
+		flexDirection: 'row'
+	},
+	subtitle: {
+		color: '#4E6068',
+		flex: 1
 	},
 	descContainer: {
 		marginTop: 20
