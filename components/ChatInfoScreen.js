@@ -15,7 +15,16 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 
+import QRCodeModal from './QRCodeModal.js';
+
 export default class ChatInfoScreen extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			qrcodeModalOpen: false
+		};
+	}
+
 	static navigationOptions = {
 		title: '群組資訊'
 	};
@@ -53,6 +62,7 @@ export default class ChatInfoScreen extends React.Component {
 						icon={{ name: 'qrcode', type: 'font-awesome' }}
 						backgroundColor="#007dff"
 						title='QR Code'
+						onPress={() => { this.setState({ qrcodeModalOpen: true }) }}
 					/>
 				</View>
 				<View style={styles.leaveBtnContainer}>
@@ -77,6 +87,10 @@ export default class ChatInfoScreen extends React.Component {
 						}
 					</List>
 				</View>
+				<QRCodeModal
+					open={ this.state.qrcodeModalOpen }
+					onHide={() => { this.setState({qrcodeModalOpen: false}) }}
+				/>
 			</KeyboardAwareScrollView>
 		)
 	}
