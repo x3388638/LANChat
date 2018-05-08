@@ -43,7 +43,7 @@ export default (() => {
 	}
 
 	async function addGroup(groupInfo = {}, callback) {
-		const { groupName, createdTime, groupID, key } = groupInfo;
+		const { groupName, groupDesc, createdTime, groupID, key } = groupInfo;
 		if (!groupName || !createdTime || !groupID || !key) {
 			callback('missing param');
 			return;
@@ -55,6 +55,7 @@ export default (() => {
 			[groupID]: {
 				groupID,
 				groupName,
+				groupDesc,
 				key,
 				createdTime,
 				net: {

@@ -24,6 +24,7 @@ export default class CreateGroupScreen extends React.Component {
 		this.state = {
 			groupName: '',
 			pass: '',
+			groupDesc: '',
 			generating: false
 		};
 
@@ -56,7 +57,7 @@ export default class CreateGroupScreen extends React.Component {
 		});
 
 		setTimeout(() => {
-			const { groupName, pass } = this.state;
+			const { groupName, pass, groupDesc } = this.state;
 			if (!groupName || !pass) {
 				this.setState({
 					generating: false
@@ -72,6 +73,7 @@ export default class CreateGroupScreen extends React.Component {
 			Storage.addGroup({
 				groupID,
 				groupName,
+				groupDesc,
 				createdTime,
 				key
 			}, (err) => {
@@ -107,6 +109,14 @@ export default class CreateGroupScreen extends React.Component {
 					maxLength={20}
 					onChangeText={(text) => { this.handleChangeText('pass', text, 1) }}
 					onEndEditing={(e) => { this.handleChangeText('pass', e.nativeEvent.text, 2) }}
+				/>
+				<FormLabel>群組簡介</FormLabel>
+				<FormInput
+					ref={(node) => { this.groupDesc = node }}
+					value={this.state.groupDesc}
+					maxLength={150}
+					onChangeText={(text) => { this.handleChangeText('groupDesc', text, 1) }}
+					onEndEditing={(e) => { this.handleChangeText('groupDesc', e.nativeEvent.text, 2) }}
 				/>
 				<View style={ styles.btnContainer }>
 					<Button

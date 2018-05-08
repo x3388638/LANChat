@@ -9,13 +9,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 export default class ChatScreen extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: navigation.state.params.groupName,
+		headerBackTitle: 'Back',
 		headerRight: (
 			<Icon
 				size={24}
 				color="#007dff"
 				name="info-circle"
 				style={ styles.settingsBtn }
-				onPress={ () => navigation.navigate('ChatInfo') }
+				onPress={ () => navigation.navigate('ChatInfo', navigation.state.params) }
 			/>
 		)
 	});
@@ -24,7 +25,7 @@ export default class ChatScreen extends React.Component {
 		return (
 			<View>
 				<Text>chat screen</Text>
-				<Text>{ JSON.stringify(this.props.navigation.state.params) }</Text>
+				<Text>{ JSON.stringify(this.props.navigation.state.params, null, 4) }</Text>
 			</View>
 		)
 	}

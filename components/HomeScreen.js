@@ -77,6 +77,7 @@ export default class HomeScreen extends React.Component {
 
 	async renderGroups() {
 		const joinedGroups = await Storage.getJoinedGroups();
+		// console.warn(JSON.stringify(joinedGroups, null, 4));
 		const [ssid, bssid] = await util.getWifi();
 		this.setState({
 			joinedGroups: JSON.stringify(joinedGroups),
@@ -87,11 +88,14 @@ export default class HomeScreen extends React.Component {
 		});
 	}
 
-	handlePressGroup(groupID, groupName) {
+	handlePressGroup(groupID, groupName, bssid) {
+		const joinedGroups = JSON.parse(this.state.joinedGroups);
+		const groupInfo = JSON.stringify(joinedGroups[bssid][groupID]);
 		this.props.navigation.navigate('Chat', {
 			groupID,
 			groupName,
-			bssid: JSON.parse(this.state.currentNet).bssid
+			bssid,
+			groupInfo
 		});
 	}
 
@@ -126,7 +130,7 @@ export default class HomeScreen extends React.Component {
 										underlayColor="#d3d3d3"
 										titleStyle={styles.groupTitle}
 										badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
-										onPress={() => { this.handlePressGroup(groupID, joinedGroups[currentNet.bssid][groupID].groupName) }}
+										onPress={() => { this.handlePressGroup(groupID, joinedGroups[currentNet.bssid][groupID].groupName, currentNet.bssid) }}
 									/>
 								)) }
 							</List>
@@ -148,7 +152,7 @@ export default class HomeScreen extends React.Component {
 											underlayColor="#d3d3d3"
 											titleStyle={styles.groupTitle}
 											badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
-											onPress={() => { this.handlePressGroup(groupID, joinedGroups[bssid][groupID].groupName) }}
+											onPress={() => { this.handlePressGroup(groupID, joinedGroups[bssid][groupID].groupName, bssid) }}
 										/>
 									)) }
 								</List>
