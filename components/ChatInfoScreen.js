@@ -4,6 +4,12 @@ import {
 	Text,
 	StyleSheet
 } from 'react-native';
+import {
+	Button,
+	List,
+	ListItem,
+	Divider
+} from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
@@ -42,10 +48,50 @@ export default class ChatInfoScreen extends React.Component {
 					<Text style={ styles.descTitle }>簡介</Text>
 					<Text style={ styles.descText }>{ JSON.parse(this.props.navigation.state.params.groupInfo).groupDesc || '-' }</Text>
 				</View>
+				<View style={ styles.QRCodeBtnContainer }>
+					<Button
+						icon={{ name: 'qrcode', type: 'font-awesome' }}
+						backgroundColor="#007dff"
+						title='QR Code'
+					/>
+				</View>
+				<View style={styles.leaveBtnContainer}>
+					<Button
+						icon={{ name: 'warning' }}
+						backgroundColor="#ff3b30"
+						title='退出群組'
+					/>
+				</View>
+				<Divider style={ styles.divider } />
+				<View style={ styles.memberContainer }>
+					<Text style={ styles.memberTitle }>30 成員</Text>
+					<List containerStyle={{ marginTop: 0 }}>
+						{
+							list.map((item, i) => (
+								<ListItem
+									key={i}
+									title={item.title}
+									leftIcon={{ name: item.icon }}
+								/>
+							))
+						}
+					</List>
+				</View>
 			</KeyboardAwareScrollView>
 		)
 	}
 }
+
+const list = [
+	{
+		title: 'Appointments',
+		icon: 'av-timer'
+	},
+	{
+		title: 'Trips',
+		icon: 'flight-takeoff'
+	},
+]
 
 const styles = StyleSheet.create({
 	titleContainer: {
@@ -89,5 +135,23 @@ const styles = StyleSheet.create({
 		paddingTop: 25,
 		paddingBottom: 25,
 		borderColor: '#d3d3d3'
+	},
+	QRCodeBtnContainer: {
+		marginTop: 30
+	},
+	leaveBtnContainer: {
+		marginTop: 15
+	},
+	divider: {
+		marginTop: 30,
+		marginBottom: 30
+	},
+	memberContainer: {
+	},
+	memberTitle: {
+		marginLeft: 10,
+		marginBottom: 3,
+		fontSize: 16,
+		color: '#6B7B83'
 	}
 });
