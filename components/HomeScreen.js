@@ -30,7 +30,7 @@ export default class HomeScreen extends React.Component {
 		this.handleTabChange = this.handleTabChange.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 		this.renderGroups = this.renderGroups.bind(this);
-		this.handlePressGroup - this.handlePressGroup.bind(this);
+		this.handlePressGroup = this.handlePressGroup.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -150,7 +150,11 @@ export default class HomeScreen extends React.Component {
 					}
 
 					{ Object.keys(joinedGroups).filter((bssid) => !currentNet || bssid !== currentNet.bssid).map((bssid) => {
-						const ssid = Object.values(joinedGroups[bssid])[0].net.ssid;
+						const ssid = Object.values(joinedGroups[bssid])[0] ? Object.values(joinedGroups[bssid])[0].net.ssid : null;
+						if (ssid === null) {
+							return null;
+						}
+
 						return (
 							<View key={ bssid }>
 								<GroupsTitle ssid={ ssid } />

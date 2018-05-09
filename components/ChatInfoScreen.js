@@ -2,6 +2,7 @@ import React from 'react';
 import {
 	View,
 	Text,
+	Alert,
 	StyleSheet
 } from 'react-native';
 import {
@@ -16,6 +17,7 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 
 import QRCodeModal from './QRCodeModal.js';
+import Storage from '../modules/Storage.js';
 
 export default class ChatInfoScreen extends React.Component {
 	constructor(props) {
@@ -23,11 +25,26 @@ export default class ChatInfoScreen extends React.Component {
 		this.state = {
 			qrcodeModalOpen: false
 		};
+
+		this.handleLeave = this.handleLeave.bind(this);
 	}
 
 	static navigationOptions = {
 		title: '群組資訊'
 	};
+
+	handleLeave() {
+		Alert.alert('確定退出?', null, [
+			{ text: '取消', onPress: () => {} },
+			{ text: '確定', onPress: () => {
+				Storage.leaveGroup(
+					JSON.parse(this.props.navigation.state.params.groupInfo).net.bssid,
+					this.props.navigation.state.params.groupID,
+					this.props.navigation.goBack
+				)
+			} }
+		]);
+	}
 
 	render() {
 		const isLobby = this.props.navigation.state.params.groupID === 'LOBBY';
@@ -76,6 +93,7 @@ export default class ChatInfoScreen extends React.Component {
 							icon={{ name: 'warning' }}
 							backgroundColor="#ff3b30"
 							title='退出群組'
+							onPress={ this.handleLeave }
 						/>
 					</View>
 					<Divider style={ styles.divider } />

@@ -5,8 +5,14 @@ import {
 	StyleSheet
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Storage from '../modules/Storage';
 
 export default class ChatScreen extends React.Component {
+	constructor(props) {
+		super(props);
+		this.checkGroup = this.checkGroup.bind(this);
+	}
+
 	static navigationOptions = ({ navigation }) => ({
 		title: navigation.state.params.groupName,
 		headerBackTitle: 'Back',
@@ -20,6 +26,20 @@ export default class ChatScreen extends React.Component {
 			/>
 		)
 	});
+
+	componentDidMount() {
+		this.props.navigation.addListener('didFocus', () => {
+			this.checkGroup();
+		});
+	}
+
+	async checkGroup() {
+		const joinedGroups = await Storage.getJoinedGroups();
+		const { bssid, groupID } = this.props.navigation.state.params;
+		if (!joinedGroups[bssid] || !joinedGroups[bssid][groupID]) {
+			this.props.navigation.goBack();
+		}
+	}
 
 	render() {
 		return (
