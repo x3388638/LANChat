@@ -66,13 +66,17 @@ export default (() => {
 	}
 
 	function sendAlive() {
-		const period = 40 * 1000;
+		const period = 10 * 1000;
 		const uid = getUid();
 		setInterval(async () => {
 			const personalInfo = await Storage.getPersonalInfo();
 			const joinedGroups = await Storage.getJoinedGroups();
 			const [ssid, bssid] = await getWifi();
-			let groups = joinedGroups[bssid];
+			let groups = {};
+			Object.keys(joinedGroups[bssid]).forEach((groupID) => {
+				groups[groupID] = encrypt(groupID, joinedGroups[bssid][groupID].key);
+			});
+
 			global.Socket.send(new Buffer(JSON.stringify({
 				type: 'alive',
 				paylaod: {
@@ -82,6 +86,20 @@ export default (() => {
 				}
 			})));
 		}, period);
+	}
+
+	function encrypt(text, key) {
+		const cipher = crypto.createCipher('aes192', key);
+		let encrypted = cipher.update(text, 'utf8', 'hex');
+		encrypted += cipher.final('hex');
+		return encrypted;
+	}
+
+	function decrypt(encrypted, key) {
+		const decipher = crypto.createDecipher('aes192', key);
+		let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+		decrypted += decipher.final('utf8');
+		return decrypted;
 	}
 	
 	return {
@@ -93,6 +111,8 @@ export default (() => {
 		genGroupKey,
 		genUUID,
 		getWifi,
-		sendAlive
+		sendAlive,
+		encrypt,
+		decrypt
 	}
 })();

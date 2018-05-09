@@ -36,7 +36,7 @@ export default class ChatScreen extends React.Component {
 	async checkGroup() {
 		const joinedGroups = await Storage.getJoinedGroups();
 		const { bssid, groupID } = this.props.navigation.state.params;
-		if (!joinedGroups[bssid] || !joinedGroups[bssid][groupID]) {
+		if (groupID !== 'LOBBY' && (!joinedGroups[bssid] || !joinedGroups[bssid][groupID])) {
 			this.props.navigation.goBack();
 		}
 	}
