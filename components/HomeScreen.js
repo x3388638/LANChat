@@ -27,6 +27,7 @@ export default class HomeScreen extends React.Component {
 			currentNet: null
 		};
 
+		global.Socket.init();
 		this.handleTabChange = this.handleTabChange.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 		this.renderGroups = this.renderGroups.bind(this);

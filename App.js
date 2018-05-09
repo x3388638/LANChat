@@ -17,6 +17,12 @@ import CreateGroupScreen from './components/CreateGroupScreen';
 import ChatScreen from './components/ChatScreen';
 import ChatInfoScreen from './components/ChatInfoScreen';
 
+import PubSub from './modules/PubSub.js';
+global.PubSub = PubSub;
+
+import Socket from './modules/Socket.js';
+global.Socket = Socket;
+
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 export default SwitchNavigator({
