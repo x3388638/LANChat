@@ -17,7 +17,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
-import util from '../modules/util.js';
+import Util from '../modules/util.js';
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
@@ -53,6 +53,8 @@ export default class HomeScreen extends React.Component {
 			this.checkPersonalInfo();
 			this.renderGroups();
 		});
+
+		Util.sendAlive();
 	}
 
 	handleTabChange(index) {
@@ -79,7 +81,7 @@ export default class HomeScreen extends React.Component {
 	async renderGroups() {
 		const joinedGroups = await Storage.getJoinedGroups();
 		// console.warn(JSON.stringify(joinedGroups, null, 4));
-		const [ssid, bssid] = await util.getWifi();
+		const [ssid, bssid] = await Util.getWifi();
 		this.setState({
 			joinedGroups: JSON.stringify(joinedGroups),
 			currentNet: JSON.stringify({

@@ -64,6 +64,25 @@ export default (() => {
 			new Promise((resolve) => NetworkInfo.getBSSID(resolve))
 		]);
 	}
+
+	function sendAlive() {
+		const period = 40 * 1000;
+		const uid = getUid();
+		setInterval(async () => {
+			const personalInfo = await Storage.getPersonalInfo();
+			const joinedGroups = await Storage.getJoinedGroups();
+			const [ssid, bssid] = await getWifi();
+			let groups = joinedGroups[bssid];
+			global.Socket.send(new Buffer(JSON.stringify({
+				type: 'alive',
+				paylaod: {
+					uid,
+					data: personalInfo.normal,
+					joinedGroups: groups
+				}
+			})));
+		}, period);
+	}
 	
 	return {
 		genPass,
@@ -73,6 +92,7 @@ export default (() => {
 		getUid,
 		genGroupKey,
 		genUUID,
-		getWifi
+		getWifi,
+		sendAlive
 	}
 })();
