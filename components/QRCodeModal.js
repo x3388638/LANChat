@@ -13,7 +13,9 @@ export default class QRCodeModal extends React.Component {
 		return (
 			<Modal
 				isVisible={ this.props.open }
-				onBackdropPress={ this.props.onHide }>
+				onBackdropPress={ this.props.onHide }
+				onModalShow={ this.props.onShow }
+			>
 				<View style={ styles.container }>
 					<Text style={ styles.title }>{ this.props.groupInfo.groupName }</Text>
 					<QRCode

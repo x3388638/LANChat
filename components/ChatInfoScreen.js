@@ -23,15 +23,27 @@ export default class ChatInfoScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			qrcodeModalOpen: false
+			qrcodeModalOpen: false,
+			qrcodeModalLoading: false
 		};
 
+		this.handleShowQRCode = this.handleShowQRCode.bind(this);
 		this.handleLeave = this.handleLeave.bind(this);
 	}
 
 	static navigationOptions = {
 		title: '群組資訊'
 	};
+
+	handleShowQRCode() {
+		this.setState({ qrcodeModalLoading: true }, () => {
+			setTimeout(() => {
+				this.setState({
+					qrcodeModalOpen: true
+				});
+			}, 100);
+		})
+	}
 
 	handleLeave() {
 		Alert.alert('確定退出?', null, [
@@ -85,7 +97,8 @@ export default class ChatInfoScreen extends React.Component {
 							icon={{ name: 'qrcode', type: 'font-awesome' }}
 							backgroundColor="#007dff"
 							title='QR Code'
-							onPress={() => { this.setState({ qrcodeModalOpen: true }) }}
+							loading={ this.state.qrcodeModalLoading }
+							onPress={ this.handleShowQRCode }
 						/>
 					</View>
 					<View style={styles.leaveBtnContainer}>
@@ -116,6 +129,7 @@ export default class ChatInfoScreen extends React.Component {
 				{ !isLobby &&
 				<QRCodeModal
 					open={ this.state.qrcodeModalOpen }
+					onShow={() => { this.setState({ qrcodeModalLoading: false }) }}
 					onHide={() => { this.setState({qrcodeModalOpen: false}) }}
 					groupInfo={ JSON.parse(this.props.navigation.state.params.groupInfo) }
 				/>
