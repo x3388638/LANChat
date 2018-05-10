@@ -17,8 +17,20 @@ export default (() => {
 			_serverSocket.addMembership(_multicastAddress);
 		});
 
-		_serverSocket.on('message', function (msg, rinfo) {
-			global.PubSub.emit('message');
+		_serverSocket.on('message', function (data, rinfo) {
+			try {
+				const msg = JSON.parse(data.toString());
+				const type = msg.type;
+				switch (type) {
+					case 'alive':
+						global.PubSub.emit('newMsg:alive', msg);
+						break;
+					default:
+						break;
+				}
+			} catch (err) {
+				console.warn(err);
+			}
 		});
 	}
 

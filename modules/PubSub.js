@@ -9,14 +9,11 @@ export default (() => {
 	 * public method
 	 */
 	function on(eventName, callback) {
-		_events[eventName] = _events[eventName] || [];
-		_events[eventName].push(callback);
+		_events[eventName] = callback
 	}
 
-	function emit(eventName) {
-		_events[eventName] && _events[eventName].forEach((callback) => {
-			callback();
-		});
+	function emit(eventName, data) {
+		_events[eventName](data);
 	}
 
 	return {

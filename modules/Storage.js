@@ -95,6 +95,34 @@ export default (() => {
 		return groups ? JSON.parse(groups) : {};
 	}
 
+	async function getUsers() {
+		const users = await AsyncStorage.getItem('@LANChat:users');
+		return users ? JSON.parse(users) : {};
+	}
+
+	async function saveUser(uid, data) {
+		const users = await getUsers();
+		users[uid] = data;
+		AsyncStorage.setItem('@LANChat:users', JSON.stringify(users));
+	}
+
+	async function getUsersByNet(bssid = null) {
+		let users = await AsyncStorage.getItem('@LANChat:usersByNet');
+		users = users ? JSON.parse(users) : {};
+		if (bssid) {
+			return users[bssid] || {};
+		}
+
+		return users;
+	}
+
+	async function saveNetUser(bssid, uid) {
+		let users = await getUsersByNet();
+		users[bssid] = users[bssid] || {};
+		users[bssid][uid] = 1;
+		AsyncStorage.setItem('@LANChat:usersByNet', JSON.stringify(users));
+	}
+
 	function removeItem(key) {
 		AsyncStorage.removeItem(`@LANChat:${key}`);
 	}
@@ -109,6 +137,10 @@ export default (() => {
 		addGroup,
 		leaveGroup,
 		getJoinedGroups,
+		getUsers,
+		saveUser,
+		getUsersByNet,
+		saveNetUser,
 		removeItem
 	};
 })();

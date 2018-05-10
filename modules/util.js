@@ -11,6 +11,27 @@ import Storage from './Storage.js';
 
 export default (() => {
 	const _expireTime = 5;
+
+	async function _sendAlive() {
+		const uid = getUid();
+		const personalInfo = await Storage.getPersonalInfo();
+		const joinedGroups = await Storage.getJoinedGroups();
+		const [ssid, bssid] = await getWifi();
+		let groups = {};
+		Object.keys(joinedGroups[bssid] || {}).forEach((groupID) => {
+			groups[groupID] = encrypt(groupID, joinedGroups[bssid][groupID].key);
+		});
+
+		global.Socket.send(new Buffer(JSON.stringify({
+			type: 'alive',
+			payload: {
+				uid,
+				data: personalInfo.normal,
+				joinedGroups: groups
+			}
+		})));
+	}
+
 	function genPass(pass) {
 		const salt = DeviceInfo.getBrand().toLocaleLowerCase();
 		const n = ([...pass].reduce((sum, curr) => sum + (+curr), 0)) % 5;
@@ -66,26 +87,9 @@ export default (() => {
 	}
 
 	function sendAlive() {
-		const period = 10 * 1000;
-		const uid = getUid();
-		setInterval(async () => {
-			const personalInfo = await Storage.getPersonalInfo();
-			const joinedGroups = await Storage.getJoinedGroups();
-			const [ssid, bssid] = await getWifi();
-			let groups = {};
-			Object.keys(joinedGroups[bssid]).forEach((groupID) => {
-				groups[groupID] = encrypt(groupID, joinedGroups[bssid][groupID].key);
-			});
-
-			global.Socket.send(new Buffer(JSON.stringify({
-				type: 'alive',
-				paylaod: {
-					uid,
-					data: personalInfo.normal,
-					joinedGroups: groups
-				}
-			})));
-		}, period);
+		const period = 40 * 1000;
+		setTimeout(_sendAlive, 3 * 1000);
+		setInterval(_sendAlive, period);
 	}
 
 	function encrypt(text, key) {
@@ -101,6 +105,34 @@ export default (() => {
 		decrypted += decipher.final('utf8');
 		return decrypted;
 	}
+
+	function parseAlive() {
+		global.PubSub.on('newMsg:alive', async (data) => {
+			const payload = data.payload;
+			const [ssid, bssid] = await getWifi();
+			const targetGroups = Object.keys(payload.joinedGroups); // 收到的使用者所加入的 groupID array
+			// 檢查此使用者是否有加入本身已加入群組
+			const joinedGroups = await Storage.getJoinedGroups();
+			const conGroups = Object.keys(joinedGroups[bssid] || {}).filter((groupID) => targetGroups.includes(groupID)); // 共同群組 groupID array
+			if (conGroups.length === 0) {
+				return;
+			}
+
+			// 檢查封包正確性
+			const validData =  conGroups.every((groupID) => {
+				const key = joinedGroups[bssid][groupID].key;
+				return groupID === decrypt(payload.joinedGroups[groupID], key);
+			});
+
+			if (!validData) {
+				return;
+			}
+
+			// save user info
+			Storage.saveUser(payload.uid, payload.data);
+			Storage.saveNetUser(bssid, payload.uid);
+		});
+	}
 	
 	return {
 		genPass,
@@ -113,6 +145,7 @@ export default (() => {
 		getWifi,
 		sendAlive,
 		encrypt,
-		decrypt
+		decrypt,
+		parseAlive
 	}
 })();

@@ -55,6 +55,7 @@ export default class HomeScreen extends React.Component {
 		});
 
 		Util.sendAlive();
+		Util.parseAlive();
 	}
 
 	handleTabChange(index) {
