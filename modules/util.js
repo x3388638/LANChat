@@ -129,7 +129,7 @@ export default (() => {
 			}
 
 			// save user info
-			Storage.saveUser(payload.uid, payload.data);
+			Storage.saveUser(payload.uid, Object.assign({}, payload.data, { lastSeen: moment().format() }));
 			Storage.saveNetUser(bssid, payload.uid);
 		});
 	}
