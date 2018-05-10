@@ -135,7 +135,7 @@ export default class HomeScreen extends React.Component {
 				<KeyboardAwareScrollView style={{ marginBottom: 50}}>
 					{ currentNet &&
 						<View>
-							<GroupsTitle ssid={ `[連線中] ${currentNet.ssid}` } />
+							<GroupsTitle ssid={ `[連線中] ${currentNet.ssid}` } count={ 999 } />
 							<List containerStyle={styles.groupList}>
 								{ joinedGroups[currentNet.bssid] && Object.keys(joinedGroups[currentNet.bssid]).map((groupID) => (
 									<ListItem
