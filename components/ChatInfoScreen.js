@@ -40,7 +40,9 @@ export default class ChatInfoScreen extends React.Component {
 	};
 
 	componentDidMount () {
-		this.getMembers();
+		this.props.navigation.addListener('didFocus', () => {
+			this.getMembers();
+		});
 	}
 	
 	handleShowQRCode() {
@@ -66,10 +68,21 @@ export default class ChatInfoScreen extends React.Component {
 		]);
 	}
 
-	getMembers() {
+	async getMembers() {
 		let members = {};
-		if (this.props.navigation.state.params.groupID === 'LOBBY') {
+		const currentGroupID = this.props.navigation.state.params.groupID;
+		if (currentGroupID === 'LOBBY') {
 			members = global.netUsers;
+		} else {
+			const bssid = JSON.parse(this.props.navigation.state.params.groupInfo).net.bssid;
+			const usersByNet = await Storage.getUsersByNet(bssid);
+			const users = await Storage.getUsers();
+			const joinedGroups = await Storage.getJoinedGroups();
+			Object.keys(usersByNet).forEach((uid) => {
+				if (users[uid].joinedGroups.includes(currentGroupID)) {
+					members[uid] = users[uid];
+				}
+			});
 		}
 
 		this.setState({
@@ -145,7 +158,9 @@ export default class ChatInfoScreen extends React.Component {
 									key={ uid }
 									title={ members[uid].username }
 									titleStyle={ styles.memberItemTitle }
+									underlayColor="#d3d3d3"
 									subtitle={ <MemberOnlineStatus lastSeen={ members[uid].lastSeen } /> }
+									onPress={() => { alert(uid) }}
 								/>
 							))
 						}
@@ -219,7 +234,8 @@ const styles = StyleSheet.create({
 		marginBottom: 10
 	},
 	memberContainer: {
-		marginTop: 20
+		marginTop: 20,
+		marginBottom: 20
 	},
 	memberTitle: {
 		marginLeft: 10,

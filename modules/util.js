@@ -137,7 +137,7 @@ export default (() => {
 			}
 
 			// 檢查封包正確性
-			const validData =  conGroups.every((groupID) => {
+			const validData = conGroups.every((groupID) => {
 				const key = joinedGroups[bssid][groupID].key;
 				return groupID === decrypt(payload.joinedGroups[groupID], key);
 			});
@@ -147,7 +147,10 @@ export default (() => {
 			}
 
 			// save user info
-			Storage.saveUser(payload.uid, Object.assign({}, payload.data, { lastSeen: moment().format() }));
+			Storage.saveUser(payload.uid, Object.assign({}, payload.data, {
+				lastSeen: moment().format(),
+				joinedGroups: conGroups
+			}));
 			Storage.saveNetUser(bssid, payload.uid);
 		});
 	}
