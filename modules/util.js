@@ -82,7 +82,22 @@ export default (() => {
 	function getWifi() {
 		return Promise.all([
 			new Promise((resolve) => NetworkInfo.getSSID(resolve)),
-			new Promise((resolve) => NetworkInfo.getBSSID(resolve))
+			new Promise((resolve) =>{
+				NetworkInfo.getBSSID((bssid) => {
+					bssid = bssid
+						.split(':')
+						.map((hex) => {
+							if (hex.length === 1) {
+								return `0${hex}`;
+							}
+
+							return hex;
+						})
+						.join(':');
+
+					resolve(bssid);
+				});
+			})
 		]);
 	}
 

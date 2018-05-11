@@ -10,7 +10,7 @@ export default class GroupsTitle extends React.Component {
 		return (
 			<View style={ styles.container }>
 				<Text style={ styles.text }>{ this.props.ssid }</Text>
-				{ this.props.count &&
+				{ this.props.count !== undefined &&
 					<Text style={ styles.count }>在線人數: { this.props.count }</Text>
 				}
 			</View>
