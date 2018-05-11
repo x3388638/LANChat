@@ -6,6 +6,10 @@ import '../shim.js';
 import crypto from 'crypto';
 import UUID from 'uuid/v4';
 import { NetworkInfo } from 'react-native-network-info';
+import {
+	Alert,
+	NetInfo
+} from 'react-native';
 
 import Storage from './Storage.js';
 
@@ -87,6 +91,11 @@ export default (() => {
 			new Promise((resolve) => NetworkInfo.getSSID(resolve)),
 			new Promise((resolve) =>{
 				NetworkInfo.getBSSID((bssid) => {
+					if (!bssid) {
+						resolve(bssid);
+						return;
+					}
+
 					bssid = bssid
 						.split(':')
 						.map((hex) => {
@@ -206,6 +215,27 @@ export default (() => {
 
 		return members;
 	}
+
+	function checkConnection() {
+		NetInfo.addEventListener('connectionChange', async (data) => {
+			const netType = data.type.toLocaleLowerCase();
+			if (netType === 'wifi') {
+				PubSub.emit('wifi:changed');
+			} else if (netType === 'none') {
+				const [ssid, bssid] = await getWifi();
+				if (bssid === null || bssid === 'error') {
+					Alert.alert('WiFi 連線中斷');
+					PubSub.emit('wifi:disconnect');
+					return;
+				}
+
+				PubSub.emit('wifi:changed');
+			} else {
+				Alert.alert('WiFi 連線中斷');
+				PubSub.emit('wifi:disconnect');
+			}
+		});
+	}
 	
 	return {
 		genPass,
@@ -221,6 +251,7 @@ export default (() => {
 		decrypt,
 		parseAlive,
 		getOnlineStatus,
-		getGroupMembers
+		getGroupMembers,
+		checkConnection
 	}
 })();

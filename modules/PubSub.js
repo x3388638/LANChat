@@ -13,7 +13,7 @@ export default (() => {
 	}
 
 	function emit(eventName, data) {
-		_events[eventName](data);
+		typeof _events[eventName] === 'function' && _events[eventName](data);
 	}
 
 	return {

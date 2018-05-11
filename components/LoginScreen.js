@@ -25,7 +25,7 @@ export default class LoginScreen extends React.Component {
 		this.handleRegister = this.handleRegister.bind(this);
 		this.getStoredPass = this.getStoredPass.bind(this);
 		// Storage.removeItem('pass');
-		// Storage.removeItem('lastLogin');
+		Storage.removeItem('lastLogin');
 		// Storage.removeItem('personalInfo');
 		// Storage.removeItem('joinedGroups');
 		// Storage.removeItem('users');
@@ -50,10 +50,16 @@ export default class LoginScreen extends React.Component {
 		this.props.navigation.addListener('didFocus', this.getStoredPass);
 	}
 
-	handleLogin() {
+	async handleLogin() {
 		const pass = this.state.pass;
 		if (Util.genPass(pass) !== this.state.storedPass) {
 			Alert.alert('密碼錯誤');
+			return;
+		}
+
+		const [ssid, bssid] = await Util.getWifi();
+		if (bssid === null || bssid === 'error') {
+			Alert.alert('尚未連接 WiFi');
 			return;
 		}
 

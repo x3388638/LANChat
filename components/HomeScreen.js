@@ -3,7 +3,8 @@ import {
 	View,
 	Text,
 	Alert,
-	StyleSheet
+	StyleSheet,
+	NetInfo
 } from 'react-native';
 import {
 	Button,
@@ -19,6 +20,7 @@ import moment from 'moment';
 import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
 import Util from '../modules/util.js';
+import PubSub from '../modules/PubSub.js';
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
@@ -59,6 +61,11 @@ export default class HomeScreen extends React.Component {
 
 		Util.sendAlive();
 		Util.parseAlive();
+		Util.checkConnection();
+
+		PubSub.on('wifi:disconnect', () => {
+			this.props.navigation.navigate('LoginRegister');
+		});
 
 		setTimeout(this.getUserCount, 3000);
 		setInterval(this.getUserCount, 30 * 1000);
