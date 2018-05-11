@@ -17,24 +17,32 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 
 import QRCodeModal from './QRCodeModal.js';
+import MemberOnlineStatus from './MemberOnlineStatus.js';
 import Storage from '../modules/Storage.js';
+import Util from '../modules/util.js';
 
 export default class ChatInfoScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			qrcodeModalOpen: false,
-			qrcodeModalLoading: false
+			qrcodeModalLoading: false,
+			members: '{}'
 		};
 
 		this.handleShowQRCode = this.handleShowQRCode.bind(this);
 		this.handleLeave = this.handleLeave.bind(this);
+		this.getMembers = this.getMembers.bind(this);
 	}
 
 	static navigationOptions = {
 		title: '群組資訊'
 	};
 
+	componentDidMount () {
+		this.getMembers();
+	}
+	
 	handleShowQRCode() {
 		this.setState({ qrcodeModalLoading: true }, () => {
 			setTimeout(() => {
@@ -58,9 +66,25 @@ export default class ChatInfoScreen extends React.Component {
 		]);
 	}
 
+	getMembers() {
+		let members = {};
+		if (this.props.navigation.state.params.groupID === 'LOBBY') {
+			members = global.netUsers;
+		}
+
+		this.setState({
+			members: JSON.stringify(members)
+		});
+	}
+
 	render() {
 		const isLobby = this.props.navigation.state.params.groupID === 'LOBBY';
 		const ssid = isLobby ? this.props.navigation.state.params.ssid : JSON.parse(this.props.navigation.state.params.groupInfo).net.ssid;
+		const members = JSON.parse(this.state.members);
+		const membersArrSorted = Object.keys(members).sort((uidA, uidB) => {
+			return moment(members[uidB].lastSeen).diff(moment(members[uidB].lastSeen), 'seconds');
+		});
+
 		return (
 			<KeyboardAwareScrollView>
 				<View style={ styles.titleContainer }>
@@ -116,11 +140,11 @@ export default class ChatInfoScreen extends React.Component {
 					<Text style={ styles.memberTitle }>30 成員</Text>
 					<List containerStyle={{ marginTop: 0 }}>
 						{
-							list.map((item, i) => (
+							membersArrSorted.map((uid) => (
 								<ListItem
-									key={i}
-									title={item.title}
-									leftIcon={{ name: item.icon }}
+									key={ uid }
+									title={ members[uid].username }
+									subtitle={ <MemberOnlineStatus lastSeen={ members[uid].lastSeen } /> }
 								/>
 							))
 						}
@@ -138,17 +162,6 @@ export default class ChatInfoScreen extends React.Component {
 		)
 	}
 }
-
-const list = [
-	{
-		title: 'Appointments',
-		icon: 'av-timer'
-	},
-	{
-		title: 'Trips',
-		icon: 'flight-takeoff'
-	},
-]
 
 const styles = StyleSheet.create({
 	titleContainer: {

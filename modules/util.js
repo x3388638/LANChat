@@ -151,6 +151,30 @@ export default (() => {
 			Storage.saveNetUser(bssid, payload.uid);
 		});
 	}
+
+	function getOnlineStatus(timestamp) {
+		const diff = moment().diff(moment(timestamp), 'seconds');
+		let online = 0;
+		let text;
+		if (diff <= 60 * 3) {
+			online = 1;
+			text = '上線中';
+		} else if (diff <= 60 * 60) {
+			text = '1 小時內';
+		} else if (diff <= 60 * 60 * 24) {
+			text = '1 天內';
+		} else if (diff <= 60 * 60 * 24 * 30) {
+			text = '1 天以上';
+		} else {
+			online = -1;
+		}
+
+		return {
+			online,
+			text,
+			diff
+		};
+	}
 	
 	return {
 		genPass,
@@ -164,6 +188,7 @@ export default (() => {
 		sendAlive,
 		encrypt,
 		decrypt,
-		parseAlive
+		parseAlive,
+		getOnlineStatus
 	}
 })();

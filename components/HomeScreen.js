@@ -34,7 +34,7 @@ export default class HomeScreen extends React.Component {
 		this.handlePressGroup = this.handlePressGroup.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 		this.renderGroups = this.renderGroups.bind(this);
-		this.renderUserCount = this.renderUserCount.bind(this);
+		this.getUserCount = this.getUserCount.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -60,8 +60,8 @@ export default class HomeScreen extends React.Component {
 		Util.sendAlive();
 		Util.parseAlive();
 
-		setTimeout(this.renderUserCount, 4000);
-		setInterval(this.renderUserCount, 30 * 1000);
+		setTimeout(this.getUserCount, 4000);
+		setInterval(this.getUserCount, 30 * 1000);
 	}
 
 	handleTabChange(index) {
@@ -121,7 +121,7 @@ export default class HomeScreen extends React.Component {
 		});
 	}
 
-	async renderUserCount() {
+	async getUserCount() {
 		this.setState({
 			userCount: Object.keys(global.netUsers).length
 		});
