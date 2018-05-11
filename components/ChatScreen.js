@@ -5,16 +5,19 @@ import {
 	StyleSheet
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import Storage from '../modules/Storage';
+import Util from '../modules/util';
 
 export default class ChatScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.checkGroup = this.checkGroup.bind(this);
+		this.getOnlineCount = this.getOnlineCount.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
-		title: navigation.state.params.groupName,
+		title: navigation.state.params.title || navigation.state.params.groupName,
 		headerBackTitle: 'Back',
 		headerRight: (
 			<Icon
@@ -30,6 +33,8 @@ export default class ChatScreen extends React.Component {
 	componentDidMount() {
 		this.props.navigation.addListener('didFocus', () => {
 			this.checkGroup();
+			this.getOnlineCount();
+			setInterval(this.getOnlineCount, 30 * 1000);
 		});
 	}
 
@@ -39,6 +44,16 @@ export default class ChatScreen extends React.Component {
 		if (groupID !== 'LOBBY' && (!joinedGroups[bssid] || !joinedGroups[bssid][groupID])) {
 			this.props.navigation.goBack();
 		}
+	}
+
+	async getOnlineCount() {
+		const bssid = this.props.navigation.state.params.bssid;
+		const groupID = this.props.navigation.state.params.groupID;
+		const members = await Util.getGroupMembers(bssid, groupID);
+		const onlineMembers = Object.keys(members).filter((uid) => !!Util.getOnlineStatus(members[uid].lastSeen).online);
+		this.props.navigation.setParams({
+			title: `${this.props.navigation.state.params.groupName} (${onlineMembers.length})`
+		});
 	}
 
 	render() {

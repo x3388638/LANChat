@@ -178,6 +178,24 @@ export default (() => {
 			diff
 		};
 	}
+
+	async function getGroupMembers(bssid = '', groupID = '') {
+		let members = {};
+		if (groupID === 'LOBBY') {
+			members = global.netUsers;
+		} else {
+			const usersByNet = await Storage.getUsersByNet(bssid);
+			const users = await Storage.getUsers();
+			const joinedGroups = await Storage.getJoinedGroups();
+			Object.keys(usersByNet).forEach((uid) => {
+				if (users[uid].joinedGroups.includes(groupID)) {
+					members[uid] = users[uid];
+				}
+			});
+		}
+
+		return members;
+	}
 	
 	return {
 		genPass,
@@ -192,6 +210,7 @@ export default (() => {
 		encrypt,
 		decrypt,
 		parseAlive,
-		getOnlineStatus
+		getOnlineStatus,
+		getGroupMembers
 	}
 })();

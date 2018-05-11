@@ -69,21 +69,9 @@ export default class ChatInfoScreen extends React.Component {
 	}
 
 	async getMembers() {
-		let members = {};
-		const currentGroupID = this.props.navigation.state.params.groupID;
-		if (currentGroupID === 'LOBBY') {
-			members = global.netUsers;
-		} else {
-			const bssid = JSON.parse(this.props.navigation.state.params.groupInfo).net.bssid;
-			const usersByNet = await Storage.getUsersByNet(bssid);
-			const users = await Storage.getUsers();
-			const joinedGroups = await Storage.getJoinedGroups();
-			Object.keys(usersByNet).forEach((uid) => {
-				if (users[uid].joinedGroups.includes(currentGroupID)) {
-					members[uid] = users[uid];
-				}
-			});
-		}
+		const groupID = this.props.navigation.state.params.groupID;
+		const bssid = this.props.navigation.state.params.bssid;
+		const members = await Util.getGroupMembers(bssid, groupID);
 
 		this.setState({
 			members: JSON.stringify(members)
