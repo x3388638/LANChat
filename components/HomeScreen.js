@@ -14,6 +14,7 @@ import BottomNavigation, { Tab } from 'react-native-material-bottom-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import moment from 'moment';
 
 import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
@@ -24,14 +25,16 @@ export default class HomeScreen extends React.Component {
 		super(props);
 		this.state = {
 			joinedGroups: '{}',
-			currentNet: null
+			currentNet: null,
+			userCount: '...'
 		};
 
 		global.Socket.init();
 		this.handleTabChange = this.handleTabChange.bind(this);
+		this.handlePressGroup = this.handlePressGroup.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 		this.renderGroups = this.renderGroups.bind(this);
-		this.handlePressGroup = this.handlePressGroup.bind(this);
+		this.renderUserCount = this.renderUserCount.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -56,6 +59,8 @@ export default class HomeScreen extends React.Component {
 
 		Util.sendAlive();
 		Util.parseAlive();
+
+		this.renderUserCount();
 	}
 
 	handleTabChange(index) {
@@ -70,26 +75,6 @@ export default class HomeScreen extends React.Component {
 				this.props.navigation.navigate('QRScanner');
 				break;
 		}
-	}
-
-	async checkPersonalInfo() {
-		const info = await Storage.getPersonalInfo();
-		if (!info.normal.username) {
-			Alert.alert('請先填寫個人資料', null, [{ text: 'OK', onPress: () => this.props.navigation.navigate('Settings') }]);
-		}
-	}
-
-	async renderGroups() {
-		const joinedGroups = await Storage.getJoinedGroups();
-		// console.warn(JSON.stringify(joinedGroups, null, 4));
-		const [ssid, bssid] = await Util.getWifi();
-		this.setState({
-			joinedGroups: JSON.stringify(joinedGroups),
-			currentNet: JSON.stringify({
-				ssid,
-				bssid
-			})
-		});
 	}
 
 	handlePressGroup(groupID, groupName, bssid) {
@@ -115,6 +100,39 @@ export default class HomeScreen extends React.Component {
 		});
 	}
 
+	async checkPersonalInfo() {
+		const info = await Storage.getPersonalInfo();
+		if (!info.normal.username) {
+			Alert.alert('請先填寫個人資料', null, [{ text: 'OK', onPress: () => this.props.navigation.navigate('Settings') }]);
+		}
+	}
+
+	async renderGroups() {
+		const joinedGroups = await Storage.getJoinedGroups();
+		// console.warn(JSON.stringify(joinedGroups, null, 4));
+		const [ssid, bssid] = await Util.getWifi();
+		this.setState({
+			joinedGroups: JSON.stringify(joinedGroups),
+			currentNet: JSON.stringify({
+				ssid,
+				bssid
+			})
+		});
+	}
+
+	async renderUserCount() {
+		const [ssid, bssid] = await Util.getWifi();
+		const users = await Storage.getUsers();
+		const uidArr = Object.keys(await Storage.getUsersByNet(bssid));
+		const onlineUsers = uidArr.filter((uid) => {
+			return moment().diff(moment(users[uid].lastSeen), 'minutes') < 4;
+		});
+
+		this.setState({
+			userCount: onlineUsers.length
+		});
+	}
+
 	render() {
 		let joinedGroups = JSON.parse(this.state.joinedGroups);
 		let currentNet = this.state.currentNet ? JSON.parse(this.state.currentNet) : null;
@@ -135,7 +153,7 @@ export default class HomeScreen extends React.Component {
 				<KeyboardAwareScrollView style={{ marginBottom: 50}}>
 					{ currentNet &&
 						<View>
-							<GroupsTitle ssid={ `[連線中] ${currentNet.ssid}` } count={ 999 } />
+							<GroupsTitle ssid={ `[連線中] ${currentNet.ssid}` } count={ this.state.userCount } />
 							<List containerStyle={styles.groupList}>
 								{ joinedGroups[currentNet.bssid] && Object.keys(joinedGroups[currentNet.bssid]).map((groupID) => (
 									<ListItem
