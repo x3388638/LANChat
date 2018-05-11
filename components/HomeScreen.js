@@ -71,7 +71,7 @@ export default class HomeScreen extends React.Component {
 			const [ssid, bssid] = await Util.getWifi();
 			global.Socket.reCreate(bssid);
 			global.netUsers = {};
-			this.renderGroups();
+			!!this.renderGroups && this.renderGroups();
 		});
 
 		setTimeout(this.getUserCount, 3000);
