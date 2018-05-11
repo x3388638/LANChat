@@ -23,6 +23,8 @@ global.PubSub = PubSub;
 import Socket from './modules/Socket.js';
 global.Socket = Socket;
 
+global.netUsers = {};
+
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 export default SwitchNavigator({

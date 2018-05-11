@@ -60,7 +60,7 @@ export default class HomeScreen extends React.Component {
 		Util.sendAlive();
 		Util.parseAlive();
 
-		this.renderUserCount();
+		setTimeout(this.renderUserCount, 4000);
 		setInterval(this.renderUserCount, 30 * 1000);
 	}
 
@@ -122,15 +122,8 @@ export default class HomeScreen extends React.Component {
 	}
 
 	async renderUserCount() {
-		const [ssid, bssid] = await Util.getWifi();
-		const users = await Storage.getUsers();
-		const uidArr = Object.keys(await Storage.getUsersByNet(bssid));
-		const onlineUsers = uidArr.filter((uid) => {
-			return moment().diff(moment(users[uid].lastSeen), 'minutes') < 4;
-		});
-
 		this.setState({
-			userCount: onlineUsers.length
+			userCount: Object.keys(global.netUsers).length
 		});
 	}
 

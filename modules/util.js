@@ -126,6 +126,9 @@ export default (() => {
 			const payload = data.payload;
 			const [ssid, bssid] = await getWifi();
 			const targetGroups = Object.keys(payload.joinedGroups); // 收到的使用者所加入的 groupID array
+			// 將使用者存進記憶體
+			global.netUsers[payload.uid] = Object.assign({}, payload.data, { lastSeen: moment().format() });
+
 			// 檢查此使用者是否有加入本身已加入群組
 			const joinedGroups = await Storage.getJoinedGroups();
 			const conGroups = Object.keys(joinedGroups[bssid] || {}).filter((groupID) => targetGroups.includes(groupID)); // 共同群組 groupID array
