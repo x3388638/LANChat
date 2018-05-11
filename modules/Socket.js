@@ -5,18 +5,43 @@ export default (() => {
 	 * private variable
 	 */
 	let _socketOpened = false;
-	const _serverSocket = dgram.createSocket('udp4');
-	const _port = 12321;
-	const _multicastAddress = '225.225.225.225';
+	let _port = 12321;
+	let _multicastAddress = '225.225.225.225';
+	let _serverSocket;
+
+	/**
+	 * private method
+	 */
+	function _genPort(bssid) {
+		const base = 10001;
+		const section = bssid.split(':');
+		const sum = section.reduce((total, hex) => total + parseInt(hex, 16), 0);
+		return base + sum;
+	}
+
+	function _genAddress(bssid) {
+		const base = [225, 11, 12, 13];
+		const range = [11, 200, 200, 200];
+		const section = bssid.split(':');
+		const incress = range.map((n, i) => (parseInt(section[i], 16) * (i + 1)) % n);
+
+		return base.map((num, i) => num + incress[i]).join('.');
+	}
 
 	/**
 	 * public method
 	 */
-	function init() {
+	function init(bssid) {
 		if (!!_socketOpened) {
 			return;
 		}
 
+		if (bssid) {
+			_port = _genPort(bssid);
+			_multicastAddress = _genAddress(bssid);
+		}
+
+		_serverSocket = dgram.createSocket('udp4');
 		_serverSocket.bind(_port);
 		_serverSocket.on('listening', () => {
 			_serverSocket.addMembership(_multicastAddress);
@@ -49,14 +74,21 @@ export default (() => {
 		});
 	}
 
-	function close() {
-		_serverSocket.close();
-		_socketOpened = false;
+	function close(callback) {
+		_serverSocket.close(() => {
+			_socketOpened = false;
+			callback();
+		});
+	}
+
+	function reCreate(bssid) {
+		close(init);
 	}
 
 	return {
 		init,
 		send,
-		close
+		close,
+		reCreate
 	}
 })();
