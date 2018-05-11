@@ -4,6 +4,7 @@ export default (() => {
 	/**
 	 * private variable
 	 */
+	let _socketOpened = false;
 	const _serverSocket = dgram.createSocket('udp4');
 	const _port = 12321;
 	const _multicastAddress = '225.225.225.225';
@@ -12,9 +13,14 @@ export default (() => {
 	 * public method
 	 */
 	function init() {
+		if (!!_socketOpened) {
+			return;
+		}
+
 		_serverSocket.bind(_port);
 		_serverSocket.on('listening', () => {
 			_serverSocket.addMembership(_multicastAddress);
+			_socketOpened = true;
 		});
 
 		_serverSocket.on('message', function (data, rinfo) {
@@ -43,8 +49,14 @@ export default (() => {
 		});
 	}
 
+	function close() {
+		_serverSocket.close();
+		_socketOpened = false;
+	}
+
 	return {
 		init,
-		send
+		send,
+		close
 	}
 })();
