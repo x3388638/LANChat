@@ -163,7 +163,7 @@ export default (() => {
 			text = '1 小時內';
 		} else if (diff <= 60 * 60 * 24) {
 			text = '1 天內';
-		} else if (diff <= 60 * 60 * 24 * 30) {
+		} else if (diff <= 60 * 60 * 24 * 15) {
 			text = '1 天以上';
 		} else {
 			online = -1;

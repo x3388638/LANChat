@@ -82,7 +82,7 @@ export default class ChatInfoScreen extends React.Component {
 		const ssid = isLobby ? this.props.navigation.state.params.ssid : JSON.parse(this.props.navigation.state.params.groupInfo).net.ssid;
 		const members = JSON.parse(this.state.members);
 		const membersArrSorted = Object.keys(members).sort((uidA, uidB) => {
-			return moment(members[uidB].lastSeen).diff(moment(members[uidB].lastSeen), 'seconds');
+			return moment(members[uidB].lastSeen).diff(moment(members[uidA].lastSeen), 'seconds');
 		});
 
 		return (
@@ -137,7 +137,7 @@ export default class ChatInfoScreen extends React.Component {
 				</View>
 				}
 				<View style={ styles.memberContainer }>
-					<Text style={ styles.memberTitle }>30 成員</Text>
+					<Text style={ styles.memberTitle }>{ membersArrSorted.length } 成員</Text>
 					<List containerStyle={{ marginTop: 0 }}>
 						{
 							membersArrSorted.map((uid) => (

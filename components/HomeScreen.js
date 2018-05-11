@@ -122,8 +122,9 @@ export default class HomeScreen extends React.Component {
 	}
 
 	async getUserCount() {
+		const onlineMembers = Object.keys(global.netUsers).filter((uid) => !!Util.getOnlineStatus(global.netUsers[uid].lastSeen).online);
 		this.setState({
-			userCount: Object.keys(global.netUsers).length
+			userCount: onlineMembers.length
 		});
 	}
 
