@@ -144,6 +144,7 @@ export default class ChatInfoScreen extends React.Component {
 								<ListItem
 									key={ uid }
 									title={ members[uid].username }
+									titleStyle={ styles.memberItemTitle }
 									subtitle={ <MemberOnlineStatus lastSeen={ members[uid].lastSeen } /> }
 								/>
 							))
@@ -225,5 +226,8 @@ const styles = StyleSheet.create({
 		marginBottom: 3,
 		fontSize: 16,
 		color: '#6B7B83'
+	},
+	memberItemTitle: {
+		fontWeight: 'bold'
 	}
 });

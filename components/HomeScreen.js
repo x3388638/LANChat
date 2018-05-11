@@ -60,7 +60,7 @@ export default class HomeScreen extends React.Component {
 		Util.sendAlive();
 		Util.parseAlive();
 
-		setTimeout(this.getUserCount, 4000);
+		setTimeout(this.getUserCount, 3000);
 		setInterval(this.getUserCount, 30 * 1000);
 	}
 

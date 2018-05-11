@@ -103,7 +103,7 @@ export default (() => {
 
 	function sendAlive() {
 		const period = 40 * 1000;
-		setTimeout(_sendAlive, 3 * 1000);
+		setTimeout(_sendAlive, 2 * 1000);
 		setInterval(_sendAlive, period);
 	}
 
