@@ -18,8 +18,11 @@ export default (() => {
 		const joinedGroups = await Storage.getJoinedGroups();
 		const [ssid, bssid] = await getWifi();
 		let groups = {};
-		Object.keys(joinedGroups[bssid] || {}).forEach((groupID) => {
-			groups[groupID] = encrypt(groupID, joinedGroups[bssid][groupID].key);
+
+		Object.values(joinedGroups).forEach((netGroups) => {
+			Object.values(netGroups).forEach((group) => {
+				groups[group.groupID] = encrypt(group.groupID, group.key);
+			});
 		});
 
 		global.Socket.send(new Buffer(JSON.stringify({
@@ -131,14 +134,21 @@ export default (() => {
 
 			// 檢查此使用者是否有加入本身已加入群組
 			const joinedGroups = await Storage.getJoinedGroups();
-			const conGroups = Object.keys(joinedGroups[bssid] || {}).filter((groupID) => targetGroups.includes(groupID)); // 共同群組 groupID array
+			const totalGroups = {};
+			Object.values(joinedGroups).forEach((netGroups) => {
+				Object.values(netGroups).forEach((group) => {
+					totalGroups[group.groupID] = group;
+				});
+			});
+
+			const conGroups = Object.keys(totalGroups).filter((groupID) => targetGroups.includes(groupID)); // 共同群組 groupID array
 			if (conGroups.length === 0) {
 				return;
 			}
 
 			// 檢查封包正確性
 			const validData = conGroups.every((groupID) => {
-				const key = joinedGroups[bssid][groupID].key;
+				const key = totalGroups[groupID].key;
 				return groupID === decrypt(payload.joinedGroups[groupID], key);
 			});
 
