@@ -16,6 +16,7 @@ import SettingsScreen from './components/SettingsScreen';
 import CreateGroupScreen from './components/CreateGroupScreen';
 import ChatScreen from './components/ChatScreen';
 import ChatInfoScreen from './components/ChatInfoScreen';
+import UserInfoScreen from './components/UserInfoScreen';
 
 import PubSub from './modules/PubSub.js';
 global.PubSub = PubSub;
@@ -40,7 +41,8 @@ export default SwitchNavigator({
 			Settings: SettingsScreen,
 			CreateGroup: CreateGroupScreen,
 			Chat: ChatScreen,
-			ChatInfo: ChatInfoScreen
+			ChatInfo: ChatInfoScreen,
+			UserInfo: UserInfoScreen
 		}, {
 			initialRouteName: 'Home'
 		}),
