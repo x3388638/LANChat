@@ -39,8 +39,11 @@ export default class QRCodeModal extends React.Component {
 
 const styles = StyleSheet.create({
 	container: {
-		height: '76%',
+		alignSelf: 'center',
+		width: 300,
 		backgroundColor: '#fff',
+		paddingTop: 50,
+		paddingBottom: 50,
 		paddingLeft: 30,
 		paddingRight: 30,
 		alignItems: 'center',
