@@ -75,7 +75,7 @@ export default class HomeScreen extends React.Component {
 		});
 
 		setTimeout(this.getUserCount, 3000);
-		setInterval(this.getUserCount, 30 * 1000);
+		setInterval(this.getUserCount, 12 * 1000);
 	}
 
 	handleTabChange(index) {
