@@ -38,8 +38,9 @@ export default class LoginScreen extends React.Component {
 	}
 
 	componentDidMount() {
-		Util.checkLogin().then((isLogin) => {
-			if (isLogin) {
+		Util.checkLogin().then(async (isLogin) => {
+			const wifiConnected = await Util.isWiFiConnected();
+			if (isLogin && wifiConnected) {
 				setTimeout(() => {
 					Util.login();
 					this.props.navigation.navigate('Main1');
@@ -57,8 +58,7 @@ export default class LoginScreen extends React.Component {
 			return;
 		}
 
-		const [ssid, bssid] = await Util.getWifi();
-		if (bssid === null || bssid === 'error') {
+		if (!(await Util.isWiFiConnected())) {
 			Alert.alert('尚未連接 WiFi');
 			return;
 		}

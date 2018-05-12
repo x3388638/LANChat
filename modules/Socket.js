@@ -82,7 +82,9 @@ export default (() => {
 	}
 
 	function reCreate(bssid) {
-		close(init);
+		close(() => {
+			init(bssid);
+		});
 	}
 
 	return {

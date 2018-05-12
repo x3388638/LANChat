@@ -220,7 +220,7 @@ export default (() => {
 		NetInfo.addEventListener('connectionChange', async (data) => {
 			const netType = data.type.toLocaleLowerCase();
 			if (netType === 'wifi') {
-				PubSub.emit('wifi:changed');
+				// PubSub.emit('wifi:changed');
 			} else if (netType === 'none') {
 				const [ssid, bssid] = await getWifi();
 				if (bssid === null || bssid === 'error') {
@@ -229,12 +229,36 @@ export default (() => {
 					return;
 				}
 
-				PubSub.emit('wifi:changed');
+				// PubSub.emit('wifi:changed');
 			} else {
 				Alert.alert('WiFi 連線中斷');
 				PubSub.emit('wifi:disconnect');
 			}
 		});
+	}
+
+	async function isWiFiConnected() {
+		const [ssid, bssid] = await getWifi();
+		if (bssid === null || bssid === 'error') {
+			return false;
+		}
+
+		return true;
+	}
+
+	function listenWiFiChanged() {
+		let lastBssid = null;
+		setInterval(async () => {
+			const connected = await isWiFiConnected();
+			if (connected) {
+				const [ssid, bssid] = await getWifi();
+				if (!!bssid && bssid !== lastBssid) {
+					PubSub.emit('wifi:changed', [ssid, bssid]);
+				}
+
+				lastBssid = bssid;
+			}
+		}, 5000);
 	}
 	
 	return {
@@ -252,6 +276,8 @@ export default (() => {
 		parseAlive,
 		getOnlineStatus,
 		getGroupMembers,
-		checkConnection
+		checkConnection,
+		isWiFiConnected,
+		listenWiFiChanged
 	}
 })();

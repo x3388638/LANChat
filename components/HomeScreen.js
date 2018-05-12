@@ -62,13 +62,13 @@ export default class HomeScreen extends React.Component {
 		Util.sendAlive();
 		Util.parseAlive();
 		Util.checkConnection();
+		Util.listenWiFiChanged();
 
 		PubSub.on('wifi:disconnect', () => {
 			this.props.navigation.navigate('LoginRegister');
 		});
 
-		PubSub.on('wifi:changed', async () => {
-			const [ssid, bssid] = await Util.getWifi();
+		PubSub.on('wifi:changed', ([ssid, bssid]) => {
 			global.Socket.reCreate(bssid);
 			global.netUsers = {};
 			!!this.renderGroups && this.renderGroups();
