@@ -148,7 +148,7 @@ export default class ChatInfoScreen extends React.Component {
 									titleStyle={ styles.memberItemTitle }
 									underlayColor="#d3d3d3"
 									subtitle={ <MemberOnlineStatus lastSeen={ members[uid].lastSeen } /> }
-									onPress={() => { this.props.navigation.navigate('UserInfo', { uid }) }}
+									onPress={() => { this.props.navigation.navigate('UserInfo', Object.assign({}, this.props.navigation.state.params, { uid })) }}
 								/>
 							))
 						}

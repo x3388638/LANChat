@@ -31,7 +31,7 @@ export default class HomeScreen extends React.Component {
 			userCount: '...'
 		};
 
-		this.createSocket();
+		global.Socket.init();
 		this.handleTabChange = this.handleTabChange.bind(this);
 		this.handlePressGroup = this.handlePressGroup.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
@@ -69,7 +69,6 @@ export default class HomeScreen extends React.Component {
 		});
 
 		PubSub.on('wifi:changed', ([ssid, bssid]) => {
-			global.Socket.reCreate(bssid);
 			global.netUsers = {};
 			!!this.renderGroups && this.renderGroups();
 		});
@@ -113,11 +112,6 @@ export default class HomeScreen extends React.Component {
 			bssid,
 			groupInfo
 		});
-	}
-
-	async createSocket() {
-		const [ssid, bssid] = await Util.getWifi();
-		global.Socket.init(bssid);
 	}
 
 	async checkPersonalInfo() {

@@ -34,7 +34,13 @@ export default class UserInfoScreen extends React.Component {
 	}
 
 	async getUser(uid) {
-		const users = await Storage.getUsers();
+		let users = {};
+		if (this.props.navigation.state.params.groupID === 'LOBBY') {
+			users = global.netUsers;
+		} else {
+			users = await Storage.getUsers();
+		}
+
 		this.setState({
 			username: users[uid].username,
 			selfIntro: users[uid].selfIntro,
