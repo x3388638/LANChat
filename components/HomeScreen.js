@@ -17,6 +17,8 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import moment from 'moment';
 
+import UnreadCounter from './UnreadCounter.js';
+
 import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
 import Util from '../modules/util.js';
@@ -154,7 +156,7 @@ export default class HomeScreen extends React.Component {
 						underlayColor="#d3d3d3"
 						leftIcon={{ name: 'home'}}
 						titleStyle={ styles.groupTitle }
-						badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+						badge={{ element: <UnreadCounter count={3} /> }}
 						onPress={() => { this.handlePressGroup('LOBBY') }}
 					/>
 				</List>
@@ -171,7 +173,7 @@ export default class HomeScreen extends React.Component {
 										subtitle="23:19  |  Y.y.: 安安你好..."
 										underlayColor="#d3d3d3"
 										titleStyle={styles.groupTitle}
-										badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+										badge={{ element: <UnreadCounter count={13} /> }}
 										onPress={() => { this.handlePressGroup(groupID, joinedGroups[currentNet.bssid][groupID].groupName, currentNet.bssid) }}
 									/>
 								)) }
@@ -197,7 +199,7 @@ export default class HomeScreen extends React.Component {
 											subtitle="23:19  |  Y.y.: 安安你好..."
 											underlayColor="#d3d3d3"
 											titleStyle={styles.groupTitle}
-											badge={{ value: 3, textStyle: { color: '#fff' }, containerStyle: { backgroundColor: '#ff3b30' } }}
+											badge={{ element: <UnreadCounter count={113} /> }}
 											onPress={() => { this.handlePressGroup(groupID, joinedGroups[bssid][groupID].groupName, bssid) }}
 										/>
 									)) }
