@@ -21,8 +21,8 @@ import UserInfoScreen from './components/UserInfoScreen';
 import PubSub from './modules/PubSub.js';
 global.PubSub = PubSub;
 
-import Socket from './modules/Socket.js';
-global.Socket = Socket;
+import UdpSocket from './modules/UdpSocket.js';
+global.UdpSocket = UdpSocket;
 
 global.netUsers = {};
 

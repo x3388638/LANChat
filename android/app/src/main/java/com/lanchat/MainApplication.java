@@ -3,6 +3,7 @@ package com.lanchat;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.peel.react.TcpSocketsModule;
 import com.tradle.react.UdpSocketsModule;
 import com.horcrux.svg.SvgPackage;
 import com.pusherman.networkinfo.RNNetworkInfoPackage;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new TcpSocketsModule(),
             new UdpSocketsModule(),
             new SvgPackage(),
             new RNNetworkInfoPackage(),

@@ -9,27 +9,6 @@ export default (() => {
 	const _serverSocket = dgram.createSocket('udp4');
 
 	/**
-	 * private method
-	 */
-	/*
-	function _genPort(bssid) {
-		const base = 10001;
-		const section = bssid.split(':');
-		const sum = section.reduce((total, hex) => total + parseInt(hex, 16), 0);
-		return base + sum;
-	}
-
-	function _genAddress(bssid) {
-		const base = [225, 11, 12, 13];
-		const range = [11, 200, 200, 200];
-		const section = bssid.split(':');
-		const incress = range.map((n, i) => (parseInt(section[i], 16) * (i + 1)) % n);
-
-		return base.map((num, i) => num + incress[i]).join('.');
-	}
-	*/
-
-	/**
 	 * public method
 	 */
 	function init() {

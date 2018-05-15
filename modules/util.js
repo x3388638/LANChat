@@ -29,7 +29,7 @@ export default (() => {
 			});
 		});
 
-		global.Socket.send(new Buffer(JSON.stringify({
+		global.UdpSocket.send(new Buffer(JSON.stringify({
 			type: 'alive',
 			payload: {
 				uid,
