@@ -9,20 +9,46 @@ import QRCode from 'react-native-qrcode-svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class QRCodeModal extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			modalOnLoad: false
+		};
+
+		this.handleModalOnLoad = this.handleModalOnLoad.bind(this);
+		this.handleModalHide = this.handleModalHide.bind(this);
+	}
+
+	handleModalOnLoad() {
+		if (!this.state.modalOnLoad) {
+			this.setState({ modalOnLoad: true });
+		}
+	}
+
+	handleModalHide() {
+		if (!!this.state.modalOnLoad) {
+			this.setState({ modalOnLoad: false });
+		}
+	}
+
 	render() {
 		return (
 			<Modal
 				isVisible={ this.props.open }
 				onBackdropPress={ this.props.onHide }
-				onModalShow={ this.props.onShow }
+				onModalShow={ this.handleModalOnLoad }
+				onModalHide={ this.handleModalHide }
 			>
 				<View style={ styles.container }>
 					<Text style={ styles.title }>{ this.props.groupInfo.groupName }</Text>
-					<QRCode
-						size={250}
-						color="#132731"
-						value={ JSON.stringify(this.props.groupInfo) }
-					/>
+					{ this.state.modalOnLoad ?
+						<QRCode
+							size={250}
+							color="#132731"
+							value={ JSON.stringify(this.props.groupInfo) }
+						/> :
+						<Text>Loading...</Text>
+					}
 					<View style={ styles.closeBtnContainer }>
 						<Icon
 							size={40}
