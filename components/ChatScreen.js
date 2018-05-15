@@ -6,12 +6,19 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import QRCodeModal from './QRCodeModal.js';
+
 import Storage from '../modules/Storage';
 import Util from '../modules/util';
 
 export default class ChatScreen extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			qrcodeModalOpen: false
+		};
+
+		this.handleShowQRCode = this.handleShowQRCode.bind(this);
 		this.checkGroup = this.checkGroup.bind(this);
 		this.getOnlineCount = this.getOnlineCount.bind(this);
 	}
@@ -20,13 +27,26 @@ export default class ChatScreen extends React.Component {
 		title: navigation.state.params.title || navigation.state.params.groupName,
 		headerBackTitle: 'Back',
 		headerRight: (
-			<Icon
-				size={24}
-				color="#007dff"
-				name="info-circle"
-				style={ styles.settingsBtn }
-				onPress={ () => navigation.navigate('ChatInfo', navigation.state.params) }
-			/>
+			<View style={ styles.headerRightContainer }>
+				{ navigation.state.params.groupID !== 'LOBBY' &&
+				<Icon
+					size={24}
+					color="#132731"
+					name="qrcode"
+					underlayColor="#d3d3d3"
+					style={ styles.qrcodeBtn }
+					onPress={ navigation.state.params.handleShowQRCode }
+				/>
+				}
+				<Icon
+					size={24}
+					color="#007dff"
+					name="info-circle"
+					underlayColor="#d3d3d3"
+					style={styles.settingsBtn}
+					onPress={() => navigation.navigate('ChatInfo', navigation.state.params)}
+				/>
+			</View>
 		)
 	});
 
@@ -35,6 +55,14 @@ export default class ChatScreen extends React.Component {
 			this.checkGroup();
 			this.getOnlineCount();
 			setInterval(this.getOnlineCount, 30 * 1000);
+		});
+
+		this.props.navigation.setParams({ handleShowQRCode: this.handleShowQRCode });
+	}
+
+	handleShowQRCode() {
+		this.setState({
+			qrcodeModalOpen: true
 		});
 	}
 
@@ -57,10 +85,19 @@ export default class ChatScreen extends React.Component {
 	}
 
 	render() {
+		const isLobby = this.props.navigation.state.params.groupID === 'LOBBY'
 		return (
 			<View>
 				<Text>chat screen</Text>
 				<Text>{ JSON.stringify(this.props.navigation.state.params, null, 4) }</Text>
+				{ !isLobby &&
+				<QRCodeModal
+					open={ this.state.qrcodeModalOpen }
+					onShow={() => { this.setState({ qrcodeModalLoading: false }) }}
+					onHide={() => { this.setState({ qrcodeModalOpen: false }) }}
+					groupInfo={ JSON.parse(this.props.navigation.state.params.groupInfo) }
+				/>
+				}
 			</View>
 		)
 	}
@@ -69,5 +106,11 @@ export default class ChatScreen extends React.Component {
 const styles = StyleSheet.create({
 	settingsBtn: {
 		marginRight: 10
+	},
+	qrcodeBtn: {
+		marginRight: 10
+	},
+	headerRightContainer: {
+		flexDirection: 'row'
 	}
 });
