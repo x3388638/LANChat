@@ -17,26 +17,11 @@ export default (() => {
 	const _expireTime = 5;
 
 	async function _sendAlive() {
-		const uid = getUid();
-		const personalInfo = await Storage.getPersonalInfo();
-		const joinedGroups = await Storage.getJoinedGroups();
-		const [ssid, bssid] = await getWifi();
 		const ip = await getIP();
-		let groups = {};
-
-		Object.values(joinedGroups).forEach((netGroups) => {
-			Object.values(netGroups).forEach((group) => {
-				groups[group.groupID] = encrypt(group.groupID, group.key);
-			});
-		});
-
 		global.UdpSocket.send(new Buffer(JSON.stringify({
 			type: 'alive',
 			payload: {
-				uid,
-				ip,
-				data: personalInfo.normal,
-				joinedGroups: groups
+				ip
 			}
 		})));
 	}
@@ -143,7 +128,10 @@ export default (() => {
 
 	function parseAlive() {
 		global.PubSub.on('newMsg:alive', async (data) => {
-			console.warn(JSON.stringify(data, null, 4))
+			const currentIP = await getIP();
+			data.payload.ip !== currentIP && global.TcpSocket.connect(data.payload.ip);
+
+			/*
 			const payload = data.payload;
 			const [ssid, bssid] = await getWifi();
 			const targetGroups = Object.keys(payload.joinedGroups); // 收到的使用者所加入的 groupID array
@@ -180,6 +168,7 @@ export default (() => {
 				joinedGroups: conGroups
 			}));
 			Storage.saveNetUser(bssid, payload.uid);
+			*/
 		});
 	}
 
