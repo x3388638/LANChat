@@ -25,12 +25,9 @@ export default class ChatInfoScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			qrcodeModalOpen: false,
-			qrcodeModalLoading: false,
 			members: '{}'
 		};
 
-		this.handleShowQRCode = this.handleShowQRCode.bind(this);
 		this.handleLeave = this.handleLeave.bind(this);
 		this.getMembers = this.getMembers.bind(this);
 	}
@@ -43,16 +40,6 @@ export default class ChatInfoScreen extends React.Component {
 		this.props.navigation.addListener('didFocus', () => {
 			this.getMembers();
 		});
-	}
-	
-	handleShowQRCode() {
-		this.setState({ qrcodeModalLoading: true }, () => {
-			setTimeout(() => {
-				this.setState({
-					qrcodeModalOpen: true
-				});
-			}, 100);
-		})
 	}
 
 	handleLeave() {
@@ -117,15 +104,6 @@ export default class ChatInfoScreen extends React.Component {
 						<Text style={ styles.descTitle }>簡介</Text>
 						<Text style={ styles.descText }>{ JSON.parse(this.props.navigation.state.params.groupInfo).groupDesc || '-' }</Text>
 					</View>
-					<View style={ styles.QRCodeBtnContainer }>
-						<Button
-							icon={{ name: 'qrcode', type: 'font-awesome' }}
-							backgroundColor="#007dff"
-							title='QR Code'
-							loading={ this.state.qrcodeModalLoading }
-							onPress={ this.handleShowQRCode }
-						/>
-					</View>
 					<View style={styles.leaveBtnContainer}>
 						<Button
 							icon={{ name: 'warning' }}
@@ -154,14 +132,6 @@ export default class ChatInfoScreen extends React.Component {
 						}
 					</List>
 				</View>
-				{ !isLobby &&
-				<QRCodeModal
-					open={ this.state.qrcodeModalOpen }
-					onShow={() => { this.setState({ qrcodeModalLoading: false }) }}
-					onHide={() => { this.setState({qrcodeModalOpen: false}) }}
-					groupInfo={ JSON.parse(this.props.navigation.state.params.groupInfo) }
-				/>
-				}
 			</KeyboardAwareScrollView>
 		)
 	}

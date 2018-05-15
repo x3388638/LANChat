@@ -93,7 +93,6 @@ export default class ChatScreen extends React.Component {
 				{ !isLobby &&
 				<QRCodeModal
 					open={ this.state.qrcodeModalOpen }
-					onShow={() => { this.setState({ qrcodeModalLoading: false }) }}
 					onHide={() => { this.setState({ qrcodeModalOpen: false }) }}
 					groupInfo={ JSON.parse(this.props.navigation.state.params.groupInfo) }
 				/>
