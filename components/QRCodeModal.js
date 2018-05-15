@@ -4,6 +4,9 @@ import {
 	Text,
 	StyleSheet
 } from 'react-native';
+import {
+	Button
+} from 'react-native-elements';
 import Modal from 'react-native-modal';
 import QRCode from 'react-native-qrcode-svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -47,7 +50,12 @@ export default class QRCodeModal extends React.Component {
 							color="#132731"
 							value={ JSON.stringify(this.props.groupInfo) }
 						/> :
-						<Text>Loading...</Text>
+						<Button
+							loading
+							title="QR Code 載入中..."
+							backgroundColor="#fff"
+							color="#132731"
+						/>
 					}
 					<View style={ styles.closeBtnContainer }>
 						<Icon
