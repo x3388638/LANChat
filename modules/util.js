@@ -21,6 +21,7 @@ export default (() => {
 		const personalInfo = await Storage.getPersonalInfo();
 		const joinedGroups = await Storage.getJoinedGroups();
 		const [ssid, bssid] = await getWifi();
+		const ip = await getIP();
 		let groups = {};
 
 		Object.values(joinedGroups).forEach((netGroups) => {
@@ -33,6 +34,7 @@ export default (() => {
 			type: 'alive',
 			payload: {
 				uid,
+				ip,
 				data: personalInfo.normal,
 				joinedGroups: groups
 			}
@@ -113,6 +115,12 @@ export default (() => {
 		]);
 	}
 
+	function getIP() {
+		return new Promise((resolve, reject) => {
+			NetworkInfo.getIPV4Address(resolve);
+		});
+	}
+
 	function sendAlive() {
 		const period = 10 * 1000;
 		setTimeout(_sendAlive, 2 * 1000);
@@ -135,6 +143,7 @@ export default (() => {
 
 	function parseAlive() {
 		global.PubSub.on('newMsg:alive', async (data) => {
+			console.warn(JSON.stringify(data, null, 4))
 			const payload = data.payload;
 			const [ssid, bssid] = await getWifi();
 			const targetGroups = Object.keys(payload.joinedGroups); // 收到的使用者所加入的 groupID array
@@ -260,6 +269,14 @@ export default (() => {
 			}
 		}, 5000);
 	}
+
+	function updateNetUsers(ip, userInfo = {}) {
+		global.netUsers[ip] = Object.assign({}, global.netUsers[ip] || {}, userInfo, { ip });
+	}
+
+	function netUserExist(ip) {
+		return !!global.netUsers[ip];
+	}
 	
 	return {
 		genPass,
@@ -270,6 +287,7 @@ export default (() => {
 		genGroupKey,
 		genUUID,
 		getWifi,
+		getIP,
 		sendAlive,
 		encrypt,
 		decrypt,
@@ -278,6 +296,8 @@ export default (() => {
 		getGroupMembers,
 		checkConnection,
 		isWiFiConnected,
-		listenWiFiChanged
+		listenWiFiChanged,
+		updateNetUsers,
+		netUserExist
 	}
 })();
