@@ -8,23 +8,14 @@ import UUID from 'uuid/v4';
 import { NetworkInfo } from 'react-native-network-info';
 import {
 	Alert,
-	NetInfo
+	NetInfo,
+	Platform
 } from 'react-native';
 
 import Storage from './Storage.js';
 
 export default (() => {
 	const _expireTime = 5;
-
-	async function _sendAlive() {
-		const ip = await getIP();
-		global.UdpSocket.send(new Buffer(JSON.stringify({
-			type: 'alive',
-			payload: {
-				ip
-			}
-		})));
-	}
 
 	function genPass(pass) {
 		const salt = DeviceInfo.getBrand().toLocaleLowerCase();
@@ -106,10 +97,16 @@ export default (() => {
 		});
 	}
 
-	function sendAlive() {
-		const period = 10 * 1000;
-		setTimeout(_sendAlive, 2 * 1000);
-		setInterval(_sendAlive, period);
+	async function sendAlive() {
+		const ip = await getIP();
+		const os = Platform.OS;
+		global.UdpSocket.send(new Buffer(JSON.stringify({
+			type: 'alive',
+			payload: {
+				ip,
+				os
+			}
+		})));
 	}
 
 	function encrypt(text, key) {
@@ -129,7 +126,20 @@ export default (() => {
 	function parseAlive() {
 		global.PubSub.on('newMsg:alive', async (data) => {
 			const currentIP = await getIP();
-			data.payload.ip !== currentIP && global.TcpSocket.connect(data.payload.ip);
+			const currentOS = Platform.OS;
+
+			if (data.payload.ip === currentIP) {
+				return;
+			}
+
+			// 如果本身是 Android, 收到 ios 的 alive 則不理他並反送 alive
+			if (currentOS !== 'ios' && data.payload.os === 'ios') {
+				sendAlive();
+				return;
+			}
+
+			// tcp connect
+			global.TcpSocket.connect(data.payload.ip);
 
 			/*
 			const payload = data.payload;

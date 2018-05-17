@@ -61,10 +61,10 @@ export default class HomeScreen extends React.Component {
 			this.renderGroups();
 		});
 
-		Util.sendAlive();
 		Util.parseAlive();
 		Util.checkConnection();
 		Util.listenWiFiChanged();
+		Util.sendAlive();
 
 		PubSub.on('wifi:disconnect', () => {
 			this.props.navigation.navigate('LoginRegister');

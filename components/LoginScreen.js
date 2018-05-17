@@ -25,12 +25,12 @@ export default class LoginScreen extends React.Component {
 		this.handleRegister = this.handleRegister.bind(this);
 		this.getStoredPass = this.getStoredPass.bind(this);
 		// Storage.removeItem('pass');
-		// Storage.removeItem('lastLogin');
+		Storage.removeItem('lastLogin');
 		// Storage.removeItem('personalInfo');
-		// Storage.removeItem('joinedGroups');
-		// Storage.removeItem('users');
-		// Storage.removeItem('usersByNet');
-		// global.netUsers = {};
+		Storage.removeItem('joinedGroups');
+		Storage.removeItem('users');
+		Storage.removeItem('usersByNet');
+		global.netUsers = {};
 	}
 
 	static navigationOptions = {

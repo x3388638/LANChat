@@ -6,28 +6,40 @@ export default (() => {
 	/**
 	 * private variable
 	 */
-	const _port = 20838;
+	const _port = 14432;
 	let _server;
 
 	/**
 	 * init
 	 */
 	_server = net.createServer((socket) => {
-		const remoteAddr = socket._address.address
-		console.warn(`1 connect to ${remoteAddr}`);
-		socket.on('data', (data) => {
-		});
-
-		socket.on('close', () => {
-			console.warn(`tcp disconnect from ${remoteAddr}`);
-		});
-
-		// TODO: send userData
-
+		const remoteAddr = socket._address.address;
+		console.warn(`tcp server on connect from: ${remoteAddr}`);
+		socket.on('data', (data) => _onData(socket, data));
+		socket.on('close', () => _onClose(socket));
+		socket.on('error', _onError);
+		
 		Util.updateNetUsers(remoteAddr, { tcpSocket: socket });
+		console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
+		// TODO: send userData
 	});
 
 	_server.listen(_port)
+
+	/**
+	 * private method
+	 */
+	function _onData(socket, data) {
+		console.warn(`receive data ${data.toString()} from ${socket.address()}`);
+	}
+
+	function _onClose(socket) {
+		console.warn(`Disconnect from ${socket.address()}`)
+	}
+
+	function _onError(err) {
+		console.warn('tcp socket on error');
+	}
 
 	/**
 	 * public method
@@ -38,16 +50,15 @@ export default (() => {
 		}
 
 		const socket = net.connect(_port, ip, () => {
-			console.warn(`2 connect to ${ip}`);
-			socket.on('data', (data) => {
-			});
-
-			socket.on('close', () => {
-				console.warn(`disconnect from ${socket._address.address}`);
-			});
+			console.warn(`tcp connect to ${ip}`);
+			socket.on('data', (data) => _onData(socket, data));
+			socket.on('close', () => _onClose(socket));
+			socket.on('error', _onError);
 
 			Util.updateNetUsers(ip, { tcpSocket: socket });
 			!!callback && callback();
+			console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
+
 			// TODO: send userData
 		});
 	}
