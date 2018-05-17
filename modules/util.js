@@ -138,6 +138,11 @@ export default (() => {
 				return;
 			}
 
+			// 如果兩端都是 ios，那先放置不理，不然應該會壞掉
+			if (currentOS === 'ios' && data.payload.os === 'ios') {
+				return;
+			}
+
 			// tcp connect
 			global.TcpSocket.connect(data.payload.ip);
 
