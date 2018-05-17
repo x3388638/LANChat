@@ -30,11 +30,12 @@ export default (() => {
 	 * private method
 	 */
 	function _onData(socket, data) {
-		console.warn(`receive data ${data.toString()} from ${socket.address()}`);
+		console.warn(`receive data ${data.toString()} from ${socket._address.address}`);
 	}
 
 	function _onClose(socket) {
-		console.warn(`Disconnect from ${socket.address()}`)
+		console.warn(`Disconnect from ${socket._address.address}`);
+		Util.removeNetUsers(socket._address.address);
 	}
 
 	function _onError(err) {

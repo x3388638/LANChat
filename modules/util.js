@@ -276,6 +276,10 @@ export default (() => {
 	function netUserExist(ip) {
 		return !!global.netUsers[ip];
 	}
+
+	function removeNetUsers(ip) {
+		delete global.netUsers[ip];
+	}
 	
 	return {
 		genPass,
@@ -297,6 +301,7 @@ export default (() => {
 		isWiFiConnected,
 		listenWiFiChanged,
 		updateNetUsers,
-		netUserExist
+		netUserExist,
+		removeNetUsers
 	}
 })();
