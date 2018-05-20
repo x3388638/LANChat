@@ -285,6 +285,29 @@ export default (() => {
 	function removeNetUsers(ip) {
 		delete global.netUsers[ip];
 	}
+
+	async function sendUserData(ip) {
+		const uid = getUid();
+		const personalInfo = await Storage.getPersonalInfo();
+		const joinedGroups = await Storage.getJoinedGroups();
+		const groups = {};
+		Object.values(joinedGroups).forEach((groupsObj) => {
+			Object.values(groupsObj).forEach((group) => {
+				groups[group.groupID] = group;
+			});
+		});
+
+		const data = JSON.stringify({
+			type: 'userData',
+			payload: {
+				uid,
+				data: personalInfo.normal,
+				joinedGroups: groups
+			}
+		});
+
+		global.netUsers[ip].tcpSocket.write(new Buffer(data));
+	}
 	
 	return {
 		genPass,
@@ -307,6 +330,7 @@ export default (() => {
 		listenWiFiChanged,
 		updateNetUsers,
 		netUserExist,
-		removeNetUsers
+		removeNetUsers,
+		sendUserData
 	}
 })();

@@ -21,7 +21,9 @@ export default (() => {
 		
 		Util.updateNetUsers(remoteAddr, { tcpSocket: socket });
 		console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
+
 		// TODO: send userData
+		Util.sendUserData(remoteAddr);
 	});
 
 	_server.listen(_port)
@@ -61,6 +63,7 @@ export default (() => {
 			console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
 
 			// TODO: send userData
+			Util.sendUserData(ip);
 		});
 	}
 
