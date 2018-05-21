@@ -32,7 +32,20 @@ export default (() => {
 	 * private method
 	 */
 	function _onData(socket, data) {
-		console.warn(`receive data ${data.toString()} from ${socket._address.address}`);
+		const ip = socket._address.address;
+		try {
+			const msg = JSON.parse(data.toString());
+			msg.payload.ip = ip;
+			switch (msg.type) {
+				case 'userData':
+					global.PubSub.emit('newMsg:userData', msg);
+					break;
+				default:
+					break;
+			}
+		} catch (err) {
+			console.warn(err);
+		}
 	}
 
 	function _onClose(socket) {

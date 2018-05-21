@@ -293,7 +293,8 @@ export default (() => {
 		const groups = {};
 		Object.values(joinedGroups).forEach((groupsObj) => {
 			Object.values(groupsObj).forEach((group) => {
-				groups[group.groupID] = group;
+				const key = group.key;
+				groups[group.groupID] = encrypt(group.groupID, key);
 			});
 		});
 
@@ -307,6 +308,48 @@ export default (() => {
 		});
 
 		global.netUsers[ip].tcpSocket.write(new Buffer(data));
+	}
+
+	function parseUserData() {
+		global.PubSub.on('newMsg:userData', async (data) => {
+			const payload = data.payload;
+			const [ssid, bssid] = await getWifi();
+			const targetGroups = Object.keys(payload.joinedGroups); // 收到的使用者所加入的 groupID array
+			// 更新 global.netUsers 資料
+			updateNetUsers(payload.ip, Object.assign({}, payload.data, { lastSeen: moment().format() }));
+
+			// 檢查此使用者是否有加入本身已加入群組
+			const joinedGroups = await Storage.getJoinedGroups();
+			const totalGroups = {};
+			Object.values(joinedGroups).forEach((netGroups) => {
+				Object.values(netGroups).forEach((group) => {
+					totalGroups[group.groupID] = group;
+				});
+			});
+
+			const conGroups = Object.keys(totalGroups).filter((groupID) => targetGroups.includes(groupID)); // 共同群組 groupID array
+			if (conGroups.length === 0) {
+				return;
+			}
+
+			// 檢查封包正確性
+			const validData = conGroups.every((groupID) => {
+				const key = totalGroups[groupID].key;
+				return groupID === decrypt(payload.joinedGroups[groupID], key);
+			});
+
+			if (!validData) {
+				return;
+			}
+
+			// save user info
+			Storage.saveUser(payload.uid, Object.assign({}, payload.data, {
+				lastSeen: moment().format(),
+				joinedGroups: conGroups
+			}));
+
+			Storage.saveNetUser(bssid, payload.uid);
+		});
 	}
 	
 	return {
@@ -331,6 +374,7 @@ export default (() => {
 		updateNetUsers,
 		netUserExist,
 		removeNetUsers,
-		sendUserData
+		sendUserData,
+		parseUserData
 	}
 })();
