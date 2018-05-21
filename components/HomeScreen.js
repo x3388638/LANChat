@@ -22,7 +22,6 @@ import UnreadCounter from './UnreadCounter.js';
 import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
 import Util from '../modules/util.js';
-import PubSub from '../modules/PubSub.js';
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
@@ -67,17 +66,24 @@ export default class HomeScreen extends React.Component {
 		Util.listenWiFiChanged();
 		Util.sendAlive();
 
-		PubSub.on('wifi:disconnect', () => {
+		global.PubSub.on('wifi:disconnect', () => {
 			this.props.navigation.navigate('LoginRegister');
 		});
 
-		PubSub.on('wifi:changed', ([ssid, bssid]) => {
+		global.PubSub.on('wifi:changed', ([ssid, bssid]) => {
 			global.netUsers = {};
 			!!this.renderGroups && this.renderGroups();
 		});
 
-		setTimeout(this.getUserCount, 3000);
-		setInterval(this.getUserCount, 12 * 1000);
+		global.PubSub.on('tcp:connect', () => {
+			setTimeout(this.getUserCount, 1000);
+		});
+
+		global.PubSub.on('tcp:disconnect', () => {
+			setTimeout(this.getUserCount, 1000);
+		});
+
+		this.getUserCount();
 	}
 
 	handleTabChange(index) {
@@ -138,9 +144,8 @@ export default class HomeScreen extends React.Component {
 	}
 
 	async getUserCount() {
-		const onlineMembers = Object.keys(global.netUsers).filter((uid) => !!Util.getOnlineStatus(global.netUsers[uid].lastSeen).online);
 		this.setState({
-			userCount: onlineMembers.length
+			userCount: Object.keys(global.netUsers).length + 1
 		});
 	}
 

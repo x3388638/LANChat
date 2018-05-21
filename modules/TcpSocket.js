@@ -18,12 +18,14 @@ export default (() => {
 		socket.on('data', (data) => _onData(socket, data));
 		socket.on('close', () => _onClose(socket));
 		socket.on('error', _onError);
-		
+
 		Util.updateNetUsers(remoteAddr, { tcpSocket: socket });
 		console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
 
 		// TODO: send userData
 		Util.sendUserData(remoteAddr);
+
+		global.PubSub.emit('tcp:connect');
 	});
 
 	_server.listen(_port)
@@ -51,6 +53,7 @@ export default (() => {
 	function _onClose(socket) {
 		console.warn(`Disconnect from ${socket._address.address}`);
 		Util.removeNetUsers(socket._address.address);
+		global.PubSub.emit('tcp:disconnect', socket._address.address);
 	}
 
 	function _onError(err) {
@@ -77,6 +80,8 @@ export default (() => {
 
 			// TODO: send userData
 			Util.sendUserData(ip);
+
+			global.PubSub.emit('tcp:connect');
 		});
 	}
 

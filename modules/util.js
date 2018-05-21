@@ -145,49 +145,11 @@ export default (() => {
 
 			// tcp connect
 			global.TcpSocket.connect(data.payload.ip);
-
-			/*
-			const payload = data.payload;
-			const [ssid, bssid] = await getWifi();
-			const targetGroups = Object.keys(payload.joinedGroups); // 收到的使用者所加入的 groupID array
-			// 將使用者存進記憶體
-			global.netUsers[payload.uid] = Object.assign({}, payload.data, { lastSeen: moment().format() });
-
-			// 檢查此使用者是否有加入本身已加入群組
-			const joinedGroups = await Storage.getJoinedGroups();
-			const totalGroups = {};
-			Object.values(joinedGroups).forEach((netGroups) => {
-				Object.values(netGroups).forEach((group) => {
-					totalGroups[group.groupID] = group;
-				});
-			});
-
-			const conGroups = Object.keys(totalGroups).filter((groupID) => targetGroups.includes(groupID)); // 共同群組 groupID array
-			if (conGroups.length === 0) {
-				return;
-			}
-
-			// 檢查封包正確性
-			const validData = conGroups.every((groupID) => {
-				const key = totalGroups[groupID].key;
-				return groupID === decrypt(payload.joinedGroups[groupID], key);
-			});
-
-			if (!validData) {
-				return;
-			}
-
-			// save user info
-			Storage.saveUser(payload.uid, Object.assign({}, payload.data, {
-				lastSeen: moment().format(),
-				joinedGroups: conGroups
-			}));
-			Storage.saveNetUser(bssid, payload.uid);
-			*/
 		});
 	}
 
 	function getOnlineStatus(timestamp) {
+		// FIXME: check tcp connection
 		const diff = moment().diff(moment(timestamp), 'seconds');
 		let online = 0;
 		let text;
