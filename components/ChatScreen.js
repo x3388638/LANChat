@@ -85,7 +85,7 @@ export default class ChatScreen extends React.Component {
 			.then((onlineStatusArr) => {
 				onlineMemberCount = onlineStatusArr.filter((onlineStatus) => !!onlineStatus.online).length
 				this.props.navigation.setParams({
-					title: `${this.props.navigation.state.params.groupName} (${onlineMemberCount + 1})`
+					title: `${this.props.navigation.state.params.groupName} (${ onlineMemberCount })`
 				});
 			});
 	}

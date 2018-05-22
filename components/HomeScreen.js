@@ -147,7 +147,7 @@ export default class HomeScreen extends React.Component {
 
 	async getUserCount() {
 		this.setState({
-			userCount: Object.keys(global.netUsers).length + 1
+			userCount: Object.keys(global.netUsers).length
 		});
 	}
 

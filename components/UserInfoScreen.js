@@ -56,7 +56,7 @@ export default class UserInfoScreen extends React.Component {
 						<UserAvatar size="55" name={ this.state.username } style={ styles.avatar } />
 						<View style={ styles.textContainer }>
 							<Text style={ styles.username }>{ this.state.username }</Text>
-							<MemberOnlineStatus lastSeen={ this.state.lastSeen } />
+							<MemberOnlineStatus uid={ this.props.navigation.state.params.uid } />
 						</View>
 					</View>
 				}
