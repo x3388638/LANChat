@@ -15,8 +15,30 @@ import {
 import Storage from './Storage.js';
 
 export default (() => {
+	/**
+	 * private variable
+	 */
 	const _expireTime = 5;
+	const _alivePeriod = 9;
 
+	/**
+	 * private method
+	 */
+	async function _sendAlive() {
+		const ip = await getIP();
+		const os = Platform.OS;
+		global.UdpSocket.send(new Buffer(JSON.stringify({
+			type: 'alive',
+			payload: {
+				ip,
+				os
+			}
+		})));
+	}
+
+	/**
+	 * public method
+	 */
 	function genPass(pass) {
 		const salt = DeviceInfo.getBrand().toLocaleLowerCase();
 		const n = ([...pass].reduce((sum, curr) => sum + (+curr), 0)) % 5;
@@ -97,16 +119,9 @@ export default (() => {
 		});
 	}
 
-	async function sendAlive() {
-		const ip = await getIP();
-		const os = Platform.OS;
-		global.UdpSocket.send(new Buffer(JSON.stringify({
-			type: 'alive',
-			payload: {
-				ip,
-				os
-			}
-		})));
+	function sendAlive() {
+		_sendAlive();
+		setInterval(_sendAlive, _alivePeriod * 1000);
 	}
 
 	function encrypt(text, key) {
@@ -128,13 +143,19 @@ export default (() => {
 			const currentIP = await getIP();
 			const currentOS = Platform.OS;
 
+			// 收到自己的 alive，略過
 			if (data.payload.ip === currentIP) {
+				return;
+			}
+
+			// tcp 連線已建立
+			if (netUserExist(data.payload.ip)) {
 				return;
 			}
 
 			// 如果本身是 Android, 收到 ios 的 alive 則不理他並反送 alive
 			if (currentOS !== 'ios' && data.payload.os === 'ios') {
-				sendAlive();
+				_sendAlive();
 				return;
 			}
 
