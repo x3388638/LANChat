@@ -107,7 +107,7 @@ export default (() => {
 	}
 
 	async function updateUser(uid, data) {
-		const user = await getUsers();
+		const users = await getUsers();
 		const updated = Object.assign({}, users[uid] || {}, data);
 		saveUser(uid, updated);
 	}

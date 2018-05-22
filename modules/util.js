@@ -169,14 +169,31 @@ export default (() => {
 		});
 	}
 
-	function getOnlineStatus(timestamp) {
-		// FIXME: check tcp connection
-		const diff = moment().diff(moment(timestamp), 'seconds');
-		let online = 0;
-		let text;
-		if (diff <= 60 * 3) {
-			online = 1;
-			text = '上線中';
+	async function getOnlineStatus(uid) {
+		let online = 1;
+		let text = '上線中';
+		// check is online (tcp connecting)
+		if (Object.values(global.netUsers).some((user) => user.uid === uid)) {
+			return {
+				online,
+				text
+			}
+		}
+
+		online = 0;
+		text = '1 天以上';
+		const users = await Storage.getUsers();
+		const lastSeen = users[uid].lastSeen;
+		if (!lastSeen) {
+			return {
+				online,
+				text
+			}
+		}
+
+		const diff = moment().diff(moment(lastSeen), 'seconds');
+		if (diff <= 60 * 5) {
+			text = '5 分鐘內';
 		} else if (diff <= 60 * 60) {
 			text = '1 小時內';
 		} else if (diff <= 60 * 60 * 24) {
@@ -332,13 +349,15 @@ export default (() => {
 	}
 
 	function handleTcpDisconnect(ip) {
-		const uid = global.netUsers[ip].uid;
+		const uid = global.netUsers[ip] ? global.netUsers[ip].uid : null;
 		// remove user from netUsers
 		delete global.netUsers[ip];
 
 		// set lastSeen
-		const timestamp = moment().format();
-		Storage.updateUser(uid, { lastSeen: timestamp });
+		if (!!uid) {
+			const timestamp = moment().format();
+			Storage.updateUser(uid, { lastSeen: timestamp });
+		}
 	}
 	
 	return {

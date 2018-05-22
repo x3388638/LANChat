@@ -54,7 +54,7 @@ export default class ChatScreen extends React.Component {
 		this.props.navigation.addListener('didFocus', () => {
 			this.checkGroup();
 			this.getOnlineCount();
-			setInterval(this.getOnlineCount, 30 * 1000);
+			setInterval(this.getOnlineCount, 9 * 1000);
 		});
 
 		this.props.navigation.setParams({ handleShowQRCode: this.handleShowQRCode });
@@ -78,9 +78,17 @@ export default class ChatScreen extends React.Component {
 		const bssid = this.props.navigation.state.params.bssid;
 		const groupID = this.props.navigation.state.params.groupID;
 		const members = await Util.getGroupMembers(bssid, groupID);
-		const onlineMembers = Object.keys(members).filter((uid) => !!Util.getOnlineStatus(members[uid].lastSeen).online);
+		const onlineMembers = Object.keys(members).filter(async (uid) => {
+			const onlineStatus = await Util.getOnlineStatus(uid);
+			if (!!onlineStatus.online) {
+				return true;
+			}
+
+			return false;
+		});
+
 		this.props.navigation.setParams({
-			title: `${this.props.navigation.state.params.groupName} (${onlineMembers.length})`
+			title: `${this.props.navigation.state.params.groupName} (${ onlineMembers.length + 1 })`
 		});
 	}
 
