@@ -78,18 +78,16 @@ export default class ChatScreen extends React.Component {
 		const bssid = this.props.navigation.state.params.bssid;
 		const groupID = this.props.navigation.state.params.groupID;
 		const members = await Util.getGroupMembers(bssid, groupID);
-		const onlineMembers = Object.keys(members).filter(async (uid) => {
-			const onlineStatus = await Util.getOnlineStatus(uid);
-			if (!!onlineStatus.online) {
-				return true;
-			}
 
-			return false;
-		});
-
-		this.props.navigation.setParams({
-			title: `${this.props.navigation.state.params.groupName} (${ onlineMembers.length + 1 })`
-		});
+		let onlineMemberCount = 0;
+		Promise
+			.all(Object.keys(members).map((uid) => Util.getOnlineStatus(uid)))
+			.then((onlineStatusArr) => {
+				onlineMemberCount = onlineStatusArr.filter((onlineStatus) => !!onlineStatus.online).length
+				this.props.navigation.setParams({
+					title: `${this.props.navigation.state.params.groupName} (${onlineMemberCount + 1})`
+				});
+			});
 	}
 
 	render() {

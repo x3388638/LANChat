@@ -9,9 +9,30 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Util from '../modules/util';
 
 export default class MemberOnlineStatus extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			online: 0,
+			text: ''
+		};
+
+		this.getOnlineStatus = this.getOnlineStatus.bind(this);
+	}
+
+	componentDidMount() {
+		this.getOnlineStatus();
+	}
+
+	async getOnlineStatus() {
+		const onlineStatus = await Util.getOnlineStatus(this.props.uid);
+		this.setState({
+			online: onlineStatus.online,
+			text: onlineStatus.text
+		});
+	}
+
 	render() {
-		const onlineStatus = Util.getOnlineStatus(this.props.lastSeen);
-		const dotColor = onlineStatus.online ? '#4cd964' : '#4E6068';
+		const dotColor = this.state.online ? '#4cd964' : '#4E6068';
 		return (
 			<View style={ styles.container }>
 				<View style={ styles.dot }>
@@ -21,7 +42,7 @@ export default class MemberOnlineStatus extends React.Component {
 						name="circle"
 					/>
 				</View>
-				<Text style={ styles.text }>{ onlineStatus.text }</Text>
+				<Text style={ styles.text }>{ this.state.text }</Text>
 			</View>
 		)
 	}

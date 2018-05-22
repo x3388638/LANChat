@@ -71,6 +71,7 @@ export default class HomeScreen extends React.Component {
 		});
 
 		global.PubSub.on('wifi:changed', ([ssid, bssid]) => {
+			console.log('wifichanged');
 			global.netUsers = {};
 			!!this.renderGroups && this.renderGroups();
 		});

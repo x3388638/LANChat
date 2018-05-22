@@ -265,7 +265,7 @@ export default (() => {
 			const connected = await isWiFiConnected();
 			if (connected) {
 				const [ssid, bssid] = await getWifi();
-				if (!!bssid && bssid !== lastBssid) {
+				if (!!bssid && !!lastBssid && bssid !== lastBssid) {
 					PubSub.emit('wifi:changed', [ssid, bssid]);
 				}
 
