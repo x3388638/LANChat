@@ -244,10 +244,6 @@ export default (() => {
 		return !!global.netUsers[ip];
 	}
 
-	function removeNetUsers(ip) {
-		delete global.netUsers[ip];
-	}
-
 	async function sendUserData(ip) {
 		const uid = getUid();
 		const personalInfo = await Storage.getPersonalInfo();
@@ -313,6 +309,16 @@ export default (() => {
 			Storage.saveNetUser(bssid, payload.uid);
 		});
 	}
+
+	function handleTcpDisconnect(ip) {
+		const uid = global.netUsers[ip].uid;
+		// remove user from netUsers
+		delete global.netUsers[ip];
+
+		// set lastSeen
+		const timestamp = moment().format();
+		Storage.updateUser(uid, { lastSeen: timestamp });
+	}
 	
 	return {
 		genPass,
@@ -335,8 +341,8 @@ export default (() => {
 		listenWiFiChanged,
 		updateNetUsers,
 		netUserExist,
-		removeNetUsers,
 		sendUserData,
-		parseUserData
+		parseUserData,
+		handleTcpDisconnect
 	}
 })();

@@ -52,7 +52,6 @@ export default (() => {
 
 	function _onClose(socket) {
 		console.warn(`Disconnect from ${socket._address.address}`);
-		Util.removeNetUsers(socket._address.address);
 		global.PubSub.emit('tcp:disconnect', socket._address.address);
 	}
 

@@ -79,8 +79,9 @@ export default class HomeScreen extends React.Component {
 			setTimeout(this.getUserCount, 1000);
 		});
 
-		global.PubSub.on('tcp:disconnect', () => {
+		global.PubSub.on('tcp:disconnect', (ip) => {
 			setTimeout(this.getUserCount, 1000);
+			Util.handleTcpDisconnect(ip);
 		});
 
 		this.getUserCount();

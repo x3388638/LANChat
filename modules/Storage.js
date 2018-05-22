@@ -106,6 +106,12 @@ export default (() => {
 		AsyncStorage.setItem('@LANChat:users', JSON.stringify(users));
 	}
 
+	async function updateUser(uid, data) {
+		const user = await getUsers();
+		const updated = Object.assign({}, users[uid] || {}, data);
+		saveUser(uid, updated);
+	}
+
 	async function getUsersByNet(bssid = null) {
 		let users = await AsyncStorage.getItem('@LANChat:usersByNet');
 		users = users ? JSON.parse(users) : {};
@@ -139,8 +145,9 @@ export default (() => {
 		getJoinedGroups,
 		getUsers,
 		saveUser,
+		updateUser,
 		getUsersByNet,
 		saveNetUser,
-		removeItem
+		removeItem,
 	};
 })();
