@@ -82,6 +82,7 @@ export default class CreateGroupScreen extends React.Component {
 					return;
 				}
 
+				Util.sendUserData();
 				Alert.alert('群組新建成功', null, [{ text: 'OK', onPress: this.props.navigation.goBack }]);
 			});
 

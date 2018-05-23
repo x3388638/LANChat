@@ -10,6 +10,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Storage from '../modules/Storage.js';
+import Util from '../modules/util.js';
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
@@ -31,6 +32,7 @@ export default class HomeScreen extends React.Component {
 					return;
 				}
 
+				Util.sendUserData();
 				Alert.alert('加入成功', `群組: [${net.ssid}] ${groupName}`, [{ text: 'OK', onPress: this.props.navigation.goBack }]);
 			});
 		} catch (err) {

@@ -21,7 +21,7 @@ export default (() => {
 		return await AsyncStorage.getItem('@LANChat:pass');
 	}
 
-	async function setPersonalInfo(data = { normal: {}, emergency: {} }) {
+	async function setPersonalInfo(data = { normal: {}, emergency: {} }, callback) {
 		let personalInfo = await getPersonalInfo();
 
 		personalInfo = personalInfo || {
@@ -34,7 +34,7 @@ export default (() => {
 			emergency: Object.assign({}, personalInfo.emergency || {}, data.emergency || {})
 		};
 
-		AsyncStorage.setItem('@LANChat:personalInfo', JSON.stringify(personalInfo));
+		AsyncStorage.setItem('@LANChat:personalInfo', JSON.stringify(personalInfo), callback);
 	}
 
 	async function getPersonalInfo() {

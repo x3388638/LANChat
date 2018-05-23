@@ -19,6 +19,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import DatePicker from 'react-native-datepicker';
 
 import Storage from '../modules/Storage.js';
+import Util from '../modules/util.js';
 
 export default class SettingsScreen extends React.Component {
 	constructor(props) {
@@ -76,9 +77,10 @@ export default class SettingsScreen extends React.Component {
 					address,
 					memo
 				}
+			}, () => {
+				Util.sendUserData();
+				Alert.alert('儲存成功');
 			});
-
-			Alert.alert('儲存成功');
 		}, 300);
 	}
 

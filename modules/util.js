@@ -282,7 +282,7 @@ export default (() => {
 		return !!global.netUsers[ip];
 	}
 
-	async function sendUserData(ip) {
+	async function sendUserData(ip = 'ALL') {
 		const uid = getUid();
 		const personalInfo = await Storage.getPersonalInfo();
 		const joinedGroups = await Storage.getJoinedGroups();
@@ -303,11 +303,18 @@ export default (() => {
 			}
 		});
 
-		global.netUsers[ip].tcpSocket.write(new Buffer(data));
+		if (ip === 'ALL') {
+			Object.values(global.netUsers).forEach((user) => {
+				user.tcpSocket.write(new Buffer(data));
+			});
+		} else {
+			global.netUsers[ip].tcpSocket.write(new Buffer(data));
+		}
 	}
 
 	function parseUserData() {
 		global.PubSub.on('newMsg:userData', async (data) => {
+			console.warn(`receive user data from ${data.payload.data.username}`);
 			const payload = data.payload;
 			const [ssid, bssid] = await getWifi();
 			const targetGroups = Object.keys(payload.joinedGroups); // 收到的使用者所加入的 groupID array
