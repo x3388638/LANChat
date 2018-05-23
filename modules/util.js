@@ -314,7 +314,6 @@ export default (() => {
 
 	function parseUserData() {
 		global.PubSub.on('newMsg:userData', async (data) => {
-			console.warn(`receive user data from ${data.payload.data.username}`);
 			const payload = data.payload;
 			const [ssid, bssid] = await getWifi();
 			const targetGroups = Object.keys(payload.joinedGroups); // 收到的使用者所加入的 groupID array

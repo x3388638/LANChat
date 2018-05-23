@@ -75,8 +75,16 @@ export default class ChatScreen extends React.Component {
 	}
 
 	async getOnlineCount() {
-		const bssid = this.props.navigation.state.params.bssid;
 		const groupID = this.props.navigation.state.params.groupID;
+		if (groupID === 'LOBBY') {
+			this.props.navigation.setParams({
+				title: `${this.props.navigation.state.params.groupName} (${ Object.keys(global.netUsers).length })`
+			});
+
+			return;
+		}
+
+		const bssid = this.props.navigation.state.params.bssid;
 		const members = await Util.getGroupMembers(bssid, groupID);
 
 		let onlineMemberCount = 0;
