@@ -350,14 +350,19 @@ export default (() => {
 
 	function handleTcpDisconnect(ip) {
 		const uid = global.netUsers[ip] ? global.netUsers[ip].uid : null;
-		// remove user from netUsers
-		delete global.netUsers[ip];
 
-		// set lastSeen
 		if (!!uid) {
+			// clear socket
+			typeof global.netUsers[ip].tcpSocket.close === 'function' && global.netUsers[ip].tcpSocket.close();
+			typeof global.netUsers[ip].tcpSocket.destory === 'function' && global.netUsers[ip].tcpSocket.destory();
+
+			// set lastSeen
 			const timestamp = moment().format();
 			Storage.updateUser(uid, { lastSeen: timestamp });
 		}
+
+		// remove user from netUsers
+		delete global.netUsers[ip];
 	}
 	
 	return {
