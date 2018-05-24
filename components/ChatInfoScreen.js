@@ -49,7 +49,10 @@ export default class ChatInfoScreen extends React.Component {
 				Storage.leaveGroup(
 					JSON.parse(this.props.navigation.state.params.groupInfo).net.bssid,
 					this.props.navigation.state.params.groupID,
-					this.props.navigation.goBack
+					() => {
+						Util.sendUserData();
+						this.props.navigation.goBack();
+					}
 				)
 			} }
 		]);
