@@ -36,7 +36,9 @@ export default class UserInfoScreen extends React.Component {
 	async getUser(uid) {
 		let users = {};
 		if (this.props.navigation.state.params.groupID === 'LOBBY') {
-			users = global.netUsers;
+			Object.values(global.netUsers).forEach((user) => {
+				users[user.uid] = user;
+			});
 		} else {
 			users = await Storage.getUsers();
 		}
