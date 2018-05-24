@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Storage from './Storage.js';
+import PacketHistory from './PacketHistory.js';
 
 export default (() => {
 	/**
@@ -300,8 +301,10 @@ export default (() => {
 			});
 		});
 
+		const packetID = genUUID();
 		const data = JSON.stringify({
 			type: 'userData',
+			packetID: packetID,
 			payload: {
 				uid,
 				data: personalInfo.normal,
@@ -309,6 +312,7 @@ export default (() => {
 			}
 		});
 
+		PacketHistory.add(packetID, data);
 		if (ip === 'ALL') {
 			Object.values(global.netUsers).forEach((user) => {
 				user.tcpSocket.write(new Buffer(data));
