@@ -214,7 +214,13 @@ export default (() => {
 	async function getGroupMembers(bssid = '', groupID = '') {
 		let members = {};
 		if (groupID === 'LOBBY') {
-			members = global.netUsers;
+			const parsedMembers = {};
+			// remove tcpSocket, or the object cannot be JSON.stringify
+			Object.keys(global.netUsers).forEach((ip) => {
+				parsedMembers[global.netUsers[ip].uid] = Object.assign({}, global.netUsers[ip], { tcpSocket: null });
+			});
+
+			members = parsedMembers;
 		} else {
 			const usersByNet = await Storage.getUsersByNet(bssid);
 			const users = await Storage.getUsers();
