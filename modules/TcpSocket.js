@@ -35,18 +35,36 @@ export default (() => {
 	 */
 	function _onData(socket, data) {
 		const ip = socket._address.address;
+		const dataString = data.toString();
+		let parsedData;
+		let error = false;
+		console.log(dataString);
 		try {
-			const msg = JSON.parse(data.toString());
-			msg.payload.ip = ip;
-			switch (msg.type) {
-				case 'userData':
-					global.PubSub.emit('newMsg:userData', msg);
-					break;
-				default:
-					break;
-			}
+			parsedData = JSON.parse(dataString);
 		} catch (err) {
-			console.warn(err);
+			console.warn('Tcp receive data error, try to send `resendReq`.');
+			error = true;
+			const match = dataString.match(/"packetID":"([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})"/);
+			if (!!match && match[1]) {
+				const packetID = match[1];
+				Util.resendReq(ip, packetID);
+			}
+		}
+
+		if (error) {
+			return;
+		}
+
+		parsedData.payload.ip = ip;
+		switch (parsedData.type) {
+			case 'userData':
+				global.PubSub.emit('newMsg:userData', parsedData);
+				break;
+			case 'resendReq':
+				console.warn('receive resendReq');
+				break;
+			default:
+				break;
 		}
 	}
 
