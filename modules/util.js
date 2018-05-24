@@ -394,6 +394,13 @@ export default (() => {
 		PacketHistory.add(id, data);
 		global.netUsers[ip].tcpSocket.write(new Buffer(data));
 	}
+
+	function resend(ip, packetID) {
+		const packetData = PacketHistory.get(packetID);
+		if (!!packetData && !!packetData.packetString) {
+			global.netUsers[ip].tcpSocket.write(new Buffer(packetData.packetString));
+		}
+	}
 	
 	return {
 		genPass,
@@ -419,6 +426,7 @@ export default (() => {
 		sendUserData,
 		parseUserData,
 		handleTcpDisconnect,
-		resendReq
+		resendReq,
+		resend
 	}
 })();

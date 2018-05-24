@@ -6,7 +6,7 @@ export default (() => {
 	/**
 	 * private variable
 	 */
-	const _port = 14432;
+	const _port = 20849;
 	let _server;
 
 	/**
@@ -14,17 +14,13 @@ export default (() => {
 	 */
 	_server = net.createServer((socket) => {
 		const remoteAddr = socket._address.address;
-		console.warn(`tcp server on connect from: ${remoteAddr}`);
+		// console.warn(`tcp server on connect from: ${remoteAddr}`);
 		socket.on('data', (data) => _onData(socket, data));
 		socket.on('close', () => _onClose(socket));
 		socket.on('error', _onError);
-
 		Util.updateNetUsers(remoteAddr, { tcpSocket: socket });
-		console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
-
-		// TODO: send userData
+		// console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
 		Util.sendUserData(remoteAddr);
-
 		global.PubSub.emit('tcp:connect');
 	});
 
@@ -38,11 +34,9 @@ export default (() => {
 		const dataString = data.toString();
 		let parsedData;
 		let error = false;
-		console.log(dataString);
 		try {
 			parsedData = JSON.parse(dataString);
 		} catch (err) {
-			console.warn('Tcp receive data error, try to send `resendReq`.');
 			error = true;
 			const match = dataString.match(/"packetID":"([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})"/);
 			if (!!match && match[1]) {
@@ -61,7 +55,8 @@ export default (() => {
 				global.PubSub.emit('newMsg:userData', parsedData);
 				break;
 			case 'resendReq':
-				console.warn('receive resendReq');
+				const { packetID } = parsedData.payload;
+				Util.resend(ip, packetID);
 				break;
 			default:
 				break;
@@ -69,7 +64,7 @@ export default (() => {
 	}
 
 	function _onClose(socket) {
-		console.warn(`Disconnect from ${socket._address.address}`);
+		// console.warn(`Disconnect from ${socket._address.address}`);
 		global.PubSub.emit('tcp:disconnect', socket._address.address);
 	}
 
@@ -86,18 +81,14 @@ export default (() => {
 		}
 
 		const socket = net.connect(_port, ip, () => {
-			console.warn(`tcp connect to ${ip}`);
+			// console.warn(`tcp connect to ${ip}`);
 			socket.on('data', (data) => _onData(socket, data));
 			socket.on('close', () => _onClose(socket));
 			socket.on('error', _onError);
-
 			Util.updateNetUsers(ip, { tcpSocket: socket });
 			!!callback && callback();
-			console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
-
-			// TODO: send userData
+			// console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
 			Util.sendUserData(ip);
-
 			global.PubSub.emit('tcp:connect');
 		});
 	}

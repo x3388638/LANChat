@@ -27,7 +27,7 @@ export default (() => {
 
 	function get(id) {
 		const packetData = global.packetHistoryQueue.find((packet) => packet.id === id); // undefined for not found
-		return packageData;
+		return packetData;
 	}
 	
 	return {
