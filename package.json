@@ -24,6 +24,7 @@
     "querystring-es3": "^0.2.1",
     "react": "16.3.1",
     "react-native": "0.55.3",
+    "react-native-autogrow-input": "^0.2.1",
     "react-native-camera": "^1.1.2",
     "react-native-crypto": "^2.1.2",
     "react-native-datepicker": "^1.7.2",

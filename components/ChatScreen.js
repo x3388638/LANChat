@@ -5,8 +5,10 @@ import {
 	StyleSheet
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import QRCodeModal from './QRCodeModal.js';
+import InputBar from './InputBar.js';
 
 import Storage from '../modules/Storage';
 import Util from '../modules/util';
@@ -101,9 +103,8 @@ export default class ChatScreen extends React.Component {
 	render() {
 		const isLobby = this.props.navigation.state.params.groupID === 'LOBBY'
 		return (
-			<View>
-				<Text>chat screen</Text>
-				<Text>{ JSON.stringify(this.props.navigation.state.params, null, 4) }</Text>
+			<View style={ styles.container }>
+				<InputBar />
 				{ !isLobby &&
 				<QRCodeModal
 					open={ this.state.qrcodeModalOpen }
@@ -117,6 +118,9 @@ export default class ChatScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+	container: {
+		height: '100%'
+	},
 	settingsBtn: {
 		marginRight: 10
 	},
