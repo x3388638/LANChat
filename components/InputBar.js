@@ -7,10 +7,26 @@ import {
 import AutogrowInput from 'react-native-autogrow-input';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+class MoreFunc extends React.Component {
+	render() {
+		return (
+			<View style={ styles.btnContainer }>
+				<View style={ styles.moreBtn }>
+					<Icon
+						size={26}
+						name='more-horiz'
+						color="#666"
+					/>
+				</View>
+			</View>
+		);
+	}
+}
+
 class SendButton extends React.Component {
 	render() {
 		return (
-			<View style={ styles.sendBtnContainer }>
+			<View style={ styles.btnContainer }>
 				<View style={ styles.sendBtn }>
 					<Icon
 						size={24}
@@ -27,6 +43,7 @@ export default class InputBar extends React.Component {
 	render() {
 		return (
 			<View style={ styles.container }>
+				<MoreFunc />
 				<AutogrowInput
 					multiline
 					defaultHeight={40}
@@ -62,7 +79,7 @@ const styles = StyleSheet.create({
 		marginTop: 5,
 		marginBottom: 5
 	},
-	sendBtnContainer: {
+	btnContainer: {
 		justifyContent: 'center'
 	},
 	sendBtn: {
@@ -71,10 +88,16 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderRadius: 30,
-		marginLeft: 5,
 		marginRight: 5,
 		borderWidth: 1,
 		borderColor: '#d3d3d3',
 		backgroundColor: '#ff9500'
+	},
+	moreBtn: {
+		height: 35,
+		width: 35,
+		justifyContent: 'center',
+		alignItems: 'center',
+		marginLeft: 5,
 	}
 });
