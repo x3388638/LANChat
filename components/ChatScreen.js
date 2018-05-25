@@ -2,10 +2,11 @@ import React from 'react';
 import {
 	View,
 	Text,
+	FlatList,
 	StyleSheet
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import QRCodeModal from './QRCodeModal.js';
 import InputBar from './InputBar.js';
@@ -104,7 +105,12 @@ export default class ChatScreen extends React.Component {
 		const isLobby = this.props.navigation.state.params.groupID === 'LOBBY'
 		return (
 			<View style={ styles.container }>
+				<FlatList
+					data={[{ key: 'a' }, { key: 'b' }]}
+					renderItem={({ item }) => <Text>{item.key}</Text>}
+				/>
 				<InputBar />
+				<KeyboardSpacer />
 				{ !isLobby &&
 				<QRCodeModal
 					open={ this.state.qrcodeModalOpen }
