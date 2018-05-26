@@ -14,7 +14,7 @@ export default (() => {
 	 */
 	_server = net.createServer((socket) => {
 		const remoteAddr = socket._address.address;
-		// console.warn(`tcp server on connect from: ${remoteAddr}`);
+		console.warn(`tcp server on connect from: ${remoteAddr}`);
 		socket.on('data', (data) => _onData(socket, data));
 		socket.on('close', () => _onClose(socket));
 		socket.on('error', _onError);
@@ -23,8 +23,11 @@ export default (() => {
 		Util.sendUserData(remoteAddr);
 		global.PubSub.emit('tcp:connect');
 	});
-
-	_server.listen(_port)
+	
+	// server listen
+	Util.getIP().then((host) => {
+		_server.listen(_port, host);
+	});
 
 	/**
 	 * private method
@@ -81,7 +84,7 @@ export default (() => {
 		}
 
 		const socket = net.connect(_port, ip, () => {
-			// console.warn(`tcp connect to ${ip}`);
+			console.warn(`tcp connect to ${ip}`);
 			socket.on('data', (data) => _onData(socket, data));
 			socket.on('close', () => _onClose(socket));
 			socket.on('error', _onError);
