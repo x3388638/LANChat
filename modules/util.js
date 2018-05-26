@@ -358,8 +358,7 @@ export default (() => {
 
 		if (!!uid) {
 			// clear socket
-			typeof global.netUsers[ip].tcpSocket.close === 'function' && global.netUsers[ip].tcpSocket.close();
-			typeof global.netUsers[ip].tcpSocket.destory === 'function' && global.netUsers[ip].tcpSocket.destory();
+			global.netUsers[ip].tcpSocket.end();
 
 			// set lastSeen
 			const timestamp = moment().format();
