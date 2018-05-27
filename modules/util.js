@@ -14,6 +14,7 @@ import {
 
 import Storage from './Storage.js';
 import PacketHistory from './PacketHistory.js';
+import TcpSocket from './TcpSocket.js';
 
 export default (() => {
 	/**
@@ -303,11 +304,16 @@ export default (() => {
 
 		PacketHistory.add(packetID, data);
 		if (ip === 'ALL') {
-			Object.values(global.netUsers).forEach((user) => {
-				user.tcpSocket.write(new Buffer(data));
+			// Object.values(global.netUsers).forEach((user) => {
+			// 	user.tcpSocket.write(new Buffer(data));
+			// });
+
+			Object.keys(global.netUsers).forEach((userIP) => {
+				TcpSocket.connectAndWrite(userIP, new Buffer(data));
 			});
 		} else {
-			global.netUsers[ip].tcpSocket.write(new Buffer(data));
+			// global.netUsers[ip].tcpSocket.write(new Buffer(data));
+			TcpSocket.connectAndWrite(ip, new Buffer(data));
 		}
 	}
 

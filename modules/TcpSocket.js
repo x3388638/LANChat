@@ -96,7 +96,19 @@ export default (() => {
 		});
 	}
 
+	function connectAndWrite(ip, dataBuffer) {
+		const socket = net.connect(_port, ip, () => {
+			socket.on('error', (err) => {
+				console.warn(`TCP connect to ${ ip } error. ${ err }`);
+			});
+
+			socket.write(dataBuffer);
+			socket.end();
+		});
+	}
+
 	return {
-		connect
+		connect,
+		connectAndWrite
 	};
 })();
