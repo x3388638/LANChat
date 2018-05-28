@@ -405,6 +405,39 @@ export default (() => {
 			});
 		}
 	}
+
+	function parseMsg() {
+		global.PubSub.on('newMsg:msg', async (data) => {
+			const payload = data.payload;
+			let msgData;
+			const [ssid, bssid] = await getWifi();
+			if (payload.groupID !== 'LOBBY') {
+				const joinedGroups = await Storage.getJoinedGroups();
+				if (!joinedGroups[bssid][payload.groupID]) {
+					// 這個封包跟我無關
+					return;
+				}
+
+				if (decrypt(payload.encryptedID, joinedGroups[bssid][payload.groupID].key) !== payload.groupID) {
+					// 封包不正確
+					return;
+				}
+
+				msgData = JSON.parse(decrypt(payload.data, joinedGroups[bssid][payload.groupID].key));
+			} else {
+				msgData = JSON.parse(payload.data);
+			}
+
+			// 存入訊息至 @LANChat:messages
+			Storage.storeMsg(bssid, payload.groupID, msgData, () => {
+				global.PubSub.emit('receiveMsg');
+				global.PubSub.emit('msgInChat');
+				// Storage.getMsg().then((msg) => {
+				// 	console.warn(JSON.stringify(msg, null, 4))
+				// })
+			});
+		});
+	}
 	
 	return {
 		genPass,
@@ -431,6 +464,7 @@ export default (() => {
 		sendUserDataInterval,
 		parseUserData,
 		handleTcpDisconnect,
-		sendMsg
+		sendMsg,
+		parseMsg
 	}
 })();

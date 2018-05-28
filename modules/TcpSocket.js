@@ -66,7 +66,7 @@ export default (() => {
 					global.PubSub.emit('newMsg:userData', parsedData);
 					break;
 				case 'msg':
-					console.warn(JSON.stringify(parsedData, null, 4));
+					global.PubSub.emit('newMsg:msg', parsedData);
 					break;
 				default:
 					break;

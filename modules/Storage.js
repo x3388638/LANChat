@@ -132,6 +132,32 @@ export default (() => {
 	function removeItem(key) {
 		AsyncStorage.removeItem(`@LANChat:${key}`);
 	}
+
+	async function storeMsg(bssid, groupID, msgData, callback) {
+		const msg = await getMsg();
+		msg[bssid] = msg[bssid] || {};
+		msg[bssid][groupID] = msg[bssid][groupID] || {};
+		msg[bssid][groupID][Util.genUUID()] = msgData;
+		AsyncStorage.setItem('@LANChat:messages', JSON.stringify(msg), callback);
+	}
+
+	async function getMsg(bssid = '', groupID = '', msgID = '') {
+		let msg = await AsyncStorage.getItem('@LANChat:messages');
+		msg = msg ? JSON.parse(msg) : {};
+		if (!bssid) {
+			return msg;
+		}
+
+		if (!groupID) {
+			return msg[bssid] || {}
+		}
+
+		if (!msgID) {
+			return msg[bssid] ? msg[bssid][groupID] ? msg[bssid][groupID] : {} : {};
+		}
+
+		return msg[bssid] ? msg[bssid][groupID] ? msg[bssid][groupID][msgID] ? msg[bssid][groupID][msgID] : null : null : null;
+	}
 	
 	return {
 		setLastLogin,
@@ -149,5 +175,7 @@ export default (() => {
 		getUsersByNet,
 		saveNetUser,
 		removeItem,
+		storeMsg,
+		getMsg
 	};
 })();
