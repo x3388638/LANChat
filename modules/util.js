@@ -155,7 +155,7 @@ export default (() => {
 			}
 
 			// tcp connect
-			global.TcpSocket.connect(data.payload.ip);
+			global.TcpSocket.keepConn(data.payload.ip);
 		});
 	}
 
@@ -272,6 +272,7 @@ export default (() => {
 
 	function updateNetUsers(ip, userInfo = {}) {
 		global.netUsers[ip] = Object.assign({}, global.netUsers[ip] || {}, userInfo, { ip });
+		console.log(global.netUsers);
 	}
 
 	function netUserExist(ip) {

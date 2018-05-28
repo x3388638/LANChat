@@ -15,13 +15,31 @@ export default (() => {
 	_server = net.createServer((socket) => {
 		const remoteAddr = socket._address.address;
 		// console.warn(`tcp server on connect from: ${remoteAddr}`);
-		socket.on('data', (data) => _onData(socket, data));
-		socket.on('close', () => _onClose(socket));
+		const chunks = [];
+
+		socket.on('close', () => {
+			if (chunks.length === 0) {
+				// 持續連線的 tcp connection 斷線，使用者離線
+				_onClose(socket);
+				return;
+			}
+
+			const dataBuffer = Buffer.concat(chunks);
+			_onData(socket, dataBuffer);
+		});
+
+		socket.on('data', (data) => {
+			chunks.push(data);
+		});
+
 		socket.on('error', _onError);
-		Util.updateNetUsers(remoteAddr, { tcpSocket: socket });
 		// console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
-		Util.sendUserData(remoteAddr);
-		global.PubSub.emit('tcp:connect');
+		if (!Util.netUserExist(remoteAddr)) {
+			// 第一次連線 (持續連線)
+			Util.updateNetUsers(remoteAddr, { tcpSocket: socket });
+			Util.sendUserData(remoteAddr);
+			global.PubSub.emit('tcp:connect');
+		}
 	});
 	
 	// server listen
@@ -40,6 +58,7 @@ export default (() => {
 		try {
 			parsedData = JSON.parse(dataString);
 		} catch (err) {
+			console.warn('不該進來這裡ㄅ');
 			error = true;
 			const match = dataString.match(/"packetID":"([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})"/);
 			if (!!match && match[1]) {
@@ -48,7 +67,7 @@ export default (() => {
 			}
 		}
 
-		if (error) {
+		if (error && !parsedData.payload) {
 			return;
 		}
 
@@ -78,14 +97,13 @@ export default (() => {
 	/**
 	 * public method
 	 */
-	function connect(ip, callback) {
+	function keepConn(ip, callback) {
 		if (!!Util.netUserExist(ip)) {
 			return;
 		}
 
 		const socket = net.connect(_port, ip, () => {
 			// console.warn(`tcp connect to ${ip}`);
-			socket.on('data', (data) => _onData(socket, data));
 			socket.on('close', () => _onClose(socket));
 			socket.on('error', _onError);
 			Util.updateNetUsers(ip, { tcpSocket: socket });
@@ -108,7 +126,7 @@ export default (() => {
 	}
 
 	return {
-		connect,
+		keepConn,
 		connectAndWrite
 	};
 })();
