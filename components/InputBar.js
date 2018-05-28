@@ -17,7 +17,7 @@ class MoreFunc extends React.Component {
 					<Icon
 						size={26}
 						name='more-horiz'
-						color="#666"
+						color="#63676F"
 					/>
 				</View>
 			</View>
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
 		marginRight: 5,
 		borderWidth: 1,
 		borderColor: '#d3d3d3',
-		backgroundColor: '#ff9500'
+		backgroundColor: '#63676F'
 	},
 	moreBtn: {
 		height: 35,

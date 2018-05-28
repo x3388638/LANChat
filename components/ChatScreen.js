@@ -123,7 +123,8 @@ export default class ChatScreen extends React.Component {
 
 const styles = StyleSheet.create({
 	container: {
-		height: '100%'
+		height: '100%',
+		backgroundColor: '#D5D6CB'
 	},
 	settingsBtn: {
 		marginRight: 10

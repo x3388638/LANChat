@@ -77,11 +77,17 @@ const styles = StyleSheet.create({
 	},
 	msgUsername_left: {
 		color: '#666',
-		marginBottom: 1
+		marginBottom: 2,
+		marginLeft: 5,
+		fontSize: 16,
+		fontWeight: 'bold'
 	},
 	msgUsername_right: {
 		color: '#666',
-		marginBottom: 1,
+		marginBottom: 2,
+		marginRight: 5,
+		fontSize: 16,
+		fontWeight: 'bold',
 		textAlign: 'right'
 	},
 	msgBubbleContainer_left: {
@@ -93,18 +99,18 @@ const styles = StyleSheet.create({
 	},
 	msgBubble_left: {
 		borderRadius: 8,
-		backgroundColor: '#fff',
+		backgroundColor: '#F8F8F8',
 		maxWidth: '65%',
 		padding: 10
 	},
 	msgBubble_right: {
 		borderRadius: 8,
-		backgroundColor: '#ff9500',
+		backgroundColor: '#B3B3A1',
 		maxWidth: '65%',
 		padding: 10,
 	},
 	msgBubbleText: {
-		color: '#111'
+		color: '#63676F'
 	},
 	timeWrapper: {
 		marginTop: 1
