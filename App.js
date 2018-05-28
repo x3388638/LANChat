@@ -28,7 +28,6 @@ import TcpScoket from './modules/TcpSocket.js';
 global.TcpSocket = TcpScoket;
 
 global.netUsers = {};
-global.packetHistoryQueue = [];
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
