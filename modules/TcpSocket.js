@@ -54,34 +54,22 @@ export default (() => {
 		const ip = socket._address.address;
 		const dataString = data.toString();
 		let parsedData;
-		let error = false;
 		try {
 			parsedData = JSON.parse(dataString);
+			if (!parsedData.payload) {
+				return;
+			}
+
+			parsedData.payload.ip = ip;
+			switch (parsedData.type) {
+				case 'userData':
+					global.PubSub.emit('newMsg:userData', parsedData);
+					break;
+				default:
+					break;
+			}
 		} catch (err) {
 			console.warn('不該進來這裡ㄅ');
-			error = true;
-			const match = dataString.match(/"packetID":"([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})"/);
-			if (!!match && match[1]) {
-				const packetID = match[1];
-				Util.resendReq(ip, packetID);
-			}
-		}
-
-		if (error && !parsedData.payload) {
-			return;
-		}
-
-		parsedData.payload.ip = ip;
-		switch (parsedData.type) {
-			case 'userData':
-				global.PubSub.emit('newMsg:userData', parsedData);
-				break;
-			case 'resendReq':
-				const { packetID } = parsedData.payload;
-				Util.resend(ip, packetID);
-				break;
-			default:
-				break;
 		}
 	}
 

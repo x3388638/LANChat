@@ -374,27 +374,6 @@ export default (() => {
 		// remove user from netUsers
 		delete global.netUsers[ip];
 	}
-
-	function resendReq(ip, packetID) {
-		const id = genUUID();
-		const data = JSON.stringify({
-			type: 'resendReq',
-			packetID: id,
-			payload: {
-				packetID
-			}
-		});
-
-		PacketHistory.add(id, data);
-		global.netUsers[ip].tcpSocket.write(new Buffer(data));
-	}
-
-	function resend(ip, packetID) {
-		const packetData = PacketHistory.get(packetID);
-		if (!!packetData && !!packetData.packetString) {
-			global.netUsers[ip].tcpSocket.write(new Buffer(packetData.packetString));
-		}
-	}
 	
 	return {
 		genPass,
@@ -420,7 +399,5 @@ export default (() => {
 		sendUserData,
 		parseUserData,
 		handleTcpDisconnect,
-		resendReq,
-		resend
 	}
 })();
