@@ -1,8 +1,10 @@
 import React from 'react';
 import {
 	View,
-	TextInput,
-	StyleSheet
+	TouchableOpacity,
+	StyleSheet,
+	Platform,
+	Keyboard
 } from 'react-native';
 import AutogrowInput from 'react-native-autogrow-input';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -26,7 +28,7 @@ class MoreFunc extends React.Component {
 class SendButton extends React.Component {
 	render() {
 		return (
-			<View style={ styles.btnContainer }>
+			<TouchableOpacity style={ styles.btnContainer } onPress={ this.props.onPress }>
 				<View style={ styles.sendBtn }>
 					<Icon
 						size={24}
@@ -34,23 +36,64 @@ class SendButton extends React.Component {
 						color="#fff"
 					/>
 				</View>
-			</View>
+			</TouchableOpacity>
 		);
 	}
 }
 
 export default class InputBar extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			inputMsg: ''
+		};
+
+		this.handleChangeText = this.handleChangeText.bind(this);
+		this.send = this.send.bind(this);
+	}
+
+	handleChangeText(text, type) {
+		if (Platform.OS === 'ios' && type === 2 ||
+			Platform.OS !== 'ios' && type === 1) {
+			return;
+		}
+
+		this.setState({
+			inputMsg: text
+		});
+	}
+
+	send() {
+		Keyboard.dismiss();
+		const msg = this.msgTextInput.inputRef._lastNativeText.trim();
+		if (msg === '') {
+			return;
+		}
+
+		setTimeout(() => {
+			this.setState({
+				inputMsg: ''
+			});
+		}, 150);
+
+		// Util.sendMsg('text', msg);
+	}
+
 	render() {
 		return (
 			<View style={ styles.container }>
 				<MoreFunc />
 				<AutogrowInput
 					multiline
+					ref={(ref) => { this.msgTextInput = ref }}
 					defaultHeight={40}
 					maxLength={255}
+					value={ this.state.inputMsg }
+					onEndEditing={(e) => { this.handleChangeText(e.nativeEvent.text, 1) }}
+					onChangeText={(text) => { this.handleChangeText(text, 2) }}
 					style={ styles.input } placeholder="Message..."
 				/>
-				<SendButton />
+				<SendButton onPress={ this.send } />
 			</View>
 		);
 	}

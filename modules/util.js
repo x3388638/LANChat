@@ -144,11 +144,6 @@ export default (() => {
 			const currentIP = await getIP();
 			const currentOS = Platform.OS;
 
-			// 收到自己的 alive，略過
-			if (data.payload.ip === currentIP) {
-				return;
-			}
-
 			// tcp 連線已建立
 			if (netUserExist(data.payload.ip)) {
 				return;
@@ -291,10 +286,8 @@ export default (() => {
 			});
 		});
 
-		const packetID = genUUID();
 		const data = JSON.stringify({
 			type: 'userData',
-			packetID: packetID,
 			payload: {
 				uid,
 				data: personalInfo.normal,
@@ -312,7 +305,7 @@ export default (() => {
 	}
 
 	function sendUserDataInterval() {
-		setInterval(sendUserData, _userDataPeriod);
+		setInterval(sendUserData, _userDataPeriod * 1000);
 	}
 
 	function parseUserData() {
