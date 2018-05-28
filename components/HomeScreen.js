@@ -65,6 +65,7 @@ export default class HomeScreen extends React.Component {
 		Util.checkConnection();
 		Util.listenWiFiChanged();
 		Util.sendAlive();
+		Util.sendUserDataInterval();
 
 		global.PubSub.on('wifi:disconnect', () => {
 			this.props.navigation.navigate('LoginRegister');

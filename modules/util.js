@@ -20,6 +20,7 @@ export default (() => {
 	 */
 	const _expireTime = 5;
 	const _alivePeriod = 9;
+	const _userDataPeriod = Math.ceil(Math.random() * 10) + 33;
 
 	/**
 	 * private method
@@ -302,17 +303,16 @@ export default (() => {
 		});
 
 		if (ip === 'ALL') {
-			// Object.values(global.netUsers).forEach((user) => {
-			// 	user.tcpSocket.write(new Buffer(data));
-			// });
-
 			Object.keys(global.netUsers).forEach((userIP) => {
 				global.TcpSocket.connectAndWrite(userIP, new Buffer(data));
 			});
 		} else {
-			// global.netUsers[ip].tcpSocket.write(new Buffer(data));
 			global.TcpSocket.connectAndWrite(ip, new Buffer(data));
 		}
+	}
+
+	function sendUserDataInterval() {
+		setInterval(sendUserData, _userDataPeriod);
 	}
 
 	function parseUserData() {
@@ -395,6 +395,7 @@ export default (() => {
 		updateNetUsers,
 		netUserExist,
 		sendUserData,
+		sendUserDataInterval,
 		parseUserData,
 		handleTcpDisconnect,
 	}
