@@ -107,7 +107,7 @@ export default class ChatScreen extends React.Component {
 		return (
 			<View style={ styles.container }>
 				<MsgList />
-				<InputBar />
+				<InputBar { ...this.props.navigation.state.params } />
 				{ Platform.OS === 'ios' && <KeyboardSpacer /> }
 				{ !isLobby &&
 				<QRCodeModal

@@ -126,6 +126,10 @@ export default (() => {
 	}
 
 	function encrypt(text, key) {
+		if (!key) {
+			return text;
+		}
+
 		const cipher = crypto.createCipher('aes192', key);
 		let encrypted = cipher.update(text, 'utf8', 'hex');
 		encrypted += cipher.final('hex');
@@ -365,6 +369,42 @@ export default (() => {
 		// remove user from netUsers
 		delete global.netUsers[ip];
 	}
+
+	async function sendMsg({ type, bssid, groupID, msg }) {
+		let joinedGroups;
+		let key;
+		if (groupID !== 'LOBBY') {
+			joinedGroups = await Storage.getJoinedGroups();
+			key = joinedGroups[bssid][groupID].key;
+		}
+
+		const data = JSON.stringify({
+			type: 'msg',
+			payload: {
+				groupID,
+				encryptedID: key ? encrypt(groupID, key) : null,
+				data: encrypt(JSON.stringify({
+					sender: getUid(),
+					timestamp: moment().format(),
+					type: type,
+					[type]: msg
+				}), key)
+			}
+		});
+
+		if (groupID === 'LOBBY') {
+			Object.keys(global.netUsers).forEach((ip) => {
+				global.TcpSocket.connectAndWrite(ip, new Buffer(data));
+			});
+		} else {
+			const groupMembers = await getGroupMembers(bssid, groupID);
+			Object.values(global.netUsers).forEach((user) => {
+				if (groupMembers[user.uid]) {
+					global.TcpSocket.connectAndWrite(user.ip, new Buffer(data));
+				}
+			});
+		}
+	}
 	
 	return {
 		genPass,
@@ -391,5 +431,6 @@ export default (() => {
 		sendUserDataInterval,
 		parseUserData,
 		handleTcpDisconnect,
+		sendMsg
 	}
 })();

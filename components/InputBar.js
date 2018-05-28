@@ -9,6 +9,8 @@ import {
 import AutogrowInput from 'react-native-autogrow-input';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import Util from '../modules/util.js';
+
 class MoreFunc extends React.Component {
 	render() {
 		return (
@@ -76,7 +78,12 @@ export default class InputBar extends React.Component {
 			});
 		}, 150);
 
-		// Util.sendMsg('text', msg);
+		Util.sendMsg({
+			type: 'text',
+			bssid: this.props.bssid,
+			groupID: this.props.groupID,
+			msg
+		});
 	}
 
 	render() {
