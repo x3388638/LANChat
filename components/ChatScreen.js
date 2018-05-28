@@ -2,7 +2,8 @@ import React from 'react';
 import {
 	View,
 	Text,
-	StyleSheet
+	StyleSheet,
+	Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -107,7 +108,7 @@ export default class ChatScreen extends React.Component {
 			<View style={ styles.container }>
 				<MsgList />
 				<InputBar />
-				<KeyboardSpacer />
+				{ Platform.OS === 'ios' && <KeyboardSpacer /> }
 				{ !isLobby &&
 				<QRCodeModal
 					open={ this.state.qrcodeModalOpen }
