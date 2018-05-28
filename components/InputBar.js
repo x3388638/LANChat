@@ -76,6 +76,8 @@ export default class InputBar extends React.Component {
 			this.setState({
 				inputMsg: ''
 			});
+
+			// TODO: reset input
 		}, 150);
 
 		Util.sendMsg({

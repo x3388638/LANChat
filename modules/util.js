@@ -271,7 +271,6 @@ export default (() => {
 
 	function updateNetUsers(ip, userInfo = {}) {
 		global.netUsers[ip] = Object.assign({}, global.netUsers[ip] || {}, userInfo, { ip });
-		console.log(global.netUsers);
 	}
 
 	function netUserExist(ip) {
@@ -428,10 +427,17 @@ export default (() => {
 				msgData = JSON.parse(payload.data);
 			}
 
+			msgData.key = genUUID();
 			// 存入訊息至 @LANChat:messages
 			Storage.storeMsg(bssid, payload.groupID, msgData, () => {
-				global.PubSub.emit('receiveMsg');
-				global.PubSub.emit('msgInChat');
+				const data = {
+					bssid,
+					msgData,
+					groupID: payload.groupID
+				};
+
+				global.PubSub.emit('receiveMsg', data);
+				global.PubSub.emit('msgInChat', data);
 				// Storage.getMsg().then((msg) => {
 				// 	console.warn(JSON.stringify(msg, null, 4))
 				// })

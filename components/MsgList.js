@@ -6,6 +6,7 @@ import {
 	StyleSheet
 } from 'react-native';
 import moment from 'moment';
+import Util from '../modules/util';
 
 export default class MsgList extends React.Component {
 	constructor(props) {
@@ -13,8 +14,9 @@ export default class MsgList extends React.Component {
 		this.renderMsg = this.renderMsg.bind(this);
 	}
 
-	renderMsg({item}) {
-		const isSelf = item.username === 'yy';
+	renderMsg({ item }) {
+		const isSelf = item.sender === Util.getUid();
+		const type = item.type;
 		return (
 			<View style={ styles.msgContainer }>
 				<View>
@@ -22,7 +24,7 @@ export default class MsgList extends React.Component {
 				</View>
 				<View style={!!isSelf ? styles.msgBubbleContainer_right : styles.msgBubbleContainer_left }>
 					<View style={ !!isSelf ? styles.msgBubble_right : styles.msgBubble_left }>
-						<Text style={ styles.msgBubbleText }>{ item.text }</Text>
+						<Text style={ styles.msgBubbleText }>{ item[type] }</Text>
 						<View style={ styles.timeWrapper }>
 							<Text style={ styles.time }>{ moment(item.timestamp).format('HH:mm') }</Text>
 						</View>
@@ -36,39 +38,12 @@ export default class MsgList extends React.Component {
 		return (
 			<FlatList
 				style={{ marginBottom: 5 }}
-				data={ data }
+				data={ this.props.messages }
 				renderItem={ this.renderMsg }
 			/>
 		);
 	}
 }
-
-const data = [
-	{
-		key: 'a',
-		username: 'yy',
-		timestamp: '2018-05-26T00:52:23+08:00',
-		text: 'lalalalla'
-	},
-	{
-		key: 'b',
-		username: 'yy',
-		timestamp: '2018-05-26T00:52:23+08:00',
-		text: 'lalalalasdflkja w;lkej;asldjhv;a oljkwef; lvckahw ;ejla'
-	},
-	{
-		key: 'c',
-		username: 'zz',
-		timestamp: '2018-05-26T00:52:23+08:00',
-		text: 'lalaafewihe;ocuh a;wenca;wekfjc;awouieh lalla'
-	},
-	{
-		key: 'd',
-		username: 'yy',
-		timestamp: '2018-05-26T00:52:23+08:00',
-		text: 'lalalawelkfn alla'
-	}
-];
 
 const styles = StyleSheet.create({
 	msgContainer: {

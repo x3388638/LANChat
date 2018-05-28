@@ -19,10 +19,12 @@ export default class ChatScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			qrcodeModalOpen: false
+			qrcodeModalOpen: false,
+			messages: []
 		};
 
 		this.handleShowQRCode = this.handleShowQRCode.bind(this);
+		this.handleReceiveMsg = this.handleReceiveMsg.bind(this);
 		this.checkGroup = this.checkGroup.bind(this);
 		this.getOnlineCount = this.getOnlineCount.bind(this);
 	}
@@ -62,11 +64,26 @@ export default class ChatScreen extends React.Component {
 		});
 
 		this.props.navigation.setParams({ handleShowQRCode: this.handleShowQRCode });
+		this.handleReceiveMsg();
 	}
 
 	handleShowQRCode() {
 		this.setState({
 			qrcodeModalOpen: true
+		});
+	}
+
+	handleReceiveMsg() {
+		global.PubSub.on('msgInChat', async ({ bssid, groupID, msgData }) => {
+			if (this.props.navigation.state.params.groupID !== groupID) {
+				return;
+			}
+
+			const users = await Storage.getUsers();
+			msgData.username = users[msgData.sender].username;
+			this.setState((prevState) => ({
+				messages: [...prevState.messages, msgData]
+			}));
 		});
 	}
 
@@ -106,7 +123,7 @@ export default class ChatScreen extends React.Component {
 		const isLobby = this.props.navigation.state.params.groupID === 'LOBBY'
 		return (
 			<View style={ styles.container }>
-				<MsgList />
+				<MsgList messages={ this.state.messages } />
 				<InputBar { ...this.props.navigation.state.params } />
 				{ Platform.OS === 'ios' && <KeyboardSpacer /> }
 				{ !isLobby &&

@@ -137,7 +137,7 @@ export default (() => {
 		const msg = await getMsg();
 		msg[bssid] = msg[bssid] || {};
 		msg[bssid][groupID] = msg[bssid][groupID] || {};
-		msg[bssid][groupID][Util.genUUID()] = msgData;
+		msg[bssid][groupID][msgData.key] = Object.assign({}, msgData, { read: false });
 		AsyncStorage.setItem('@LANChat:messages', JSON.stringify(msg), callback);
 	}
 
