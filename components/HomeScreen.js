@@ -29,7 +29,8 @@ export default class HomeScreen extends React.Component {
 		this.state = {
 			joinedGroups: '{}',
 			currentNet: null,
-			userCount: '...'
+			userCount: '...',
+			lastMsg: '{}' // { groupID: { username: '', msg: '', time: 'ISO 8601' } }
 		};
 
 		global.UdpSocket.init();
@@ -38,6 +39,7 @@ export default class HomeScreen extends React.Component {
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 		this.renderGroups = this.renderGroups.bind(this);
 		this.getUserCount = this.getUserCount.bind(this);
+		this.getLastMsg = this.getLastMsg.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -58,6 +60,7 @@ export default class HomeScreen extends React.Component {
 		this.props.navigation.addListener('didFocus', () => {
 			this.checkPersonalInfo();
 			this.renderGroups();
+			this.getLastMsg();
 		});
 
 		Util.parseAlive();
@@ -152,16 +155,42 @@ export default class HomeScreen extends React.Component {
 		});
 	}
 
+	async getLastMsg() {
+		const [ssid, bssid] = await Util.getWifi();
+		const messages = await Storage.getMsg(bssid);
+		const users = await Storage.getUsers();
+		const lastMsg = {};
+		Object.keys(messages).forEach((groupID) => {
+			const last = Object.values(messages[groupID]).sort((a, b) => moment(a.timestamp).diff(moment(b.timestamp))).pop();
+			if (last) {
+				lastMsg[groupID] = {
+					username: users[last.sender].username,
+					msg: last[last.type],
+					time: last.timestamp
+				}
+			} else {
+				// 此群組沒有訊息
+				lastMsg[groupID] = null;
+			}
+		});
+
+		this.setState({
+			lastMsg: JSON.stringify(lastMsg)
+		});
+	}
+
 	render() {
 		let joinedGroups = JSON.parse(this.state.joinedGroups);
 		let currentNet = this.state.currentNet ? JSON.parse(this.state.currentNet) : null;
+		const lastMsg = JSON.parse(this.state.lastMsg);
+		const lobbySubtitle = lastMsg.LOBBY === undefined ? 'loading...' : lastMsg.LOBBY === null ? '' : `${moment(lastMsg.LOBBY.timestamp).format('HH:mm')} | ${ lastMsg.LOBBY.username }: ${ lastMsg.LOBBY.msg.substring(0, 14) }`;
 		return (
 			<View style={ styles.container }>
 				<List containerStyle={ styles.groupList }>
 					<ListItem
 						hideChevron
 						title="LOBBY"
-						subtitle="loading..."
+						subtitle={ lobbySubtitle }
 						underlayColor="#d3d3d3"
 						leftIcon={{ name: 'home'}}
 						titleStyle={ styles.groupTitle }
