@@ -75,13 +75,15 @@ const styles = StyleSheet.create({
 	msgBubble_left: {
 		borderRadius: 8,
 		backgroundColor: '#F8F8F8',
-		maxWidth: '65%',
+		maxWidth: '85%',
+		minWidth: 100,
 		padding: 10
 	},
 	msgBubble_right: {
 		borderRadius: 8,
 		backgroundColor: '#B3B3A1',
-		maxWidth: '65%',
+		maxWidth: '85%',
+		minWidth: 100,
 		padding: 10,
 	},
 	msgBubbleText: {

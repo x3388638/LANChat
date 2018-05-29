@@ -78,6 +78,8 @@ export default class InputBar extends React.Component {
 			});
 
 			// TODO: reset input
+			this.msgTextInput.resetInputText();
+			this.msgTextInput.inputRef._lastNativeText = '';
 		}, 150);
 
 		Util.sendMsg({
