@@ -168,9 +168,6 @@ export default class HomeScreen extends React.Component {
 					msg: last[last.type],
 					time: last.timestamp
 				}
-			} else {
-				// 此群組沒有訊息
-				lastMsg[groupID] = null;
 			}
 		});
 
@@ -179,18 +176,21 @@ export default class HomeScreen extends React.Component {
 		});
 	}
 
+	genSubtitle(groupID) {
+		const lastMsg = JSON.parse(this.state.lastMsg);
+		return lastMsg[groupID] ? `${moment(lastMsg[groupID].timestamp).format('HH:mm')} | ${ lastMsg[groupID].username }: ${ lastMsg[groupID].msg.substring(0, 14) }` : '';
+	}
+
 	render() {
 		let joinedGroups = JSON.parse(this.state.joinedGroups);
 		let currentNet = this.state.currentNet ? JSON.parse(this.state.currentNet) : null;
-		const lastMsg = JSON.parse(this.state.lastMsg);
-		const lobbySubtitle = lastMsg.LOBBY === undefined ? 'loading...' : lastMsg.LOBBY === null ? '' : `${moment(lastMsg.LOBBY.timestamp).format('HH:mm')} | ${ lastMsg.LOBBY.username }: ${ lastMsg.LOBBY.msg.substring(0, 14) }`;
 		return (
 			<View style={ styles.container }>
 				<List containerStyle={ styles.groupList }>
 					<ListItem
 						hideChevron
 						title="LOBBY"
-						subtitle={ lobbySubtitle }
+						subtitle={ this.genSubtitle('LOBBY') }
 						underlayColor="#d3d3d3"
 						leftIcon={{ name: 'home'}}
 						titleStyle={ styles.groupTitle }
@@ -208,7 +208,7 @@ export default class HomeScreen extends React.Component {
 										key={ groupID }
 										hideChevron
 										title={ joinedGroups[currentNet.bssid][groupID].groupName }
-										subtitle="23:19  |  Y.y.: 安安你好..."
+										subtitle={ this.genSubtitle(groupID) }
 										underlayColor="#d3d3d3"
 										titleStyle={styles.groupTitle}
 										badge={{ element: <UnreadCounter count={13} /> }}
@@ -234,7 +234,7 @@ export default class HomeScreen extends React.Component {
 											key={ groupID }
 											hideChevron
 											title={ joinedGroups[bssid][groupID].groupName }
-											subtitle="23:19  |  Y.y.: 安安你好..."
+											subtitle={ this.genSubtitle(groupID) }
 											underlayColor="#d3d3d3"
 											titleStyle={styles.groupTitle}
 											badge={{ element: <UnreadCounter count={113} /> }}
