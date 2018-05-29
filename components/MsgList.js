@@ -11,7 +11,28 @@ import Util from '../modules/util';
 export default class MsgList extends React.Component {
 	constructor(props) {
 		super(props);
+		this.scrolling = false;
+		this.scrollTimeout = null;
 		this.renderMsg = this.renderMsg.bind(this);
+		this.handleScroll = this.handleScroll.bind(this);
+		this.handleContentSizeChange = this.handleContentSizeChange.bind(this);
+	}
+
+	handleScroll() {
+		this.scrolling = true;
+		if (this.scrollTimeout) {
+			clearTimeout(this.scrollTimeout);
+		}
+
+		this.scrollTimeout = setTimeout(() => {
+			this.scrolling = false;
+		}, 3000);
+	}
+
+	handleContentSizeChange() {
+		if (!this.scrolling) {
+			this.list.scrollToEnd();
+		}
 	}
 
 	renderMsg({ item }) {
@@ -37,9 +58,12 @@ export default class MsgList extends React.Component {
 	render() {
 		return (
 			<FlatList
+				ref={(ref) => { this.list = ref }}
 				style={{ marginBottom: 5 }}
 				data={ this.props.messages }
 				renderItem={ this.renderMsg }
+				onScroll={ this.handleScroll }
+				onContentSizeChange={ this.handleContentSizeChange }
 			/>
 		);
 	}
