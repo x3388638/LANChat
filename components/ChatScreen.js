@@ -24,6 +24,8 @@ export default class ChatScreen extends React.Component {
 			messages: []
 		};
 
+		this.getOnlineCountInterval = 0;
+
 		this.handleShowQRCode = this.handleShowQRCode.bind(this);
 		this.handleReceiveMsg = this.handleReceiveMsg.bind(this);
 		this.checkGroup = this.checkGroup.bind(this);
@@ -62,12 +64,17 @@ export default class ChatScreen extends React.Component {
 		this.props.navigation.addListener('didFocus', () => {
 			this.checkGroup();
 			this.getOnlineCount();
-			setInterval(this.getOnlineCount, 9 * 1000);
+			this.getOnlineCountInterval = setInterval(this.getOnlineCount, 9 * 1000);
 			this.loadHistoryMsg();
 		});
 
 		this.props.navigation.setParams({ handleShowQRCode: this.handleShowQRCode });
 		this.handleReceiveMsg();
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.getOnlineCountInterval);
+		global.PubSub.on('msgInChat', () => {});
 	}
 
 	handleShowQRCode() {
