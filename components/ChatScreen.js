@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import moment from 'moment';
 
 import QRCodeModal from './QRCodeModal.js';
 import InputBar from './InputBar.js';
@@ -27,6 +28,7 @@ export default class ChatScreen extends React.Component {
 		this.handleReceiveMsg = this.handleReceiveMsg.bind(this);
 		this.checkGroup = this.checkGroup.bind(this);
 		this.getOnlineCount = this.getOnlineCount.bind(this);
+		this.loadHistoryMsg = this.loadHistoryMsg.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -61,6 +63,7 @@ export default class ChatScreen extends React.Component {
 			this.checkGroup();
 			this.getOnlineCount();
 			setInterval(this.getOnlineCount, 9 * 1000);
+			this.loadHistoryMsg();
 		});
 
 		this.props.navigation.setParams({ handleShowQRCode: this.handleShowQRCode });
@@ -117,6 +120,18 @@ export default class ChatScreen extends React.Component {
 					title: `${this.props.navigation.state.params.groupName} (${ onlineMemberCount })`
 				});
 			});
+	}
+
+	async loadHistoryMsg() {
+		const messages = await Storage.getMsg(this.props.navigation.state.params.bssid, this.props.navigation.state.params.groupID);
+		const users = await Storage.getUsers();
+		const sorted = Object.values(messages).sort((a, b) => moment(a.time).diff(moment(b.time))).map((msg) => {
+			return Object.assign({}, msg, { username: users[msg.sender].username });
+		});
+
+		this.setState({
+			messages: sorted
+		});
 	}
 
 	render() {
