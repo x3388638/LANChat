@@ -158,6 +158,17 @@ export default (() => {
 
 		return msg[bssid] ? msg[bssid][groupID] ? msg[bssid][groupID][msgID] ? msg[bssid][groupID][msgID] : null : null : null;
 	}
+
+	async function setMsgRead(bssid, groupID) {
+		const messages = await getMsg();
+		const processedMsg = {};
+		Object.values(messages[bssid][groupID]).forEach((msgObj) => {
+			processedMsg[msgObj.key] = Object.assign({}, msgObj, { read: true });
+		});
+
+		messages[bssid][groupID] = processedMsg;
+		AsyncStorage.setItem('@LANChat:messages', JSON.stringify(messages));
+	}
 	
 	return {
 		setLastLogin,
@@ -176,6 +187,7 @@ export default (() => {
 		saveNetUser,
 		removeItem,
 		storeMsg,
-		getMsg
+		getMsg,
+		setMsgRead
 	};
 })();

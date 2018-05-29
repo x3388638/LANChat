@@ -62,6 +62,7 @@ export default class ChatScreen extends React.Component {
 
 	componentDidMount() {
 		this.props.navigation.addListener('didFocus', () => {
+			Storage.setMsgRead(this.props.navigation.state.params.bssid, this.props.navigation.state.params.groupID);
 			this.checkGroup();
 			this.getOnlineCount();
 			this.getOnlineCountInterval = setInterval(this.getOnlineCount, 9 * 1000);
@@ -94,6 +95,8 @@ export default class ChatScreen extends React.Component {
 			this.setState((prevState) => ({
 				messages: [...prevState.messages, msgData]
 			}));
+
+			Storage.setMsgRead(this.props.navigation.state.params.bssid, this.props.navigation.state.params.groupID);
 		});
 	}
 
