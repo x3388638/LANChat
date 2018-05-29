@@ -41,6 +41,7 @@ export default class HomeScreen extends React.Component {
 		this.renderGroups = this.renderGroups.bind(this);
 		this.getUserCount = this.getUserCount.bind(this);
 		this.getLastMsgAndCountUnread = this.getLastMsgAndCountUnread.bind(this);
+		this.handleOnMsg = this.handleOnMsg.bind(this);
 	}
 
 	static navigationOptions = ({ navigation }) => ({
@@ -62,6 +63,7 @@ export default class HomeScreen extends React.Component {
 			this.checkPersonalInfo();
 			this.renderGroups();
 			this.getLastMsgAndCountUnread();
+			this.handleOnMsg();
 		});
 
 		Util.parseAlive();
@@ -127,6 +129,14 @@ export default class HomeScreen extends React.Component {
 			groupName,
 			bssid,
 			groupInfo
+		});
+	}
+
+	handleOnMsg() {
+		global.PubSub.on('receiveMsg', () => {
+			setTimeout(() => {
+				this.getLastMsgAndCountUnread();
+			}, 150);
 		});
 	}
 
