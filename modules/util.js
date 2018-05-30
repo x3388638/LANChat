@@ -329,9 +329,6 @@ export default (() => {
 			});
 
 			const conGroups = Object.keys(totalGroups).filter((groupID) => targetGroups.includes(groupID)); // 共同群組 groupID array
-			if (conGroups.length === 0) {
-				return;
-			}
 
 			// 檢查封包正確性
 			const validData = conGroups.every((groupID) => {

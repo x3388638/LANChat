@@ -78,6 +78,7 @@ export default (() => {
 			}
 		} catch (err) {
 			console.warn('不該進來這裡ㄅ');
+			console.warn(dataString);
 		}
 	}
 
