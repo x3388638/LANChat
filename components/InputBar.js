@@ -30,7 +30,7 @@ class MoreFunc extends React.Component {
 class SendButton extends React.Component {
 	render() {
 		return (
-			<TouchableOpacity style={ styles.btnContainer } onPress={ this.props.onPress }>
+			<TouchableOpacity style={ styles.btnContainer } onPress={() => { !this.props.readOnly && this.props.onPress() }}>
 				<View style={ styles.sendBtn }>
 					<Icon
 						size={24}
@@ -91,11 +91,13 @@ export default class InputBar extends React.Component {
 	}
 
 	render() {
+		const readOnly = this.props.currentBssid !== this.props.bssid;
 		return (
 			<View style={ styles.container }>
-				<MoreFunc />
+				<MoreFunc readOnly={ readOnly } />
 				<AutogrowInput
 					multiline
+					editable={ !readOnly }
 					ref={(ref) => { this.msgTextInput = ref }}
 					defaultHeight={40}
 					maxLength={255}
@@ -104,7 +106,7 @@ export default class InputBar extends React.Component {
 					onChangeText={(text) => { this.handleChangeText(text, 2) }}
 					style={ styles.input } placeholder="Message..."
 				/>
-				<SendButton onPress={ this.send } />
+				<SendButton onPress={ this.send } readOnly={ readOnly } />
 			</View>
 		);
 	}

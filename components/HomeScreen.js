@@ -109,14 +109,17 @@ export default class HomeScreen extends React.Component {
 		}
 	}
 
-	handlePressGroup(groupID, groupName, bssid) {
+	async handlePressGroup(groupID, groupName, bssid) {
+		const wifiInfo = await Util.getWifi();
+		const currentBssid = wifiInfo[1];
 		if (groupID === 'LOBBY') {
 			const { ssid, bssid } = JSON.parse(this.state.currentNet);
 			this.props.navigation.navigate('Chat', {
 				groupID,
 				groupName: 'LOBBY',
 				bssid,
-				ssid
+				ssid,
+				currentBssid
 			});
 
 			return;
@@ -128,7 +131,8 @@ export default class HomeScreen extends React.Component {
 			groupID,
 			groupName,
 			bssid,
-			groupInfo
+			groupInfo,
+			currentBssid
 		});
 	}
 

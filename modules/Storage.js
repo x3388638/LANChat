@@ -162,7 +162,11 @@ export default (() => {
 	async function setMsgRead(bssid, groupID) {
 		const messages = await getMsg();
 		const processedMsg = {};
-		Object.values(messages[bssid][groupID] || {}).forEach((msgObj) => {
+		if (!messages[bssid] || !messages[bssid][groupID]) {
+			return;
+		}
+
+		Object.values(messages[bssid][groupID]).forEach((msgObj) => {
 			processedMsg[msgObj.key] = Object.assign({}, msgObj, { read: true });
 		});
 
