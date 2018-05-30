@@ -156,13 +156,13 @@ export default (() => {
 			return msg[bssid] ? msg[bssid][groupID] ? msg[bssid][groupID] : {} : {};
 		}
 
-		return msg[bssid] ? msg[bssid][groupID] ? msg[bssid][groupID][msgID] ? msg[bssid][groupID][msgID] : null : null : null;
+		return msg[bssid] ? msg[bssid][groupID] ? msg[bssid][groupID][msgID] ? msg[bssid][groupID][msgID] : {} : {} : {};
 	}
 
 	async function setMsgRead(bssid, groupID) {
 		const messages = await getMsg();
 		const processedMsg = {};
-		Object.values(messages[bssid][groupID]).forEach((msgObj) => {
+		Object.values(messages[bssid][groupID] || {}).forEach((msgObj) => {
 			processedMsg[msgObj.key] = Object.assign({}, msgObj, { read: true });
 		});
 
