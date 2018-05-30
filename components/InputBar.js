@@ -50,37 +50,26 @@ export default class InputBar extends React.Component {
 			inputMsg: ''
 		};
 
-		this.handleChangeText = this.handleChangeText.bind(this);
 		this.send = this.send.bind(this);
 	}
 
-	handleChangeText(text, type) {
-		if (Platform.OS === 'ios' && type === 2 ||
-			Platform.OS !== 'ios' && type === 1) {
-			return;
-		}
-
-		this.setState({
-			inputMsg: text
-		});
-	}
-
 	send() {
-		Keyboard.dismiss();
-		const msg = this.msgTextInput.inputRef._lastNativeText.trim();
+		const msg = this.state.inputMsg.trim();
 		if (msg === '') {
 			return;
 		}
 
-		setTimeout(() => {
-			this.setState({
-				inputMsg: ''
-			});
+		this.setState({
+			inputMsg: ''
+		});
 
-			// TODO: reset input
-			this.msgTextInput.resetInputText();
-			this.msgTextInput.inputRef._lastNativeText = '';
-		}, 150);
+		if (Platform.OS === 'ios') {
+			this.msgTextInput.inputRef.setNativeProps({ text: ' ' });
+		}
+
+		setTimeout(() => {
+			this.msgTextInput.inputRef.setNativeProps({ text: '' });
+		});
 
 		Util.sendMsg({
 			type: 'text',
@@ -101,9 +90,8 @@ export default class InputBar extends React.Component {
 					ref={(ref) => { this.msgTextInput = ref }}
 					defaultHeight={40}
 					maxLength={255}
-					value={ this.state.inputMsg }
-					onEndEditing={(e) => { this.handleChangeText(e.nativeEvent.text, 1) }}
-					onChangeText={(text) => { this.handleChangeText(text, 2) }}
+					value={ Platform.OS === 'ios' ? null : this.state.inputMsg }
+					onChangeText={(inputMsg) => { this.setState({ inputMsg }) }}
 					style={ styles.input } placeholder="Message..."
 				/>
 				<SendButton onPress={ this.send } readOnly={ readOnly } />
