@@ -444,7 +444,38 @@ export default (() => {
 			});
 		});
 	}
-	
+
+	async function sendMsgSync(ip) {
+		const currentIP = await getIP();
+		if (currentIP === ip) {
+			return;
+		}
+
+		const [ssid, bssid] = await getWifi();
+		const messages = await Storage.getMsg(bssid);
+		const joinedGroups = await Storage.getJoinedGroups();
+		const payload = {}; // { [groupID]: { ENCRYPTEDID, MESSAGES } }
+		Object.keys(messages).forEach((groupID) => {
+			const msgArr = Object.values(messages[groupID]).sort((b, a) => moment(a.timestamp).diff(moment(b.timestamp))).slice(0, 100);
+			let key = '';
+			if (groupID !== 'LOBBY') {
+				key = joinedGroups[bssid][groupID].key;
+			}
+
+			payload[groupID] = {
+				encryptedID: groupID === 'LOBBY' ? null : encrypt(groupID, key),
+				messages: encrypt(JSON.stringify(msgArr), key)
+			}
+		});
+
+		const data = JSON.stringify({
+			type: 'msgSync',
+			payload
+		});
+
+		global.TcpSocket.connectAndWrite(ip, new Buffer(data));
+	}
+
 	return {
 		genPass,
 		login,
@@ -471,6 +502,7 @@ export default (() => {
 		parseUserData,
 		handleTcpDisconnect,
 		sendMsg,
-		parseMsg
+		parseMsg,
+		sendMsgSync
 	}
 })();
