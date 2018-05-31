@@ -135,7 +135,7 @@ export default class ChatScreen extends React.Component {
 	async loadHistoryMsg() {
 		const messages = await Storage.getMsg(this.props.navigation.state.params.bssid, this.props.navigation.state.params.groupID);
 		const users = await Storage.getUsers();
-		const sorted = Object.values(messages).sort((a, b) => moment(a.time).diff(moment(b.time))).map((msg) => {
+		const sorted = Object.values(messages).sort((a, b) => moment(a.timestamp).diff(moment(b.timestamp))).map((msg) => {
 			return Object.assign({}, msg, { username: users[msg.sender].username });
 		});
 
