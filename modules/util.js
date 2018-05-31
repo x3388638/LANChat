@@ -478,10 +478,7 @@ export default (() => {
 			const [ssid, bssid] = await getWifi();
 			const joinedGroups = await Storage.getJoinedGroups();
 			const messages = await Storage.getMsg(bssid);
-			console.log('======= messages in memory');
-			console.log(messages);
-			console.log('=========');
-			const pendingMsg = {};
+			const pendingMsg = {}; // { [groupID]: [msgObj, ...] }
 			Object.keys(data.payload).forEach((groupID) => {
 				if (groupID === 'LOBBY' || (joinedGroups[bssid] && joinedGroups[bssid][groupID])) {
 					// 自己有加入的群組或是當前 bssid 的 LOBBY
@@ -496,16 +493,19 @@ export default (() => {
 						msgToSync.forEach((msg) => {
 							if (!messages[groupID] || !messages[groupID][msg.key]) {
 								// store this msg
-								pendingMsg[bssid] = pendingMsg[bssid] || {};
-								pendingMsg[bssid][groupID] = pendingMsg[bssid][groupID] || [];
-								pendingMsg[bssid][groupID].push(msg);
+								pendingMsg[groupID] = pendingMsg[groupID] || [];
+								pendingMsg[groupID].push(msg);
 							}
 						});
 					}
 				}
 			});
 
-			console.log(pendingMsg);
+			if (!!Object.keys(pendingMsg).length) {
+				Storage.msgSync(bssid, pendingMsg, () => {
+					global.PubSub.emit('receiveMsg');
+				});
+			}
 		});
 	}
 
