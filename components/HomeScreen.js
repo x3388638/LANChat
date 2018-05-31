@@ -69,6 +69,7 @@ export default class HomeScreen extends React.Component {
 		Util.parseAlive();
 		Util.parseUserData();
 		Util.parseMsg();
+		Util.parseMsgSync();
 		Util.checkConnection();
 		Util.listenWiFiChanged();
 		Util.sendAlive();
@@ -198,7 +199,7 @@ export default class HomeScreen extends React.Component {
 
 	genSubtitle(groupID) {
 		const lastMsg = JSON.parse(this.state.lastMsg);
-		return lastMsg[groupID] ? `${moment(lastMsg[groupID].timestamp).format('HH:mm')} | ${ lastMsg[groupID].username }: ${ lastMsg[groupID].msg.substring(0, 14) }` : '';
+		return lastMsg[groupID] ? `${moment(lastMsg[groupID].timestamp).format('HH:mm')} | ${ lastMsg[groupID].username }: ${ lastMsg[groupID].msg.substring(0, 100) }` : '';
 	}
 
 	genUnreadCounter(groupID) {

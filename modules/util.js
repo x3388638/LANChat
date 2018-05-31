@@ -473,6 +473,42 @@ export default (() => {
 		global.TcpSocket.connectAndWrite(ip, new Buffer(data));
 	}
 
+	function parseMsgSync() {
+		global.PubSub.on('newMsg:msgSync', async (data) => {
+			const [ssid, bssid] = await getWifi();
+			const joinedGroups = await Storage.getJoinedGroups();
+			const messages = await Storage.getMsg(bssid);
+			console.log('======= messages in memory');
+			console.log(messages);
+			console.log('=========');
+			const pendingMsg = {};
+			Object.keys(data.payload).forEach((groupID) => {
+				if (groupID === 'LOBBY' || (joinedGroups[bssid] && joinedGroups[bssid][groupID])) {
+					// 自己有加入的群組或是當前 bssid 的 LOBBY
+					if (groupID === 'LOBBY' || data.payload[groupID].encryptedID === encrypt(groupID, joinedGroups[bssid][groupID].key)) {
+						let msgToSync = [];
+						if (groupID === 'LOBBY') {
+							msgToSync = JSON.parse(data.payload[groupID].messages);
+						} else {
+							msgToSync = JSON.parse(decrypt(data.payload[groupID].messages, joinedGroups[bssid][groupID].key));
+						}
+
+						msgToSync.forEach((msg) => {
+							if (!messages[groupID][msg.key]) {
+								// store this msg
+								pendingMsg[bssid] = pendingMsg[bssid] || {};
+								pendingMsg[bssid][groupID] = pendingMsg[bssid][groupID] || [];
+								pendingMsg[bssid][groupID].push(msg);
+							}
+						});
+					}
+				}
+			});
+
+			console.log(pendingMsg);
+		});
+	}
+
 	return {
 		genPass,
 		login,
@@ -500,6 +536,7 @@ export default (() => {
 		handleTcpDisconnect,
 		sendMsg,
 		parseMsg,
-		sendMsgSync
+		sendMsgSync,
+		parseMsgSync
 	}
 })();

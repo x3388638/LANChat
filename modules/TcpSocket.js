@@ -70,8 +70,7 @@ export default (() => {
 					global.PubSub.emit('newMsg:msg', parsedData);
 					break;
 				case 'msgSync':
-					console.log('====== receive msgSync')
-					console.log(parsedData);
+					global.PubSub.emit('newMsg:msgSync', parsedData);
 					break;
 				default:
 					break;
