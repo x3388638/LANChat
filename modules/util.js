@@ -380,6 +380,7 @@ export default (() => {
 				groupID,
 				encryptedID: key ? encrypt(groupID, key) : null,
 				data: encrypt(JSON.stringify({
+					key: genUUID(),
 					sender: getUid(),
 					timestamp: moment().format(),
 					type: type,
@@ -424,7 +425,6 @@ export default (() => {
 				msgData = JSON.parse(payload.data);
 			}
 
-			msgData.key = genUUID();
 			// 存入訊息至 @LANChat:messages
 			Storage.storeMsg(bssid, payload.groupID, msgData, () => {
 				const data = {
@@ -494,7 +494,7 @@ export default (() => {
 						}
 
 						msgToSync.forEach((msg) => {
-							if (!messages[groupID][msg.key]) {
+							if (!messages[groupID] || !messages[groupID][msg.key]) {
 								// store this msg
 								pendingMsg[bssid] = pendingMsg[bssid] || {};
 								pendingMsg[bssid][groupID] = pendingMsg[bssid][groupID] || [];
