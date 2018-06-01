@@ -180,8 +180,9 @@ export default class HomeScreen extends React.Component {
 		Object.keys(messages).forEach((bssid) => {
 			Object.keys(messages[bssid]).forEach((groupID) => {
 				const last = Object.values(messages[bssid][groupID]).sort((a, b) => moment(a.timestamp).diff(moment(b.timestamp))).pop();
+				const gid = groupID === 'LOBBY' ? `LOBBY-${bssid}` : groupID;
 				if (last) {
-					lastMsg[groupID] = {
+					lastMsg[gid] = {
 						username: users[last.sender].username,
 						msg: last[last.type],
 						time: last.timestamp
@@ -189,7 +190,7 @@ export default class HomeScreen extends React.Component {
 				}
 
 				// count unread
-				unread[groupID] = Object.values(messages[bssid][groupID]).reduce((sum, msgObj) => sum + (msgObj.read ? 0 : 1), 0);
+				unread[gid] = Object.values(messages[bssid][groupID]).reduce((sum, msgObj) => sum + (msgObj.read ? 0 : 1), 0);
 			});
 		});
 
@@ -199,18 +200,36 @@ export default class HomeScreen extends React.Component {
 		});
 	}
 
-	genSubtitle(groupID) {
+	genSubtitle(bssid, groupID) {
+		let gid = groupID;
+		if (groupID === 'LOBBY') {
+			if (!bssid) {
+				return '';
+			}
+
+			gid = `LOBBY-${bssid}`
+		}
+
 		const lastMsg = JSON.parse(this.state.lastMsg);
-		return lastMsg[groupID] ? `${moment(lastMsg[groupID].time).format('HH:mm')} | ${ lastMsg[groupID].username }: ${ lastMsg[groupID].msg.substring(0, 100) }` : '';
+		return lastMsg[gid] ? `${moment(lastMsg[gid].time).format('HH:mm')} | ${ lastMsg[gid].username }: ${ lastMsg[gid].msg.substring(0, 100) }` : '';
 	}
 
-	genUnreadCounter(groupID) {
+	genUnreadCounter(bssid, groupID) {
+		let gid = groupID;
+		if (groupID === 'LOBBY') {
+			if (!bssid) {
+				return null;
+			}
+
+			gid = `LOBBY-${bssid}`;
+		}
+
 		const unreadCount = JSON.parse(this.state.unreadCount);
-		if (!unreadCount[groupID]) {
+		if (!unreadCount[gid]) {
 			return null;
 		} else {
 			return {
-				element: <UnreadCounter count={ unreadCount[groupID] } />
+				element: <UnreadCounter count={ unreadCount[gid] } />
 			}
 		}
 	}
@@ -225,11 +244,11 @@ export default class HomeScreen extends React.Component {
 					<ListItem
 						hideChevron
 						title="LOBBY"
-						subtitle={ this.genSubtitle('LOBBY') }
+						subtitle={ this.genSubtitle((currentNet || {}).bssid, 'LOBBY') }
 						underlayColor="#d3d3d3"
 						leftIcon={{ name: 'home'}}
 						titleStyle={ styles.groupTitle }
-						badge={ this.genUnreadCounter('LOBBY') }
+						badge={ this.genUnreadCounter((currentNet || {}).bssid, 'LOBBY') }
 						onPress={() => { this.handlePressGroup('LOBBY') }}
 					/>
 				</List>
@@ -250,10 +269,10 @@ export default class HomeScreen extends React.Component {
 												key={ groupID }
 												hideChevron
 												title={ joinedGroups[currentNet.bssid][groupID].groupName }
-												subtitle={ this.genSubtitle(groupID) }
+												subtitle={ this.genSubtitle(currentNet.bssid, groupID) }
 												underlayColor="#d3d3d3"
 												titleStyle={styles.groupTitle}
-												badge={ this.genUnreadCounter(groupID) }
+												badge={ this.genUnreadCounter(currentNet.bssid, groupID) }
 												onPress={() => { this.handlePressGroup(groupID, joinedGroups[currentNet.bssid][groupID].groupName, currentNet.bssid) }}
 											/>
 										))
@@ -283,10 +302,10 @@ export default class HomeScreen extends React.Component {
 												key={ groupID }
 												hideChevron
 												title={ joinedGroups[bssid][groupID].groupName }
-												subtitle={ this.genSubtitle(groupID) }
+												subtitle={ this.genSubtitle(bssid, groupID) }
 												underlayColor="#d3d3d3"
 												titleStyle={styles.groupTitle}
-												badge={ this.genUnreadCounter(groupID) }
+												badge={ this.genUnreadCounter(bssid, groupID) }
 												onPress={() => { this.handlePressGroup(groupID, joinedGroups[bssid][groupID].groupName, bssid) }}
 											/>
 										))
