@@ -39,7 +39,6 @@ export default (() => {
 			// 第一次連線 (持續連線)
 			Util.updateNetUsers(remoteAddr, { tcpSocket: socket });
 			Util.sendUserData(remoteAddr);
-			Util.sendMsgSync(remoteAddr);
 			global.PubSub.emit('tcp:connect');
 		}
 	});
@@ -66,6 +65,7 @@ export default (() => {
 			switch (parsedData.type) {
 				case 'userData':
 					global.PubSub.emit('newMsg:userData', parsedData);
+					Util.sendMsgSync(ip);
 					break;
 				case 'msg':
 					global.PubSub.emit('newMsg:msg', parsedData);
@@ -108,7 +108,6 @@ export default (() => {
 			!!callback && callback();
 			// console.warn(`netUsers: ${JSON.stringify(Object.keys(global.netUsers), null, 4)}`);
 			Util.sendUserData(ip);
-			Util.sendMsgSync(ip);
 			global.PubSub.emit('tcp:connect');
 		});
 	}
