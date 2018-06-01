@@ -1,4 +1,5 @@
 const net = require('net');
+const { Readable } = require('stream');
 
 import Util from './util.js';
 
@@ -76,8 +77,9 @@ export default (() => {
 					break;
 			}
 		} catch (err) {
-			console.warn('不該進來這裡ㄅ');
-			console.warn(dataString);
+			console.log('不該進來這裡ㄅ');
+			console.log(dataString);
+			console.log(dataString.length);
 		}
 	}
 
@@ -117,8 +119,13 @@ export default (() => {
 				console.warn(`TCP connect to ${ ip } error. ${ err }`);
 			});
 
-			socket.write(dataBuffer);
-			socket.end();
+			// socket.write(dataBuffer);
+			// socket.end();
+
+			const stream = new Readable();
+			stream.push(dataBuffer);
+			stream.push(null);
+			stream.pipe(socket);
 		});
 	}
 
