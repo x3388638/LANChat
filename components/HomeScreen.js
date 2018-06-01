@@ -173,22 +173,24 @@ export default class HomeScreen extends React.Component {
 
 	async getLastMsgAndCountUnread() {
 		const [ssid, bssid] = await Util.getWifi();
-		const messages = await Storage.getMsg(bssid);
+		const messages = await Storage.getMsg();
 		const users = await Storage.getUsers();
 		const lastMsg = {};
 		const unread = {};
-		Object.keys(messages).forEach((groupID) => {
-			const last = Object.values(messages[groupID]).sort((a, b) => moment(a.timestamp).diff(moment(b.timestamp))).pop();
-			if (last) {
-				lastMsg[groupID] = {
-					username: users[last.sender].username,
-					msg: last[last.type],
-					time: last.timestamp
+		Object.keys(messages).forEach((bssid) => {
+			Object.keys(messages[bssid]).forEach((groupID) => {
+				const last = Object.values(messages[bssid][groupID]).sort((a, b) => moment(a.timestamp).diff(moment(b.timestamp))).pop();
+				if (last) {
+					lastMsg[groupID] = {
+						username: users[last.sender].username,
+						msg: last[last.type],
+						time: last.timestamp
+					}
 				}
-			}
 
-			// count unread
-			unread[groupID] = Object.values(messages[groupID]).reduce((sum, msgObj) => sum + (msgObj.read ? 0 : 1), 0);
+				// count unread
+				unread[groupID] = Object.values(messages[bssid][groupID]).reduce((sum, msgObj) => sum + (msgObj.read ? 0 : 1), 0);
+			});
 		});
 
 		this.setState({
@@ -216,6 +218,7 @@ export default class HomeScreen extends React.Component {
 	render() {
 		let joinedGroups = JSON.parse(this.state.joinedGroups);
 		let currentNet = this.state.currentNet ? JSON.parse(this.state.currentNet) : null;
+		const lastMsg = JSON.parse(this.state.lastMsg);
 		return (
 			<View style={ styles.container }>
 				<List containerStyle={ styles.groupList }>
@@ -235,18 +238,26 @@ export default class HomeScreen extends React.Component {
 						<View>
 							<GroupsTitle ssid={ `[連線中] ${currentNet.ssid}` } count={ this.state.userCount } />
 							<List containerStyle={styles.groupList}>
-								{ joinedGroups[currentNet.bssid] && Object.keys(joinedGroups[currentNet.bssid]).map((groupID) => (
-									<ListItem
-										key={ groupID }
-										hideChevron
-										title={ joinedGroups[currentNet.bssid][groupID].groupName }
-										subtitle={ this.genSubtitle(groupID) }
-										underlayColor="#d3d3d3"
-										titleStyle={styles.groupTitle}
-										badge={ this.genUnreadCounter(groupID) }
-										onPress={() => { this.handlePressGroup(groupID, joinedGroups[currentNet.bssid][groupID].groupName, currentNet.bssid) }}
-									/>
-								)) }
+								{ joinedGroups[currentNet.bssid] &&
+									Object.keys(joinedGroups[currentNet.bssid])
+										.sort((groupID1, groupID2) => {
+											const time1 = lastMsg[groupID1] ? lastMsg[groupID1].time : 0;
+											const time2 = lastMsg[groupID2] ? lastMsg[groupID2].time : 0;
+											return moment(time2).diff(moment(time1));
+										})
+										.map((groupID) => (
+											<ListItem
+												key={ groupID }
+												hideChevron
+												title={ joinedGroups[currentNet.bssid][groupID].groupName }
+												subtitle={ this.genSubtitle(groupID) }
+												underlayColor="#d3d3d3"
+												titleStyle={styles.groupTitle}
+												badge={ this.genUnreadCounter(groupID) }
+												onPress={() => { this.handlePressGroup(groupID, joinedGroups[currentNet.bssid][groupID].groupName, currentNet.bssid) }}
+											/>
+										))
+								}
 							</List>
 						</View>
 					}
@@ -261,18 +272,25 @@ export default class HomeScreen extends React.Component {
 							<View key={ bssid }>
 								<GroupsTitle ssid={ ssid } />
 								<List containerStyle={styles.groupList}>
-									{ Object.keys(joinedGroups[bssid]).map((groupID) => (
-										<ListItem
-											key={ groupID }
-											hideChevron
-											title={ joinedGroups[bssid][groupID].groupName }
-											subtitle={ this.genSubtitle(groupID) }
-											underlayColor="#d3d3d3"
-											titleStyle={styles.groupTitle}
-											badge={ this.genUnreadCounter(groupID) }
-											onPress={() => { this.handlePressGroup(groupID, joinedGroups[bssid][groupID].groupName, bssid) }}
-										/>
-									)) }
+									{ Object.keys(joinedGroups[bssid])
+										.sort((groupID1, groupID2) => {
+											const time1 = lastMsg[groupID1] ? lastMsg[groupID1].time : 0;
+											const time2 = lastMsg[groupID2] ? lastMsg[groupID2].time : 0;
+											return moment(time2).diff(moment(time1));
+										})
+										.map((groupID) => (
+											<ListItem
+												key={ groupID }
+												hideChevron
+												title={ joinedGroups[bssid][groupID].groupName }
+												subtitle={ this.genSubtitle(groupID) }
+												underlayColor="#d3d3d3"
+												titleStyle={styles.groupTitle}
+												badge={ this.genUnreadCounter(groupID) }
+												onPress={() => { this.handlePressGroup(groupID, joinedGroups[bssid][groupID].groupName, bssid) }}
+											/>
+										))
+									}
 								</List>
 							</View>
 						)
