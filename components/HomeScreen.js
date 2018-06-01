@@ -199,7 +199,7 @@ export default class HomeScreen extends React.Component {
 
 	genSubtitle(groupID) {
 		const lastMsg = JSON.parse(this.state.lastMsg);
-		return lastMsg[groupID] ? `${moment(lastMsg[groupID].timestamp).format('HH:mm')} | ${ lastMsg[groupID].username }: ${ lastMsg[groupID].msg.substring(0, 100) }` : '';
+		return lastMsg[groupID] ? `${moment(lastMsg[groupID].time).format('HH:mm')} | ${ lastMsg[groupID].username }: ${ lastMsg[groupID].msg.substring(0, 100) }` : '';
 	}
 
 	genUnreadCounter(groupID) {
