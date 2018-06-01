@@ -14,19 +14,26 @@ export default class MsgList extends React.Component {
 		this.scrolling = false;
 		this.scrollTimeout = null;
 		this.renderMsg = this.renderMsg.bind(this);
-		this.handleScroll = this.handleScroll.bind(this);
+		this.handleScrollStart = this.handleScrollStart.bind(this);
+		this.handleScrollEnd = this.handleScrollEnd.bind(this);
 		this.handleContentSizeChange = this.handleContentSizeChange.bind(this);
 	}
 
-	handleScroll() {
+	handleScrollStart() {
 		this.scrolling = true;
+		if (this.scrollTimeout) {
+			clearTimeout(this.scrollTimeout);
+		}
+	}
+
+	handleScrollEnd() {
 		if (this.scrollTimeout) {
 			clearTimeout(this.scrollTimeout);
 		}
 
 		this.scrollTimeout = setTimeout(() => {
 			this.scrolling = false;
-		}, 3000);
+		}, 10000);
 	}
 
 	handleContentSizeChange() {
@@ -62,7 +69,8 @@ export default class MsgList extends React.Component {
 				style={{ marginBottom: 5 }}
 				data={ this.props.messages }
 				renderItem={ this.renderMsg }
-				onScroll={ this.handleScroll }
+				onScrollBeginDrag={ this.handleScrollStart }
+				onScrollEndDrag={ this.handleScrollEnd }
 				onContentSizeChange={ this.handleContentSizeChange }
 			/>
 		);
