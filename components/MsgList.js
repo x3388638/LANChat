@@ -8,6 +8,26 @@ import {
 import moment from 'moment';
 import Util from '../modules/util';
 
+class MsgItem extends React.PureComponent {
+	render() {
+		return (
+			<View style={ styles.msgContainer }>
+				<View>
+					<Text style={ !!this.props.isSelf ? styles.msgUsername_right : styles.msgUsername_left }>{ this.props.item.username }</Text>
+				</View>
+				<View style={!!this.props.isSelf ? styles.msgBubbleContainer_right : styles.msgBubbleContainer_left }>
+					<View style={ !!this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left }>
+						<Text style={ styles.msgBubbleText }>{ this.props.item[this.props.item.type] }</Text>
+						<View style={ styles.timeWrapper }>
+							<Text style={ styles.time }>{ moment(this.props.item.timestamp).format('HH:mm') }</Text>
+						</View>
+					</View>
+				</View>
+			</View>
+		);
+	}
+}
+
 export default class MsgList extends React.Component {
 	constructor(props) {
 		super(props);
@@ -44,22 +64,7 @@ export default class MsgList extends React.Component {
 
 	renderMsg({ item }) {
 		const isSelf = item.sender === Util.getUid();
-		const type = item.type;
-		return (
-			<View style={ styles.msgContainer }>
-				<View>
-					<Text style={ !!isSelf ? styles.msgUsername_right : styles.msgUsername_left }>{ item.username }</Text>
-				</View>
-				<View style={!!isSelf ? styles.msgBubbleContainer_right : styles.msgBubbleContainer_left }>
-					<View style={ !!isSelf ? styles.msgBubble_right : styles.msgBubble_left }>
-						<Text style={ styles.msgBubbleText }>{ item[type] }</Text>
-						<View style={ styles.timeWrapper }>
-							<Text style={ styles.time }>{ moment(item.timestamp).format('HH:mm') }</Text>
-						</View>
-					</View>
-				</View>
-			</View>
-		);
+		return <MsgItem isSelf={isSelf} item={item} />;
 	}
 
 	render() {
@@ -67,6 +72,7 @@ export default class MsgList extends React.Component {
 			<FlatList
 				ref={(ref) => { this.list = ref }}
 				style={{ marginBottom: 5 }}
+				initialNumToRender={ 20 }
 				data={ this.props.messages }
 				renderItem={ this.renderMsg }
 				onScrollBeginDrag={ this.handleScrollStart }
