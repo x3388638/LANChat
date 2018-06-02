@@ -4,7 +4,8 @@ import {
 	Text,
 	Alert,
 	StyleSheet,
-	NetInfo
+	NetInfo,
+	PermissionsAndroid
 } from 'react-native';
 import {
 	Button,
@@ -33,7 +34,8 @@ export default class HomeScreen extends React.Component {
 			currentNet: null,
 			userCount: '...',
 			lastMsg: '{}', // { groupID: { username: '', msg: '', time: 'ISO 8601' } }
-			unreadCount: '{}' // { groupID: countNUm }
+			unreadCount: '{}', // { groupID: countNUm }
+			geolocation: '{}' // { lat: 0, lng: 0 }
 		};
 
 		global.UdpSocket.init();
@@ -106,6 +108,19 @@ export default class HomeScreen extends React.Component {
 		});
 
 		this.getUserCount();
+
+		// PermissionsAndroid.check('ACCESS_FINE_LOCATION').then((granted) => {
+		// 	console.warn(granted)
+		// 	if (!granted) {
+		// 		PermissionsAndroid.request(
+		// 			'ACCESS_FINE_LOCATION',
+		// 			{
+		// 				'title': '需要取用位置權限',
+		// 				'message': '傳送緊急訊息將會需要取用您的 GPS 位置'
+		// 			}
+		// 		)
+		// 	}
+		// });
 	}
 
 	handleTabChange(index) {
@@ -158,8 +173,22 @@ export default class HomeScreen extends React.Component {
 	}
 
 	handleOpenEmergencyModal() {
-		this.setState({
-			emergencyModalOpen: true
+		navigator.geolocation.getCurrentPosition((location) => {
+			this.setState({
+				geolocation: JSON.stringify({
+					lat: location.coords.latitude,
+					lng: location.coords.longitude
+				}),
+				emergencyModalOpen: true
+			});
+		}, (err) => {
+			console.warn(err);
+			this.setState({
+				emergencyModalOpen: true
+			});
+		}, {
+			enableHighAccuracy: false,
+			timeout: 15000
 		});
 	}
 
@@ -356,7 +385,10 @@ export default class HomeScreen extends React.Component {
 						icon={<Icon size={24} color="white" name="qrcode" />}
 					/>
 				</BottomNavigation>
-				<EmergencyModal open={ this.state.emergencyModalOpen } />
+				<EmergencyModal
+					open={ this.state.emergencyModalOpen }
+					location={ this.state.geolocation }
+				/>
 			</View>
 		)
 	}
