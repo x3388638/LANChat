@@ -43,6 +43,7 @@ export default class HomeScreen extends React.Component {
 		this.handleTabChange = this.handleTabChange.bind(this);
 		this.handlePressGroup = this.handlePressGroup.bind(this);
 		this.handleOpenEmergencyModal = this.handleOpenEmergencyModal.bind(this);
+		this.handleSubmitEmergency = this.handleSubmitEmergency.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 		this.renderGroups = this.renderGroups.bind(this);
 		this.getUserCount = this.getUserCount.bind(this);
@@ -194,6 +195,16 @@ export default class HomeScreen extends React.Component {
 			enableHighAccuracy: false,
 			timeout: 15000
 		});
+	}
+
+	handleSubmitEmergency() {
+		Alert.alert('確定發送緊急訊息?', null, [
+			{ text: '取消', onPress: () => { this.setState({ emergencyModalOpen: false }) } },
+			{ text: '確定', onPress: () => {
+				Util.sendEmergency(JSON.parse(this.state.geolocation));
+				this.setState({ emergencyModalOpen: false });
+			}}
+		]);
 	}
 
 	async checkPersonalInfo() {
@@ -394,6 +405,7 @@ export default class HomeScreen extends React.Component {
 					personalInfo={ this.state.personalInfo }
 					isOpen={ this.state.emergencyModalOpen }
 					hide={() => { this.setState({ emergencyModalOpen: false }) }}
+					onSubmit={ this.handleSubmitEmergency }
 				/>
 			</View>
 		)

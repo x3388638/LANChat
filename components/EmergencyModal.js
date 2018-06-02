@@ -16,6 +16,7 @@ export default class EmergencyModal extends React.Component {
 		const { lat, lng } = JSON.parse(this.props.location);
 		const personalInfo = JSON.parse(this.props.personalInfo);
 		const emergency = personalInfo ? personalInfo.emergency || {} : {};
+
 		return (
 			<Modal
 				isVisible={ this.props.isOpen }
@@ -76,6 +77,7 @@ export default class EmergencyModal extends React.Component {
 									backgroundColor="#ff3b30"
 									title='取消'
 									containerViewStyle={{ marginLeft: 5, marginRight: 5 }}
+									onPress={ this.props.hide }
 								/>
 							</View>
 							<View style={ styles.btn }>
@@ -84,6 +86,7 @@ export default class EmergencyModal extends React.Component {
 									backgroundColor="#007aff"
 									title='送出'
 									containerViewStyle={{ marginLeft: 5, marginRight: 5 }}
+									onPress={ this.props.onSubmit }
 								/>
 							</View>
 						</View>

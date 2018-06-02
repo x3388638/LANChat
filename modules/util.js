@@ -509,6 +509,10 @@ export default (() => {
 		});
 	}
 
+	function sendEmergency({ lat, lng }) {
+		console.warn(lat, lng);
+	}
+
 	return {
 		genPass,
 		login,
@@ -537,6 +541,7 @@ export default (() => {
 		sendMsg,
 		parseMsg,
 		sendMsgSync,
-		parseMsgSync
+		parseMsgSync,
+		sendEmergency
 	}
 })();
