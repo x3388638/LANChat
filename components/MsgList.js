@@ -53,7 +53,7 @@ export default class MsgList extends React.Component {
 
 		this.scrollTimeout = setTimeout(() => {
 			this.scrolling = false;
-		}, 10000);
+		}, 5000);
 	}
 
 	handleContentSizeChange() {

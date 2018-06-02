@@ -18,6 +18,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import moment from 'moment';
 
 import UnreadCounter from './UnreadCounter.js';
+import EmergencyModal from './EmergencyModal.js';
 
 import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
@@ -27,6 +28,7 @@ export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			emergencyModalOpen: false,
 			joinedGroups: '{}',
 			currentNet: null,
 			userCount: '...',
@@ -37,6 +39,7 @@ export default class HomeScreen extends React.Component {
 		global.UdpSocket.init();
 		this.handleTabChange = this.handleTabChange.bind(this);
 		this.handlePressGroup = this.handlePressGroup.bind(this);
+		this.handleOpenEmergencyModal = this.handleOpenEmergencyModal.bind(this);
 		this.checkPersonalInfo = this.checkPersonalInfo.bind(this);
 		this.renderGroups = this.renderGroups.bind(this);
 		this.getUserCount = this.getUserCount.bind(this);
@@ -54,11 +57,20 @@ export default class HomeScreen extends React.Component {
 				style={ styles.newGroupBtn }
 				onPress={ () => navigation.navigate('CreateGroup') }
 			/>
+		),
+		headerLeft: (
+			<Icon
+				size={24}
+				color="#007aff"
+				name="bullhorn"
+				style={ styles.emergencyBtn }
+				onPress={() => { navigation.state.params.handleOpenEmergencyModal() }}
+			/>
 		)
 	});
 
 	componentDidMount() {
-		this.props.navigation.setParams({ handlePressNewGroup: this.handlePressNewGroup });
+		this.props.navigation.setParams({ handleOpenEmergencyModal: this.handleOpenEmergencyModal });
 		this.props.navigation.addListener('didFocus', () => {
 			this.checkPersonalInfo();
 			this.renderGroups();
@@ -142,6 +154,12 @@ export default class HomeScreen extends React.Component {
 			setTimeout(() => {
 				this.getLastMsgAndCountUnread();
 			}, 150);
+		});
+	}
+
+	handleOpenEmergencyModal() {
+		this.setState({
+			emergencyModalOpen: true
 		});
 	}
 
@@ -338,6 +356,7 @@ export default class HomeScreen extends React.Component {
 						icon={<Icon size={24} color="white" name="qrcode" />}
 					/>
 				</BottomNavigation>
+				<EmergencyModal open={ this.state.emergencyModalOpen } />
 			</View>
 		)
 	}
@@ -354,6 +373,9 @@ const styles = StyleSheet.create({
 		left: 0,
 		bottom: 0,
 		right: 0
+	},
+	emergencyBtn: {
+		marginLeft: 10
 	},
 	newGroupBtn: {
 		marginRight: 10
