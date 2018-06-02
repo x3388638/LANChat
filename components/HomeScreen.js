@@ -35,7 +35,8 @@ export default class HomeScreen extends React.Component {
 			userCount: '...',
 			lastMsg: '{}', // { groupID: { username: '', msg: '', time: 'ISO 8601' } }
 			unreadCount: '{}', // { groupID: countNUm }
-			geolocation: '{}' // { lat: 0, lng: 0 }
+			geolocation: '{}', // { lat: 0, lng: 0 }
+			personalInfo: null
 		};
 
 		global.UdpSocket.init();
@@ -172,20 +173,23 @@ export default class HomeScreen extends React.Component {
 		});
 	}
 
-	handleOpenEmergencyModal() {
+	async handleOpenEmergencyModal() {
+		const personalInfo = await Storage.getPersonalInfo();
+		const stateToSet = {
+			emergencyModalOpen: true,
+			personalInfo: JSON.stringify(personalInfo)
+		};
+
 		navigator.geolocation.getCurrentPosition((location) => {
-			this.setState({
-				geolocation: JSON.stringify({
-					lat: location.coords.latitude,
-					lng: location.coords.longitude
-				}),
-				emergencyModalOpen: true
+			stateToSet.geolocation = JSON.stringify({
+				lat: location.coords.latitude,
+				lng: location.coords.longitude
 			});
+
+			this.setState(stateToSet);
 		}, (err) => {
 			console.warn(err);
-			this.setState({
-				emergencyModalOpen: true
-			});
+			this.setState(stateToSet);
 		}, {
 			enableHighAccuracy: false,
 			timeout: 15000
@@ -386,8 +390,10 @@ export default class HomeScreen extends React.Component {
 					/>
 				</BottomNavigation>
 				<EmergencyModal
-					open={ this.state.emergencyModalOpen }
 					location={ this.state.geolocation }
+					personalInfo={ this.state.personalInfo }
+					isOpen={ this.state.emergencyModalOpen }
+					hide={() => { this.setState({ emergencyModalOpen: false }) }}
 				/>
 			</View>
 		)
