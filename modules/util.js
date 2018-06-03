@@ -509,8 +509,27 @@ export default (() => {
 		});
 	}
 
-	function sendEmergency({ lat, lng }) {
-		console.warn(lat, lng);
+	async function sendEmergency({ lat, lng }) {
+		const [ssid, bssid] = await getWifi();
+		const personalInfo = await Storage.getPersonalInfo();
+		const normal = personalInfo.normal || {};
+		const emergency = personalInfo.emergency || {};
+		const msg = `[求助訊息]\n` +
+			`姓名: ${ emergency.name || normal.username }\n` +
+			`性別: ${ emergency.gender === 'M' ? '男' : emergency.gender === 'F' ? '女' : '' }\n` +
+			`生日: ${ emergency.birth }\n` +
+			`電話: ${ emergency.phone }\n` +
+			`血型: ${ emergency.bloodType ? emergency.bloodType + '型' : '' }\n` +
+			`住址: ${ emergency.address }\n` +
+			`補充資訊: ${ emergency.memo }\n` +
+			`GPS 經度: ${ lng }\n` +
+			`GPS 緯度: ${ lat }`;
+		sendMsg({
+			bssid,
+			msg,
+			type: 'emergency',
+			groupID: 'LOBBY'
+		});
 	}
 
 	return {
