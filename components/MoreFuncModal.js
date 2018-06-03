@@ -26,7 +26,7 @@ export default class MoreFuncModal extends React.Component {
 					</TouchableOpacity>
 					<Divider />
 					<TouchableOpacity
-						onPress={() => {}}
+						onPress={ this.props.onImg }
 					>
 						<Text style={styles.btn}>選擇圖片</Text>
 					</TouchableOpacity>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
 	btn: {
 		textAlign: 'center',
 		color: '#007aff',
-		fontSize: 30,
+		fontSize: 26,
 		paddingTop: 8,
 		paddingBottom: 8
 	}

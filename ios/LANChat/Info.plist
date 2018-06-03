@@ -66,6 +66,6 @@
 		<string>Zocial.ttf</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string/>
 </dict>
 </plist>

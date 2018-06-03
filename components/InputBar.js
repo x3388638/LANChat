@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import AutogrowInput from 'react-native-autogrow-input';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+const ImagePicker = require('react-native-image-picker');
 
 import MoreFuncModal from './MoreFuncModal.js';
 
@@ -57,6 +58,7 @@ export default class InputBar extends React.Component {
 		};
 
 		this.send = this.send.bind(this);
+		this.pickImg = this.pickImg.bind(this);
 	}
 
 	send() {
@@ -85,6 +87,45 @@ export default class InputBar extends React.Component {
 		});
 	}
 
+	pickImg() {
+		var options = {
+			title: 'Select Avatar',
+			customButtons: [
+				{ name: 'fb', title: 'Choose Photo from Facebook' },
+			],
+			storageOptions: {
+				skipBackup: true,
+				path: 'images'
+			}
+		};
+
+		ImagePicker.launchImageLibrary(options, (response) => {
+			console.log('Response = ', response);
+
+			if (response.didCancel) {
+				console.log('User cancelled image picker');
+			}
+			else if (response.error) {
+				console.log('ImagePicker Error: ', response.error);
+			}
+			else if (response.customButton) {
+				console.log('User tapped custom button: ', response.customButton);
+			}
+			else {
+				let source = { uri: response.uri };
+
+				// You can also display the image using data:
+				// let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+				console.warn(source);
+
+				this.setState({
+					moreFuncModalOpen: false
+				});
+			}
+		});
+	}
+
 	render() {
 		const readOnly = this.props.currentBssid !== this.props.bssid;
 		return (
@@ -107,6 +148,7 @@ export default class InputBar extends React.Component {
 				<MoreFuncModal
 					isOpen={ this.state.moreFuncModalOpen }
 					hide={() => { this.setState({ moreFuncModalOpen: false }) }}
+					onImg={ this.pickImg }
 				/>
 			</View>
 		);
