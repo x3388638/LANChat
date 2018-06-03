@@ -246,10 +246,15 @@ export default class HomeScreen extends React.Component {
 				const last = Object.values(messages[bssid][groupID]).sort((a, b) => moment(a.timestamp).diff(moment(b.timestamp))).pop();
 				const gid = groupID === 'LOBBY' ? `LOBBY-${bssid}` : groupID;
 				const type = last.type;
+				let msg = last[type];
+				if (type === 'img') {
+					msg = 'Photo';
+				}
+
 				if (last) {
 					lastMsg[gid] = {
+						msg,
 						username: users[last.sender] ? users[last.sender].username : 'Someone',
-						msg: type === 'text' || 'emergency' ? last[type] : type,
 						time: last.timestamp
 					}
 				}

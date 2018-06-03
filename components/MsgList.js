@@ -2,6 +2,7 @@ import React from 'react';
 import {
 	View,
 	Text,
+	Image,
 	FlatList,
 	StyleSheet
 } from 'react-native';
@@ -21,7 +22,13 @@ class MsgItem extends React.PureComponent {
 				<View style={ [styles.msgBUbbleContainer, this.props.isSelf && styles.msgBubbleContainer_right] }>
 					<View style={ [styles.msgBubble, this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left, type === 'emergency' && styles.msgBubble_emergency] }>
 						<Text style={ [styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency] }>
-							{ this.props.item[this.props.item.type] }
+							{ (type === 'text' || type === 'emergency') && this.props.item[type] }
+							{ type === 'img' &&
+								<Image
+									style={{ width: 200, height: 200 }}
+									source={{ uri: this.props.item[type] }}
+								/>
+							}
 						</Text>
 						<View style={ styles.timeWrapper }>
 							<Text style={ styles.time }>{ moment(this.props.item.timestamp).format('HH:mm') }</Text>
