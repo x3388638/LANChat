@@ -524,6 +524,7 @@ export default (() => {
 			`補充資訊: ${ emergency.memo }\n` +
 			`GPS 經度: ${ lng }\n` +
 			`GPS 緯度: ${ lat }`;
+
 		sendMsg({
 			bssid,
 			msg,

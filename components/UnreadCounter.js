@@ -4,11 +4,12 @@ import { Badge } from 'react-native-elements';
 
 export default class UnreadCounter extends React.Component {
 	render() {
+		const badgeColor = this.props.emergency ? '#ff3b30' : '#007aff'
 		return (
 			<Badge
 				value={ this.props.count }
 				textStyle={ styles.text }
-				containerStyle={ styles.container }
+				containerStyle={ [styles.container, { backgroundColor: badgeColor }] }
 			/>
 		);
 	}
@@ -16,7 +17,6 @@ export default class UnreadCounter extends React.Component {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#007aff',
 		paddingLeft: 7,
 		paddingRight: 7
 	},

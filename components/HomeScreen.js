@@ -35,6 +35,7 @@ export default class HomeScreen extends React.Component {
 			userCount: '...',
 			lastMsg: '{}', // { groupID: { username: '', msg: '', time: 'ISO 8601' } }
 			unreadCount: '{}', // { groupID: countNUm }
+			unreadEmergency: false,
 			geolocation: '{}', // { lat: 0, lng: 0 }
 			personalInfo: null
 		};
@@ -239,6 +240,7 @@ export default class HomeScreen extends React.Component {
 		const users = await Storage.getUsers();
 		const lastMsg = {};
 		const unread = {};
+		let unreadEmergency = false;
 		Object.keys(messages).forEach((bssid) => {
 			Object.keys(messages[bssid]).forEach((groupID) => {
 				const last = Object.values(messages[bssid][groupID]).sort((a, b) => moment(a.timestamp).diff(moment(b.timestamp))).pop();
@@ -252,13 +254,20 @@ export default class HomeScreen extends React.Component {
 				}
 
 				// count unread
-				unread[gid] = Object.values(messages[bssid][groupID]).reduce((sum, msgObj) => sum + (msgObj.read ? 0 : 1), 0);
+				unread[gid] = Object.values(messages[bssid][groupID]).reduce((sum, msgObj) => {
+					if (groupID === 'LOBBY' && msgObj.type === 'emergency' && !msgObj.read) {
+						unreadEmergency = true;
+					}
+
+					return sum + (msgObj.read ? 0 : 1);
+				}, 0);
 			});
 		});
 
 		this.setState({
 			lastMsg: JSON.stringify(lastMsg),
-			unreadCount: JSON.stringify(unread)
+			unreadCount: JSON.stringify(unread),
+			unreadEmergency
 		});
 	}
 
@@ -290,8 +299,13 @@ export default class HomeScreen extends React.Component {
 		if (!unreadCount[gid]) {
 			return null;
 		} else {
+			let emergency = false;
+			if (groupID === 'LOBBY' && this.state.unreadEmergency) {
+				emergency = true;
+			}
+
 			return {
-				element: <UnreadCounter count={ unreadCount[gid] } />
+				element: <UnreadCounter count={ unreadCount[gid] } emergency={ emergency } />
 			}
 		}
 	}
