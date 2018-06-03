@@ -10,14 +10,19 @@ import Util from '../modules/util';
 
 class MsgItem extends React.PureComponent {
 	render() {
+		const type = this.props.item.type;
 		return (
 			<View style={ styles.msgContainer }>
 				<View>
-					<Text style={ !!this.props.isSelf ? styles.msgUsername_right : styles.msgUsername_left }>{ this.props.item.username }</Text>
+					<Text style={ [styles.msgUsername, this.props.isSelf ? styles.msgUsername_right : styles.msgUsername_left ] }>
+						{ this.props.item.username }
+					</Text>
 				</View>
-				<View style={!!this.props.isSelf ? styles.msgBubbleContainer_right : styles.msgBubbleContainer_left }>
-					<View style={ !!this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left }>
-						<Text style={ styles.msgBubbleText }>{ this.props.item[this.props.item.type] }</Text>
+				<View style={ [styles.msgBUbbleContainer, this.props.isSelf && styles.msgBubbleContainer_right] }>
+					<View style={ [styles.msgBubble, this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left, type === 'emergency' && styles.msgBubble_emergency] }>
+						<Text style={ [styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency] }>
+							{ this.props.item[this.props.item.type] }
+						</Text>
 						<View style={ styles.timeWrapper }>
 							<Text style={ styles.time }>{ moment(this.props.item.timestamp).format('HH:mm') }</Text>
 						</View>
@@ -88,44 +93,45 @@ const styles = StyleSheet.create({
 		margin: 10,
 		marginBottom: 0
 	},
-	msgUsername_left: {
+	msgUsername: {
 		color: '#666',
 		marginBottom: 2,
-		marginLeft: 5,
-		fontSize: 16,
-		fontWeight: 'bold'
-	},
-	msgUsername_right: {
-		color: '#666',
-		marginBottom: 2,
-		marginRight: 5,
 		fontSize: 16,
 		fontWeight: 'bold',
+	},
+	msgUsername_left: {
+		marginLeft: 5
+	},
+	msgUsername_right: {
+		marginRight: 5,
 		textAlign: 'right'
 	},
-	msgBubbleContainer_left: {
+	msgBUbbleContainer: {
 		flexDirection: 'row'
 	},
 	msgBubbleContainer_right: {
-		flexDirection: 'row',
 		alignSelf: 'flex-end'
 	},
-	msgBubble_left: {
+	msgBubble: {
 		borderRadius: 8,
-		backgroundColor: '#F8F8F8',
 		maxWidth: '85%',
 		minWidth: 100,
 		padding: 10
 	},
+	msgBubble_left: {
+		backgroundColor: '#F8F8F8'
+	},
 	msgBubble_right: {
-		borderRadius: 8,
 		backgroundColor: '#B3B3A1',
-		maxWidth: '85%',
-		minWidth: 100,
-		padding: 10,
+	},
+	msgBubble_emergency: {
+		backgroundColor: '#ff3b30'
 	},
 	msgBubbleText: {
 		color: '#63676F'
+	},
+	msgBubbleText_emergency: {
+		color: '#fff'
 	},
 	timeWrapper: {
 		marginTop: 1
