@@ -54,7 +54,8 @@ export default class InputBar extends React.Component {
 		super(props);
 		this.state = {
 			inputMsg: '',
-			moreFuncModalOpen: false
+			moreFuncModalOpen: false,
+			imgSelected: null
 		};
 
 		this.send = this.send.bind(this);
@@ -88,20 +89,8 @@ export default class InputBar extends React.Component {
 	}
 
 	pickImg() {
-		var options = {
-			title: 'Select Avatar',
-			customButtons: [
-				{ name: 'fb', title: 'Choose Photo from Facebook' },
-			],
-			storageOptions: {
-				skipBackup: true,
-				path: 'images'
-			}
-		};
-
-		ImagePicker.launchImageLibrary(options, (response) => {
+		ImagePicker.launchImageLibrary({}, (response) => {
 			console.log('Response = ', response);
-
 			if (response.didCancel) {
 				console.log('User cancelled image picker');
 			}
@@ -112,15 +101,12 @@ export default class InputBar extends React.Component {
 				console.log('User tapped custom button: ', response.customButton);
 			}
 			else {
-				let source = { uri: response.uri };
-
 				// You can also display the image using data:
-				// let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-				console.warn(source);
+				let base64 = `data:image/jpeg;base64,${ response.data }`;
 
 				this.setState({
-					moreFuncModalOpen: false
+					moreFuncModalOpen: false,
+					imgSelected: base64
 				});
 			}
 		});
@@ -150,6 +136,7 @@ export default class InputBar extends React.Component {
 					hide={() => { this.setState({ moreFuncModalOpen: false }) }}
 					onImg={ this.pickImg }
 				/>
+				{/* <ImagePreviewModal /> */}
 			</View>
 		);
 	}
