@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const ImagePicker = require('react-native-image-picker');
 
 import MoreFuncModal from './MoreFuncModal.js';
+import ImgPreviewModal from './ImgPreviewModal.js';
 
 import Util from '../modules/util.js';
 
@@ -55,11 +56,13 @@ export default class InputBar extends React.Component {
 		this.state = {
 			inputMsg: '',
 			moreFuncModalOpen: false,
-			imgSelected: null
+			imgSelected: null,
+			imgPreviewModalOpen: false
 		};
 
 		this.send = this.send.bind(this);
 		this.pickImg = this.pickImg.bind(this);
+		this.sendImg = this.sendImg.bind(this);
 	}
 
 	send() {
@@ -102,13 +105,35 @@ export default class InputBar extends React.Component {
 			}
 			else {
 				// You can also display the image using data:
-				let base64 = `data:image/jpeg;base64,${ response.data }`;
-
+				const base64 = `data:image/jpeg;base64,${ response.data }`;
 				this.setState({
 					moreFuncModalOpen: false,
-					imgSelected: base64
+					imgSelected: base64,
+					imgPreviewModalOpen: Platform.OS !== 'ios'
+				}, () => {
+					if (Platform.OS === 'ios') {
+						setTimeout(() => {
+							this.setState({
+								imgPreviewModalOpen: true
+							});
+						}, 150);
+					}
 				});
 			}
+		});
+	}
+
+	sendImg() {
+		Util.sendMsg({
+			type: 'img',
+			bssid: this.props.bssid,
+			groupID: this.props.groupID,
+			msg: this.state.imgSelected
+		});
+
+		this.setState({
+			imgPreviewModalOpen: false,
+			imgSelected: null
 		});
 	}
 
@@ -136,7 +161,12 @@ export default class InputBar extends React.Component {
 					hide={() => { this.setState({ moreFuncModalOpen: false }) }}
 					onImg={ this.pickImg }
 				/>
-				{/* <ImagePreviewModal /> */}
+				<ImgPreviewModal
+					img={ this.state.imgSelected }
+					isOpen={ this.state.imgPreviewModalOpen }
+					hide={() => { this.setState({ imgPreviewModalOpen: false, imgSelected: null }) }}
+					onSend={ this.sendImg }
+				/>
 			</View>
 		);
 	}

@@ -14,6 +14,7 @@ export default class MoreFuncModal extends React.Component {
 	render() {
 		return (
 			<Modal
+				animationOutTiming={ 100 }
 				isVisible={ this.props.isOpen }
 				onBackButtonPress={ this.props.hide }
 				onBackdropPress={ this.props.hide }
