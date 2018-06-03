@@ -9,12 +9,17 @@ import {
 import AutogrowInput from 'react-native-autogrow-input';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import MoreFuncModal from './MoreFuncModal.js';
+
 import Util from '../modules/util.js';
 
 class MoreFunc extends React.Component {
 	render() {
 		return (
-			<View style={ styles.btnContainer }>
+			<TouchableOpacity
+				style={ styles.btnContainer }
+				onPress={ () => { !this.props.readOnly && this.props.onPress() } }
+			>
 				<View style={ styles.moreBtn }>
 					<Icon
 						size={26}
@@ -22,7 +27,7 @@ class MoreFunc extends React.Component {
 						color="#63676F"
 					/>
 				</View>
-			</View>
+			</TouchableOpacity>
 		);
 	}
 }
@@ -47,7 +52,8 @@ export default class InputBar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			inputMsg: ''
+			inputMsg: '',
+			moreFuncModalOpen: false
 		};
 
 		this.send = this.send.bind(this);
@@ -83,7 +89,10 @@ export default class InputBar extends React.Component {
 		const readOnly = this.props.currentBssid !== this.props.bssid;
 		return (
 			<View style={ styles.container }>
-				<MoreFunc readOnly={ readOnly } />
+				<MoreFunc
+					readOnly={ readOnly }
+					onPress={() => { this.setState({ moreFuncModalOpen: true }) }}
+				/>
 				<AutogrowInput
 					multiline
 					editable={ !readOnly }
@@ -95,6 +104,10 @@ export default class InputBar extends React.Component {
 					style={ styles.input } placeholder="Message..."
 				/>
 				<SendButton onPress={ this.send } readOnly={ readOnly } />
+				<MoreFuncModal
+					isOpen={ this.state.moreFuncModalOpen }
+					hide={() => { this.setState({ moreFuncModalOpen: false }) }}
+				/>
 			</View>
 		);
 	}

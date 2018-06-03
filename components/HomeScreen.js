@@ -247,7 +247,7 @@ export default class HomeScreen extends React.Component {
 				const gid = groupID === 'LOBBY' ? `LOBBY-${bssid}` : groupID;
 				if (last) {
 					lastMsg[gid] = {
-						username: users[last.sender].username,
+						username: users[last.sender] ? users[last.sender].username : 'Someone',
 						msg: last[last.type],
 						time: last.timestamp
 					}
