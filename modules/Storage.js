@@ -81,13 +81,24 @@ export default (() => {
 	}
 
 	async function leaveGroup(bssid, groupID, callback) {
+		// delete from joinedGroups
 		const joinedGroups = await getJoinedGroups();
 		delete joinedGroups[bssid][groupID];
 		if (Object.keys(joinedGroups[bssid]) === 0) {
 			delete joinedGroups[bssid];
 		}
 
-		AsyncStorage.setItem('@LANChat:joinedGroups', JSON.stringify(joinedGroups), callback);
+		// delete from messages
+		const messages = await getMsg();
+		delete messages[bssid][groupID];
+		if (Object.keys(messages[bssid]).length === 0) {
+			delete messages[bssid];
+		}
+
+		Promise.all([
+			AsyncStorage.setItem('@LANChat:joinedGroups', JSON.stringify(joinedGroups)),
+			AsyncStorage.setItem('@LANChat:messages', JSON.stringify(messages))
+		]).then(callback);
 	}
 
 	async function getJoinedGroups() {
