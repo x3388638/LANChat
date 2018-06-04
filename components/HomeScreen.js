@@ -254,7 +254,7 @@ export default class HomeScreen extends React.Component {
 				if (last) {
 					lastMsg[gid] = {
 						msg,
-						username: users[last.sender] ? users[last.sender].username : 'Someone',
+						username: users[last.sender] ? users[last.sender].username : `Someone-${ last.sender.substring(0, 3) }`,
 						time: last.timestamp
 					}
 				}
