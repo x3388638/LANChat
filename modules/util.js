@@ -8,8 +8,7 @@ import UUID from 'uuid/v4';
 import { NetworkInfo } from 'react-native-network-info';
 import {
 	Alert,
-	NetInfo,
-	Platform
+	NetInfo
 } from 'react-native';
 
 import Storage from './Storage.js';
@@ -27,12 +26,10 @@ export default (() => {
 	 */
 	async function _sendAlive() {
 		const ip = await getIP();
-		const os = Platform.OS;
 		global.UdpSocket.send(new Buffer(JSON.stringify({
 			type: 'alive',
 			payload: {
-				ip,
-				os
+				ip
 			}
 		})));
 	}
@@ -145,9 +142,6 @@ export default (() => {
 
 	function parseAlive() {
 		global.PubSub.on('newMsg:alive', async (data) => {
-			const currentIP = await getIP();
-			const currentOS = Platform.OS;
-
 			// tcp 連線已建立
 			if (netUserExist(data.payload.ip)) {
 				return;
