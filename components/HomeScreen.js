@@ -126,6 +126,11 @@ export default class HomeScreen extends React.Component {
 		// });
 	}
 
+	componentWillUnmount() {
+		global.netUsers = {};
+		global.TcpSocket.close();
+	}
+
 	handleTabChange(index) {
 		switch (index) {
 			case 0:

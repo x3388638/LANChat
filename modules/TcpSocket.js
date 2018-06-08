@@ -42,6 +42,10 @@ export default (() => {
 			global.PubSub.emit('tcp:connect');
 		}
 	});
+
+	_server.on('error', (err) => {
+		console.warn(err);
+	});
 	
 	// server listen
 	Util.getIP().then((host) => {
@@ -128,8 +132,13 @@ export default (() => {
 		});
 	}
 
+	function close() {
+		_server = null;
+	}
+
 	return {
 		keepConn,
-		connectAndWrite
+		connectAndWrite,
+		close
 	};
 })();
