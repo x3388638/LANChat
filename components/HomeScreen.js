@@ -40,7 +40,6 @@ export default class HomeScreen extends React.Component {
 			personalInfo: null
 		};
 
-		global.UdpSocket.init();
 		this.handleTabChange = this.handleTabChange.bind(this);
 		this.handlePressGroup = this.handlePressGroup.bind(this);
 		this.handleOpenEmergencyModal = this.handleOpenEmergencyModal.bind(this);
