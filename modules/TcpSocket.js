@@ -126,7 +126,10 @@ export default (() => {
 			// socket.end();
 
 			const stream = new Readable();
-			stream.push(dataBuffer);
+			for (let i = 0; i < Math.ceil(dataBuffer.byteLength / 300000); i ++) {
+				stream.push(dataBuffer.slice(i * 300000, i * 300000 + 300000));
+			}
+
 			stream.push(null);
 			stream.pipe(socket);
 		});
