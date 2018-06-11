@@ -8,6 +8,7 @@ import {
 import AutogrowInput from 'react-native-autogrow-input';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ImageResizer from 'react-native-image-resizer';
+import ImgToBase64 from 'react-native-image-base64';
 const ImagePicker = require('react-native-image-picker');
 
 import MoreFuncModal from './MoreFuncModal.js';
@@ -105,24 +106,27 @@ export default class InputBar extends React.Component {
 			}
 			else {
 				const base64 = `data:image/jpeg;base64,${ response.data }`;
-				ImageResizer.createResizedImage(base64, 500, 500, 'JPEG', 50).then((response) => {
-					console.warn(Object.keys(response));
-					this.setState({
-						moreFuncModalOpen: false,
-						imgSelected: response.uri,
-						imgPreviewModalOpen: Platform.OS !== 'ios'
-					}, () => {
-						if (Platform.OS === 'ios') {
-							setTimeout(() => {
-								this.setState({
-									imgPreviewModalOpen: true
-								});
-							}, 150);
-						}
+				ImageResizer
+					.createResizedImage(base64, 500, 500, 'JPEG', 50)
+					.then((response) => ImgToBase64.getBase64String(response.uri))
+					.then((resizedBase64) => {
+						this.setState({
+							moreFuncModalOpen: false,
+							imgSelected: `data:image/jpeg;base64,${ resizedBase64 }`,
+							imgPreviewModalOpen: Platform.OS !== 'ios'
+						}, () => {
+							if (Platform.OS === 'ios') {
+								setTimeout(() => {
+									this.setState({
+										imgPreviewModalOpen: true
+									});
+								}, 150);
+							}
+						});
+					})
+					.catch((err) => {
+						console.warn('error????' + err);
 					});
-				}).catch((err) => {
-					console.warn('error????' + err);
-				});
 			}
 		});
 	}
