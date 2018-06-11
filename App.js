@@ -1,11 +1,5 @@
-import React, { Component } from 'react';
 import {
-	Platform,
-	StyleSheet,
-	Text,
-	View,
 	YellowBox,
-	AsyncStorage
 } from 'react-native';
 import { SwitchNavigator, StackNavigator } from 'react-navigation';
 import LoginScreen from './components/LoginScreen';

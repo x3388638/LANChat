@@ -9,7 +9,6 @@ import {
 import {
 	Button
 } from 'react-native-elements';
-import sha256 from 'sha256';
 import Util from '../modules/util.js';
 import Storage from '../modules/Storage.js';
 

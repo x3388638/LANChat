@@ -3,8 +3,7 @@ import {
 	View,
 	TouchableOpacity,
 	StyleSheet,
-	Platform,
-	Keyboard
+	Platform
 } from 'react-native';
 import AutogrowInput from 'react-native-autogrow-input';
 import Icon from 'react-native-vector-icons/MaterialIcons';

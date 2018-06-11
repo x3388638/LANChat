@@ -1,10 +1,8 @@
 import React from 'react';
 import {
-	View,
 	Text,
 	Alert,
-	StyleSheet,
-	AsyncStorage
+	StyleSheet
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Icon from 'react-native-vector-icons/FontAwesome';

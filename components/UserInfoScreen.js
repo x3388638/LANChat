@@ -8,7 +8,6 @@ import UserAvatar from 'react-native-user-avatar';
 
 import MemberOnlineStatus from './MemberOnlineStatus.js';
 
-import Util from '../modules/util';
 import Storage from '../modules/Storage';
 
 export default class UserInfoScreen extends React.Component {

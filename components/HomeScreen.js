@@ -1,14 +1,11 @@
 import React from 'react';
 import {
 	View,
-	Text,
 	Alert,
 	StyleSheet,
-	NetInfo,
 	PermissionsAndroid
 } from 'react-native';
 import {
-	Button,
 	List,
 	ListItem
 } from 'react-native-elements';
