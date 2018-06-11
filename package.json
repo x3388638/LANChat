@@ -31,6 +31,7 @@
     "react-native-device-info": "^0.21.5",
     "react-native-elements": "^0.19.1",
     "react-native-image-picker": "^0.26.10",
+    "react-native-image-resizer": "^1.0.0",
     "react-native-keyboard-aware-scroll-view": "^0.5.0",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-level-fs": "^3.0.1",

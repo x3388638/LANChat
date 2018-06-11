@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import AutogrowInput from 'react-native-autogrow-input';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import ImageResizer from 'react-native-image-resizer';
 const ImagePicker = require('react-native-image-picker');
 
 import MoreFuncModal from './MoreFuncModal.js';
@@ -103,20 +104,24 @@ export default class InputBar extends React.Component {
 				console.log('User tapped custom button: ', response.customButton);
 			}
 			else {
-				// You can also display the image using data:
 				const base64 = `data:image/jpeg;base64,${ response.data }`;
-				this.setState({
-					moreFuncModalOpen: false,
-					imgSelected: base64,
-					imgPreviewModalOpen: Platform.OS !== 'ios'
-				}, () => {
-					if (Platform.OS === 'ios') {
-						setTimeout(() => {
-							this.setState({
-								imgPreviewModalOpen: true
-							});
-						}, 150);
-					}
+				ImageResizer.createResizedImage(base64, 500, 500, 'JPEG', 50).then((response) => {
+					console.warn(Object.keys(response));
+					this.setState({
+						moreFuncModalOpen: false,
+						imgSelected: response.uri,
+						imgPreviewModalOpen: Platform.OS !== 'ios'
+					}, () => {
+						if (Platform.OS === 'ios') {
+							setTimeout(() => {
+								this.setState({
+									imgPreviewModalOpen: true
+								});
+							}, 150);
+						}
+					});
+				}).catch((err) => {
+					console.warn('error????' + err);
 				});
 			}
 		});

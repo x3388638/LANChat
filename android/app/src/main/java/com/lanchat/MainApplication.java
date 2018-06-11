@@ -3,6 +3,7 @@ package com.lanchat;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.peel.react.rnos.RNOSModule;
 import com.imagepicker.ImagePickerPackage;
 import com.peel.react.TcpSocketsModule;
@@ -33,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ImageResizerPackage(),
             new RNOSModule(),
             new ImagePickerPackage(),
             new TcpSocketsModule(),
