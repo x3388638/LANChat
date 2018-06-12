@@ -13,6 +13,7 @@ const ImagePicker = require('react-native-image-picker');
 
 import MoreFuncModal from './MoreFuncModal.js';
 import ImgPreviewModal from './ImgPreviewModal.js';
+import CreatePollModal from './CreatePollModal.js';
 
 import Util from '../modules/util.js';
 
@@ -58,12 +59,14 @@ export default class InputBar extends React.Component {
 			inputMsg: '',
 			moreFuncModalOpen: false,
 			imgSelected: null,
-			imgPreviewModalOpen: false
+			imgPreviewModalOpen: false,
+			createPollModalOpen: false
 		};
 
 		this.send = this.send.bind(this);
 		this.pickImg = this.pickImg.bind(this);
 		this.sendImg = this.sendImg.bind(this);
+		this.handleOpenPollModal = this.handleOpenPollModal.bind(this);
 	}
 
 	send() {
@@ -144,6 +147,21 @@ export default class InputBar extends React.Component {
 		});
 	}
 
+	handleOpenPollModal() {
+		this.setState({
+			moreFuncModalOpen: false,
+			createPollModalOpen: Platform.OS !== 'ios'
+		}, () => {
+			if (Platform.OS === 'ios') {
+				setTimeout(() => {
+					this.setState({
+						createPollModalOpen: true
+					});
+				}, 150);
+			}
+		});
+	}
+
 	render() {
 		const readOnly = this.props.currentBssid !== this.props.bssid;
 		return (
@@ -167,12 +185,17 @@ export default class InputBar extends React.Component {
 					isOpen={ this.state.moreFuncModalOpen }
 					hide={() => { this.setState({ moreFuncModalOpen: false }) }}
 					onImg={ this.pickImg }
+					onPoll={ this.handleOpenPollModal }
 				/>
 				<ImgPreviewModal
 					img={ this.state.imgSelected }
 					isOpen={ this.state.imgPreviewModalOpen }
 					hide={() => { this.setState({ imgPreviewModalOpen: false, imgSelected: null }) }}
 					onSend={ this.sendImg }
+				/>
+				<CreatePollModal
+					isOpen={ this.state.createPollModalOpen }
+					hide={() => { this.setState({ createPollModalOpen: false }) }}
 				/>
 			</View>
 		);
