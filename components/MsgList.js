@@ -117,7 +117,6 @@ export default class MsgList extends React.Component {
 					img={ this.state.imgPreview }
 					isOpen={ this.state.imgPreviewModalOpen }
 					hide={() => { this.setState({ imgPreviewModalOpen: false, imgSelected: null }) }}
-					onSend={() => {}}
 				/>
 			]
 		);

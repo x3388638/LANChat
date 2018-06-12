@@ -25,7 +25,7 @@ export default class ImgPreviewModal extends React.Component {
 						/>
 					}
 					<View style={ styles.btnContainer }>
-						<View style={ styles.btn }>
+						<View style={ !!this.props.onSend ? styles.btn : styles.btnFill }>
 							<Button
 								icon={{ name: 'close' }}
 								backgroundColor="#ff3b30"
@@ -34,15 +34,17 @@ export default class ImgPreviewModal extends React.Component {
 								onPress={ this.props.hide }
 							/>
 						</View>
-						<View style={ styles.btn }>
-							<Button
-								icon={{ name: 'send' }}
-								backgroundColor="#007aff"
-								title='送出'
-								containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
-								onPress={ this.props.onSend }
-							/>
-						</View>
+						{ !!this.props.onSend &&
+							<View style={ styles.btn }>
+								<Button
+									icon={{ name: 'send' }}
+									backgroundColor="#007aff"
+									title='送出'
+									containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
+									onPress={ this.props.onSend }
+								/>
+							</View>
+						}
 					</View>
 				</View>
 			</Modal>
@@ -68,5 +70,8 @@ const styles = StyleSheet.create({
 	},
 	btn: {
 		width: '50%'
+	},
+	btnFill: {
+		width: '100%'
 	}
 });
