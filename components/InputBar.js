@@ -140,8 +140,7 @@ export default class InputBar extends React.Component {
 		});
 
 		this.setState({
-			imgPreviewModalOpen: false,
-			imgSelected: null
+			imgPreviewModalOpen: false
 		});
 	}
 

@@ -3,10 +3,14 @@ import {
 	View,
 	Text,
 	Image,
+	TouchableOpacity,
 	FlatList,
 	StyleSheet
 } from 'react-native';
 import moment from 'moment';
+
+import ImgPreviewModal from './ImgPreviewModal.js';
+
 import Util from '../modules/util';
 
 class MsgItem extends React.PureComponent {
@@ -24,10 +28,12 @@ class MsgItem extends React.PureComponent {
 						<Text style={ [styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency] }>
 							{ (type === 'text' || type === 'emergency') && this.props.item[type] }
 							{ type === 'img' &&
-								<Image
-									style={{ width: 200, height: 200 }}
-									source={{ uri: this.props.item[type] }}
-								/>
+								<TouchableOpacity onPress={() => { this.props.onPressImg(this.props.item[type]) }}>
+									<Image
+										style={{ width: 200, height: 200 }}
+										source={{ uri: this.props.item[type] }}
+									/>
+								</TouchableOpacity>
 							}
 						</Text>
 						<View style={ styles.timeWrapper }>
@@ -43,12 +49,18 @@ class MsgItem extends React.PureComponent {
 export default class MsgList extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			imgPreview: null,
+			imgPreviewModalOpen: false
+		};
+
 		this.scrolling = false;
 		this.scrollTimeout = null;
 		this.renderMsg = this.renderMsg.bind(this);
 		this.handleScrollStart = this.handleScrollStart.bind(this);
 		this.handleScrollEnd = this.handleScrollEnd.bind(this);
 		this.handleContentSizeChange = this.handleContentSizeChange.bind(this);
+		this.handleViewImg = this.handleViewImg.bind(this);
 	}
 
 	handleScrollStart() {
@@ -74,23 +86,40 @@ export default class MsgList extends React.Component {
 		}
 	}
 
+	handleViewImg(uri) {
+		this.setState({
+			imgPreview: uri,
+			imgPreviewModalOpen: true
+		});
+	}
+
 	renderMsg({ item }) {
 		const isSelf = item.sender === Util.getUid();
-		return <MsgItem isSelf={isSelf} item={item} />;
+		return <MsgItem isSelf={isSelf} item={item} onPressImg={ this.handleViewImg } />;
 	}
 
 	render() {
 		return (
-			<FlatList
-				ref={(ref) => { this.list = ref }}
-				style={{ marginBottom: 5 }}
-				initialNumToRender={ 20 }
-				data={ this.props.messages }
-				renderItem={ this.renderMsg }
-				onScrollBeginDrag={ this.handleScrollStart }
-				onScrollEndDrag={ this.handleScrollEnd }
-				onContentSizeChange={ this.handleContentSizeChange }
-			/>
+			[
+				<FlatList
+					key="msgList"
+					ref={(ref) => { this.list = ref }}
+					style={{ marginBottom: 5 }}
+					initialNumToRender={ 20 }
+					data={ this.props.messages }
+					renderItem={ this.renderMsg }
+					onScrollBeginDrag={ this.handleScrollStart }
+					onScrollEndDrag={ this.handleScrollEnd }
+					onContentSizeChange={ this.handleContentSizeChange }
+				/>,
+				<ImgPreviewModal
+					key="modal"
+					img={ this.state.imgPreview }
+					isOpen={ this.state.imgPreviewModalOpen }
+					hide={() => { this.setState({ imgPreviewModalOpen: false, imgSelected: null }) }}
+					onSend={() => {}}
+				/>
+			]
 		);
 	}
 }
