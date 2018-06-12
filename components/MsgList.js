@@ -25,17 +25,19 @@ class MsgItem extends React.PureComponent {
 				</View>
 				<View style={ [styles.msgBUbbleContainer, this.props.isSelf && styles.msgBubbleContainer_right] }>
 					<View style={ [styles.msgBubble, this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left, type === 'emergency' && styles.msgBubble_emergency] }>
-						<Text style={ [styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency] }>
-							{ (type === 'text' || type === 'emergency') && this.props.item[type] }
-							{ type === 'img' &&
-								<TouchableOpacity onPress={() => { this.props.onPressImg(this.props.item[type]) }}>
-									<Image
-										style={{ width: 200, height: 200 }}
-										source={{ uri: this.props.item[type] }}
-									/>
-								</TouchableOpacity>
-							}
-						</Text>
+						{ (type === 'text' || type === 'emergency') &&
+							<Text style={ [styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency] }>
+								{ this.props.item[type] }
+							</Text>
+						}
+						{ type === 'img' &&
+							<TouchableOpacity onPress={() => { this.props.onPressImg(this.props.item[type]) }}>
+								<Image
+									style={{ width: 200, height: 200 }}
+									source={{ uri: this.props.item[type] }}
+								/>
+							</TouchableOpacity>
+						}
 						<View style={ styles.timeWrapper }>
 							<Text style={ styles.time }>{ moment(this.props.item.timestamp).format('HH:mm') }</Text>
 						</View>
