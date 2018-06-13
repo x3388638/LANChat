@@ -169,6 +169,7 @@ export default class InputBar extends React.Component {
 			bssid: this.props.bssid,
 			groupID: this.props.groupID,
 			msg: {
+				pollID: Util.genUUID(),
 				title,
 				desc,
 				options

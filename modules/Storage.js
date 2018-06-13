@@ -204,6 +204,27 @@ export default (() => {
 
 		AsyncStorage.setItem('@LANChat:messages', JSON.stringify(messages), callback);
 	}
+
+	async function getPolls() {
+		let polls = await AsyncStorage.getItem('@LANChat:poll');
+		polls = polls ? JSON.parse(polls) : {};
+		return polls;
+	}
+
+	async function addPoll({ bssid, groupID, pollID, creater, timestamp, data }) {
+		const polls = await getPolls();
+		polls[pollID] = {
+			bssid,
+			groupID,
+			creater,
+			timestamp,
+			title: data.title,
+			desc: data.desc,
+			options: data.options
+		};
+
+		AsyncStorage.setItem('@LANChat:poll', JSON.stringify(polls));
+	}
 	
 	return {
 		setLastLogin,
@@ -224,6 +245,8 @@ export default (() => {
 		storeMsg,
 		getMsg,
 		setMsgRead,
-		msgSync
+		msgSync,
+		getPolls,
+		addPoll
 	};
 })();

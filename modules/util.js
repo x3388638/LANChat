@@ -433,6 +433,18 @@ export default (() => {
 				// 	console.warn(JSON.stringify(msg, null, 4))
 				// })
 			});
+
+			// if type is `poll`, store to @LANChat:poll
+			if (msgData.type === 'poll') {
+				Storage.addPoll({
+					bssid,
+					groupID: payload.groupID,
+					pollID: msgData.poll.pollID,
+					creater: msgData.sender,
+					timestamp: msgData.timestamp,
+					data: msgData.poll
+				});
+			}
 		});
 	}
 
