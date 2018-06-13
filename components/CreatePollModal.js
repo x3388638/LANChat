@@ -15,6 +15,7 @@ import Modal from 'react-native-modal';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import OptionList from './OptionList.js';
+import Util from '../modules/util.js';
 
 export default class CreatePollModal extends React.Component {
 	constructor(props) {
@@ -25,7 +26,15 @@ export default class CreatePollModal extends React.Component {
 			options: [] // [{ id: '', text: '' }]
 		};
 
+		this.handleAddOption = this.handleAddOption.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleAddOption(text) {
+		const id = Util.genUUID();
+		this.setState((prevState) => ({
+			options: [...prevState.options, { id, text }]
+		}));
 	}
 
 	handleSubmit() {
@@ -45,14 +54,12 @@ export default class CreatePollModal extends React.Component {
 					<Divider style={ styles.divider } />
 					<FormLabel>標題</FormLabel>
 					<FormInput
-						ref={(ref) => { this.title = ref }}
 						maxLength={ 15 }
 						value={ Platform.OS === 'ios' ? null : this.state.title }
 						onChangeText={(title) => { this.setState({ title }) }}
 					/>
 					<FormLabel>描述</FormLabel>
 					<FormInput
-						ref={(ref) => { this.desc = ref }}
 						multiline
 						maxLength={ 150 }
 						value={ Platform.OS === 'ios' ? null : this.state.desc }
@@ -60,7 +67,7 @@ export default class CreatePollModal extends React.Component {
 					/>
 					<OptionList
 						options={ this.state.options }
-						onChange={(options) => { this.setState({ options }) }}
+						onAdd={ this.handleAddOption }
 					/>
 				</KeyboardAwareScrollView>
 				<View style={ styles.btnContainer }>
