@@ -27,6 +27,7 @@ export default class CreatePollModal extends React.Component {
 		};
 
 		this.handleAddOption = this.handleAddOption.bind(this);
+		this.handleDelOption = this.handleDelOption.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
@@ -34,6 +35,20 @@ export default class CreatePollModal extends React.Component {
 		const id = Util.genUUID();
 		this.setState((prevState) => ({
 			options: [...prevState.options, { id, text }]
+		}));
+	}
+
+	handleDelOption(id) {
+		let index;
+		this.state.options.find((option, i) => {
+			if (option.id === id) {
+				index = i;
+				return true;
+			}
+		});
+
+		this.setState((prevState) => ({
+			options: [...prevState.options.slice(0, index), ...prevState.options.slice(index + 1, prevState.options.length)]
 		}));
 	}
 
@@ -48,6 +63,7 @@ export default class CreatePollModal extends React.Component {
 				isVisible={ this.props.isOpen }
 				onBackButtonPress={ this.props.hide }
 				onBackdropPress={ this.props.hide }
+				onModalShow={() => { this.setState({ title: '', desc: '', options: [] }) }}
 			>
 				<KeyboardAwareScrollView style={ styles.container }>
 					<Text style={ styles.title }>新增投票</Text>
@@ -68,7 +84,9 @@ export default class CreatePollModal extends React.Component {
 					<OptionList
 						options={ this.state.options }
 						onAdd={ this.handleAddOption }
+						onDel={ this.handleDelOption }
 					/>
+					<View style={{ height: 50 }}></View>
 				</KeyboardAwareScrollView>
 				<View style={ styles.btnContainer }>
 					<View style={ styles.btn }>
