@@ -53,8 +53,13 @@ export default class CreatePollModal extends React.Component {
 	}
 
 	handleSubmit() {
-		const { title, desc } = this.state;
-		// TODO: get options
+		const { title, desc, options } = this.state;
+		if (!title || !options.length) {
+			reutrn;
+		}
+
+		this.props.onSend({ title, desc, options});
+		this.props.hide();
 	}
 
 	render() {

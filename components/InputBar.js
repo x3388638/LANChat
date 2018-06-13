@@ -63,10 +63,26 @@ export default class InputBar extends React.Component {
 			createPollModalOpen: false
 		};
 
+		this.handleOpenPollModal = this.handleOpenPollModal.bind(this);
 		this.send = this.send.bind(this);
 		this.pickImg = this.pickImg.bind(this);
 		this.sendImg = this.sendImg.bind(this);
-		this.handleOpenPollModal = this.handleOpenPollModal.bind(this);
+		this.sendPoll = this.sendPoll.bind(this);
+	}
+
+	handleOpenPollModal() {
+		this.setState({
+			moreFuncModalOpen: false,
+			createPollModalOpen: Platform.OS !== 'ios'
+		}, () => {
+			if (Platform.OS === 'ios') {
+				setTimeout(() => {
+					this.setState({
+						createPollModalOpen: true
+					});
+				}, 150);
+			}
+		});
 	}
 
 	send() {
@@ -147,17 +163,15 @@ export default class InputBar extends React.Component {
 		});
 	}
 
-	handleOpenPollModal() {
-		this.setState({
-			moreFuncModalOpen: false,
-			createPollModalOpen: Platform.OS !== 'ios'
-		}, () => {
-			if (Platform.OS === 'ios') {
-				setTimeout(() => {
-					this.setState({
-						createPollModalOpen: true
-					});
-				}, 150);
+	sendPoll({ title, desc, options }) {
+		Util.sendMsg({
+			type: 'poll',
+			bssid: this.props.bssid,
+			groupID: this.props.groupID,
+			msg: {
+				title,
+				desc,
+				options
 			}
 		});
 	}
@@ -196,6 +210,7 @@ export default class InputBar extends React.Component {
 				<CreatePollModal
 					isOpen={ this.state.createPollModalOpen }
 					hide={() => { this.setState({ createPollModalOpen: false }) }}
+					onSend={ this.sendPoll }
 				/>
 			</View>
 		);
