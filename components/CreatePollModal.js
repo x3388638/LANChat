@@ -14,12 +14,15 @@ import {
 import Modal from 'react-native-modal';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+import OptionList from './OptionList.js';
+
 export default class CreatePollModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			title: '',
-			desc: ''
+			desc: '',
+			options: [] // [{ id: '', text: '' }]
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -55,27 +58,31 @@ export default class CreatePollModal extends React.Component {
 						value={ Platform.OS === 'ios' ? null : this.state.desc }
 						onChangeText={(desc) => { this.setState({ desc }) }}
 					/>
-					<View style={ styles.btnContainer }>
-						<View style={ styles.btn }>
-							<Button
-								icon={{ name: 'close' }}
-								backgroundColor="#ff3b30"
-								title='取消'
-								containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
-								onPress={ this.props.hide }
-							/>
-						</View>
-						<View style={ styles.btn }>
-							<Button
-								icon={{ name: 'send' }}
-								backgroundColor="#007aff"
-								title='送出'
-								containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
-								onPress={ this.handleSubmit }
-							/>
-						</View>
-					</View>
+					<OptionList
+						options={ this.state.options }
+						onChange={(options) => { this.setState({ options }) }}
+					/>
 				</KeyboardAwareScrollView>
+				<View style={ styles.btnContainer }>
+					<View style={ styles.btn }>
+						<Button
+							icon={{ name: 'close' }}
+							backgroundColor="#ff3b30"
+							title='取消'
+							containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
+							onPress={ this.props.hide }
+						/>
+					</View>
+					<View style={ styles.btn }>
+						<Button
+							icon={{ name: 'send' }}
+							backgroundColor="#007aff"
+							title='送出'
+							containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
+							onPress={ this.handleSubmit }
+						/>
+					</View>
+				</View>
 			</Modal>
 		);
 	}
@@ -98,8 +105,11 @@ const styles = StyleSheet.create({
 		marginBottom: 10
 	},
 	btnContainer: {
-		marginTop: 20,
+		marginTop: 10,
+		width: 500,
+		maxWidth: '100%',
 		flexDirection: 'row',
+		alignSelf: 'center',
 		alignItems: 'flex-start'
 	},
 	btn: {
