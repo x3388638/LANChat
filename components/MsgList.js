@@ -30,6 +30,13 @@ class MsgItem extends React.PureComponent {
 								{ this.props.item[type] }
 							</Text>
 						}
+
+						{ type === 'poll' &&
+							<Text style={ styles.msgBubbleText }>
+								{ this.props.item[type].title }
+							</Text>
+						}
+
 						{ type === 'img' &&
 							<TouchableOpacity onPress={() => { this.props.onPressImg(this.props.item[type]) }}>
 								<Image

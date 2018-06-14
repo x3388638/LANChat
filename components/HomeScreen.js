@@ -249,7 +249,11 @@ export default class HomeScreen extends React.Component {
 				const type = last.type;
 				let msg = last[type];
 				if (type === 'img') {
-					msg = 'Photo';
+					msg = '傳送了一張圖片';
+				}
+
+				if (type === 'poll') {
+					msg = '發起了一個投票';
 				}
 
 				if (last) {
