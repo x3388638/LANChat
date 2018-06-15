@@ -253,7 +253,7 @@ export default class HomeScreen extends React.Component {
 				}
 
 				if (type === 'poll') {
-					msg = '發起了一個投票';
+					msg = '發起了一個票選活動';
 				}
 
 				if (last) {

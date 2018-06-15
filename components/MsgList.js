@@ -3,11 +3,16 @@ import {
 	View,
 	Text,
 	Image,
+	Button,
 	TouchableOpacity,
 	FlatList,
 	StyleSheet
 } from 'react-native';
+import {
+	Divider
+} from 'react-native-elements';
 import moment from 'moment';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import ImgPreviewModal from './ImgPreviewModal.js';
 
@@ -24,7 +29,7 @@ class MsgItem extends React.PureComponent {
 					</Text>
 				</View>
 				<View style={ [styles.msgBUbbleContainer, this.props.isSelf && styles.msgBubbleContainer_right] }>
-					<View style={ [styles.msgBubble, this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left, type === 'emergency' && styles.msgBubble_emergency] }>
+					<View style={[styles.msgBubble, this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left, type === 'emergency' && styles.msgBubble_emergency, type === 'poll' && styles.msgBubble_poll] }>
 						{ (type === 'text' || type === 'emergency') &&
 							<Text style={ [styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency] }>
 								{ this.props.item[type] }
@@ -32,9 +37,23 @@ class MsgItem extends React.PureComponent {
 						}
 
 						{ type === 'poll' &&
-							<Text style={ styles.msgBubbleText }>
-								{ this.props.item[type].title }
-							</Text>
+							<View>
+								<View style={ styles.pollHeader }>
+									<Icon
+										size={24}
+										color="#5ba19b"
+										name="poll"
+									/>
+									<View style={ styles.pollTextContainer }>
+										<Text style={ styles.pollText }>票選活動</Text>
+									</View>
+								</View>
+								<Divider style={ styles.divider } />
+								<Text key="text" style={ styles.msgBubbleText }>
+									{ this.props.item[type].title }
+								</Text>
+								<Button key="btn-vote" title="Vote" onPress={() => {}} />
+							</View>
 						}
 
 						{ type === 'img' &&
@@ -171,6 +190,9 @@ const styles = StyleSheet.create({
 	msgBubble_emergency: {
 		backgroundColor: '#ff3b30'
 	},
+	msgBubble_poll: {
+		backgroundColor: '#bad7df'
+	},
 	msgBubbleText: {
 		color: '#63676F'
 	},
@@ -183,5 +205,23 @@ const styles = StyleSheet.create({
 	time: {
 		textAlign: 'right',
 		color: '#666'
+	},
+	pollHeader: {
+		flexDirection: 'row',
+		justifyContent: 'center'
+	},
+	pollTextContainer: {
+		minWidth: 50,
+		paddingTop: 3
+	},
+	pollText: {
+		textAlign: 'center',
+		color: '#63676F',
+		fontSize: 20,
+		fontWeight: 'bold'
+	},
+	divider: {
+		marginTop: 5,
+		marginBottom: 5
 	}
 });
