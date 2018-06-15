@@ -24,6 +24,9 @@ import Storage from '../modules/Storage.js';
 class MsgItem extends React.PureComponent {
 	render() {
 		const type = this.props.item.type;
+		const voteData = this.props.voteData;
+		const pollData = this.props.pollData;
+		const votesOfPoll = this.props.votesOfPoll;
 		return (
 			<View style={ styles.msgContainer }>
 				<View>
@@ -74,14 +77,43 @@ class MsgItem extends React.PureComponent {
 									title="投票"
 									backgroundColor="#8aae92"
 									buttonStyle={ styles.btnVote }
-									onPress={() => { this.props.toVote(this.props.item[type].pollID) }} />
+									onPress={() => { this.props.toVote(this.props.item[type].pollID) }}
+								/>
 							</View>
 						}
 
 						{ type === 'vote' &&
-							<Text style={ styles.msgBubbleText }>
-								{ this.props.item.username } 在 XXX 票選活動中投票給 OOO
-							</Text>
+							<View>
+								<Text style={ styles.msgBubbleText }>
+									{ this.props.item.username }於 
+									<Text style={ styles.textBold }>{ pollData.title }</Text>投票給 
+									<Text style={ styles.textBold }>{ (pollData.options.find((option) => option.id === voteData.optionID)).text }</Text>
+								</Text>
+								{ pollData.options.map((option, i) => {
+									const count = votesOfPoll.reduce((sum, vote) => {
+										if (vote.optionID === option.id) {
+											return sum + 1;
+										}
+
+										return sum;
+									}, 0);
+
+									return (
+										<Text
+											key={ option.id }
+											style={ styles.msgBubbleText }
+										>
+											{ i + 1 }. { option.text } ({ count } 票, { count * 100 / votesOfPoll.length }%)
+										</Text>
+									)
+								}) }
+								<Button
+									title="投票"
+									backgroundColor="#8aae92"
+									buttonStyle={ styles.btnVote }
+									onPress={() => { this.props.toVote(voteData.pollID) }}
+								/>
+							</View>
 						}
 
 						{ type === 'img' &&
@@ -185,7 +217,30 @@ export default class MsgList extends React.Component {
 
 	renderMsg({ item }) {
 		const isSelf = item.sender === Util.getUid();
-		return <MsgItem isSelf={isSelf} item={item} onPressImg={ this.handleViewImg } toVote={ this.openPollModal } />;
+		let voteData;
+		let pollData;
+		let votesOfPoll;
+		if (item.type === 'vote') {
+			voteData = this.props.votes[item.vote.voteID];
+			pollData = this.props.polls[voteData.pollID];
+			votesOfPoll = Object.keys(this.props.votes).map((voteID) => {
+				if (this.props.votes[voteID].pollID === voteData.pollID) {
+					return this.props.votes[voteID];
+				}
+			});
+		}
+
+		return (
+			<MsgItem
+				isSelf={ isSelf }
+				item={ item }
+				voteData={ voteData }
+				pollData={ pollData }
+				votesOfPoll={ votesOfPoll }
+				onPressImg={ this.handleViewImg }
+				toVote={ this.openPollModal }
+			/>
+		);
 	}
 
 	render() {
@@ -314,5 +369,8 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 		marginBottom: 10,
 		alignSelf: 'center'
+	},
+	textBold: {
+		fontWeight: 'bold'
 	}
 });

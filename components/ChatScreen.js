@@ -20,7 +20,9 @@ export default class ChatScreen extends React.Component {
 		super(props);
 		this.state = {
 			qrcodeModalOpen: false,
-			messages: []
+			messages: [],
+			votes: {},
+			polls: {}
 		};
 
 		this.getOnlineCountInterval = 0;
@@ -138,8 +140,12 @@ export default class ChatScreen extends React.Component {
 			return Object.assign({}, msg, { username: users[msg.sender] ? users[msg.sender].username : `Someone-${ msg.sender.substring(0, 3) }` });
 		});
 
+		const votes = await Storage.getVote();
+		const polls = await Storage.getPoll();
 		this.setState({
-			messages: sorted
+			messages: sorted,
+			votes,
+			polls
 		});
 	}
 
@@ -147,7 +153,12 @@ export default class ChatScreen extends React.Component {
 		const isLobby = this.props.navigation.state.params.groupID === 'LOBBY';
 		return (
 			<View style={ styles.container }>
-				<MsgList messages={ this.state.messages } { ...this.props.navigation.state.params } />
+				<MsgList
+					messages={ this.state.messages }
+					votes={ this.state.votes }
+					polls={ this.state.polls }
+					{ ...this.props.navigation.state.params }
+				/>
 				<InputBar { ...this.props.navigation.state.params } />
 				{ Platform.OS === 'ios' && <KeyboardSpacer /> }
 				{ !isLobby &&
