@@ -3,13 +3,13 @@ import {
 	View,
 	Text,
 	Image,
-	Button,
 	TouchableOpacity,
 	FlatList,
 	StyleSheet
 } from 'react-native';
 import {
-	Divider
+	Divider,
+	Button
 } from 'react-native-elements';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -49,10 +49,23 @@ class MsgItem extends React.PureComponent {
 									</View>
 								</View>
 								<Divider style={ styles.divider } />
-								<Text key="text" style={ styles.msgBubbleText }>
+								<Text style={ styles.pollTitle }>
 									{ this.props.item[type].title }
 								</Text>
-								<Button key="btn-vote" title="Vote" onPress={() => {}} />
+								<Text style={ styles.pollDesc }>
+									{ this.props.item[type].desc }
+								</Text>
+								<Divider style={ styles.divider } />
+								<View>
+									{ this.props.item[type].options.map((option, i) => (
+										<Text key={ option.id } style={ styles.option }>{ i + 1 }. { option.text }</Text>
+									)) }
+								</View>
+								<Button
+									title="前往投票"
+									backgroundColor="#8aae92"
+									buttonStyle={ styles.btnVote }
+									onPress={() => {}} />
 							</View>
 						}
 
@@ -223,5 +236,25 @@ const styles = StyleSheet.create({
 	divider: {
 		marginTop: 5,
 		marginBottom: 5
+	},
+	pollTitle: {
+		textAlign: 'center',
+		color: '#333',
+		fontWeight: 'bold'
+	},
+	pollDesc: {
+		textAlign: 'center',
+		color: '#63676F'
+	},
+	option: {
+		color: '#63676F',
+		fontWeight: 'bold'
+	},
+	btnVote: {
+		width: 150,
+		padding: 5,
+		marginTop: 10,
+		marginBottom: 10,
+		alignSelf: 'center'
 	}
 });
