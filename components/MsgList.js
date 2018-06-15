@@ -16,6 +16,7 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import ImgPreviewModal from './ImgPreviewModal.js';
+import PollModal from './PollModal.js';
 
 import Util from '../modules/util';
 
@@ -66,7 +67,7 @@ class MsgItem extends React.PureComponent {
 									title="前往投票"
 									backgroundColor="#8aae92"
 									buttonStyle={ styles.btnVote }
-									onPress={() => {}} />
+									onPress={() => { this.props.toVote(this.props.item[type].pollID) }} />
 							</View>
 						}
 
@@ -93,7 +94,9 @@ export default class MsgList extends React.Component {
 		super(props);
 		this.state = {
 			imgPreview: null,
-			imgPreviewModalOpen: false
+			imgPreviewModalOpen: false,
+			pollID: '',
+			pollModalOpen: false
 		};
 
 		this.scrolling = false;
@@ -103,6 +106,7 @@ export default class MsgList extends React.Component {
 		this.handleScrollEnd = this.handleScrollEnd.bind(this);
 		this.handleContentSizeChange = this.handleContentSizeChange.bind(this);
 		this.handleViewImg = this.handleViewImg.bind(this);
+		this.openPollModal = this.openPollModal.bind(this);
 	}
 
 	handleScrollStart() {
@@ -135,9 +139,16 @@ export default class MsgList extends React.Component {
 		});
 	}
 
+	openPollModal(pollID) {
+		this.setState({
+			pollID,
+			pollModalOpen: true
+		});
+	}
+
 	renderMsg({ item }) {
 		const isSelf = item.sender === Util.getUid();
-		return <MsgItem isSelf={isSelf} item={item} onPressImg={ this.handleViewImg } />;
+		return <MsgItem isSelf={isSelf} item={item} onPressImg={ this.handleViewImg } toVote={ this.openPollModal } />;
 	}
 
 	render() {
@@ -155,10 +166,16 @@ export default class MsgList extends React.Component {
 					onContentSizeChange={ this.handleContentSizeChange }
 				/>,
 				<ImgPreviewModal
-					key="modal"
+					key="imgPreviewModal"
 					img={ this.state.imgPreview }
 					isOpen={ this.state.imgPreviewModalOpen }
 					hide={() => { this.setState({ imgPreviewModalOpen: false, imgSelected: null }) }}
+				/>,
+				<PollModal
+					key="pollModal"
+					pollID={ this.state.pollID }
+					isOpen={ this.state.pollModalOpen }
+					hide={() => { this.setState({ pollModalOpen: false }) }}
 				/>
 			]
 		);
