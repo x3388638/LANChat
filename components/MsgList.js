@@ -18,7 +18,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import ImgPreviewModal from './ImgPreviewModal.js';
 import PollModal from './PollModal.js';
 
-import Util from '../modules/util';
+import Util from '../modules/util.js';
+import Storage from '../modules/Storage.js';
 
 class MsgItem extends React.PureComponent {
 	render() {
@@ -64,7 +65,7 @@ class MsgItem extends React.PureComponent {
 									)) }
 								</View>
 								<Button
-									title="前往投票"
+									title="投票"
 									backgroundColor="#8aae92"
 									buttonStyle={ styles.btnVote }
 									onPress={() => { this.props.toVote(this.props.item[type].pollID) }} />
@@ -95,7 +96,7 @@ export default class MsgList extends React.Component {
 		this.state = {
 			imgPreview: null,
 			imgPreviewModalOpen: false,
-			pollID: '',
+			poll: null,
 			pollModalOpen: false
 		};
 
@@ -139,9 +140,10 @@ export default class MsgList extends React.Component {
 		});
 	}
 
-	openPollModal(pollID) {
+	async openPollModal(pollID) {
+		const poll = await Storage.getPoll(pollID);
 		this.setState({
-			pollID,
+			poll,
 			pollModalOpen: true
 		});
 	}
@@ -173,7 +175,7 @@ export default class MsgList extends React.Component {
 				/>,
 				<PollModal
 					key="pollModal"
-					pollID={ this.state.pollID }
+					poll={ this.state.poll }
 					isOpen={ this.state.pollModalOpen }
 					hide={() => { this.setState({ pollModalOpen: false }) }}
 				/>
