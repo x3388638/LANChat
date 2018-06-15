@@ -1,6 +1,7 @@
 import {
 	AsyncStorage
 } from 'react-native';
+import moment from 'moment';
 
 import Util from './util.js';
 
@@ -230,6 +231,23 @@ export default (() => {
 		AsyncStorage.setItem('@LANChat:poll', JSON.stringify(polls));
 	}
 
+    async function addPolls(pollArr) {
+		const polls = await getPoll();
+		pollArr.forEach((poll) => {
+            polls[poll.pollID] = {
+                bssid: poll.bssid,
+                groupID: poll.groupID,
+                creater: poll.creater,
+                timestamp: poll.timestamp,
+                title: poll.data.title,
+                desc: poll.data.desc,
+                options: poll.data.options
+            };
+		});
+
+        AsyncStorage.setItem('@LANChat:poll', JSON.stringify(polls));
+	}
+
 	async function getVote(voteID) {
 		let votes = await AsyncStorage.getItem('@LANChat:vote');
 		votes = votes ? JSON.parse(votes) : {};
@@ -242,6 +260,11 @@ export default (() => {
 
 	async function addVote({ bssid, groupID, voteID, voter, timestamp, data }) {
 		const votes = await getVote();
+		if (votes[voteID] &&
+			moment(votes[voteID].timestamp).diff(moment(timestamp)) > 0) {
+			return;
+		}
+
 		votes[voteID] = {
             bssid,
             groupID,
@@ -252,6 +275,27 @@ export default (() => {
 		};
 
 		AsyncStorage.setItem('@LANChat:vote', JSON.stringify(votes));
+	}
+
+	async function addVotes(voteArr) {
+		const votes = await getVote();
+		voteArr.forEach((vote) => {
+            if (votes[vote.voteID] &&
+                moment(votes[vote.voteID].timestamp).diff(moment(vote.timestamp)) > 0) {
+                return;
+            }
+
+            votes[vote.voteID] = {
+                bssid: vote.bssid,
+                groupID: vote.groupID,
+                voter: vote.voter,
+                timestamp: vote.timestamp,
+                pollID: vote.data.pollID,
+                optionID: vote.data.optionID,
+            };
+		});
+
+        AsyncStorage.setItem('@LANChat:vote', JSON.stringify(votes));
 	}
 	
 	return {
@@ -276,7 +320,9 @@ export default (() => {
 		msgSync,
 		getPoll,
 		addPoll,
+        addPolls,
 		getVote,
-		addVote
+		addVote,
+		addVotes
 	};
 })();

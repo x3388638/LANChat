@@ -455,7 +455,7 @@ export default (() => {
 					voter: msgData.sender,
 					timestamp: msgData.timestamp,
 					data: msgData.vote
-				})
+				});
 			}
 		});
 	}
@@ -497,6 +497,8 @@ export default (() => {
 			const joinedGroups = await Storage.getJoinedGroups();
 			const messages = await Storage.getMsg(bssid);
 			const pendingMsg = {}; // { [groupID]: [msgObj, ...] }
+			const pendingPoll = []; // [{ bssid, groupID, pollID, creater, timestamp, data }]
+			const pendingVote = []; // [{ bssid, groupID, voteID, voter, timestamp, data }]
 			Object.keys(data.payload).forEach((groupID) => {
 				if (groupID === 'LOBBY' || (joinedGroups[bssid] && joinedGroups[bssid][groupID])) {
 					// 自己有加入的群組或是當前 bssid 的 LOBBY
@@ -513,6 +515,30 @@ export default (() => {
 								// store this msg
 								pendingMsg[groupID] = pendingMsg[groupID] || [];
 								pendingMsg[groupID].push(msg);
+
+                                // if type is poll, store to poll
+                                if (msg.type === 'poll') {
+                                    pendingPoll.push({
+										bssid,
+										groupID,
+										pollID: msg.poll.pollID,
+										creater: msg.sender,
+										timestamp: msg.timestamp,
+										data: msg.poll
+									});
+								}
+
+								// if type is vote, store to vote
+								if (msg.type === 'vote') {
+									pendingVote.push({
+										bssid,
+										groupID,
+										voteID: msg.vote.voteID,
+										voter: msg.sender,
+										timestamp: msg.timestamp,
+										data: msg.vote
+									});
+								}
 							}
 						});
 					}
@@ -524,6 +550,14 @@ export default (() => {
 					global.PubSub.emit('receiveMsg');
 				});
 			}
+
+			if (!!pendingPoll.length) {
+				Storage.addPolls(pendingPoll);
+			}
+
+            if (!!pendingVote.length) {
+                Storage.addVotes(pendingVote);
+            }
 		});
 	}
 
