@@ -71,7 +71,7 @@ export default class CreatePollModal extends React.Component {
 				onModalShow={() => { this.setState({ title: '', desc: '', options: [] }) }}
 			>
 				<KeyboardAwareScrollView style={ styles.container }>
-					<Text style={ styles.title }>新增投票</Text>
+					<Text style={ styles.title }>建立票選活動</Text>
 					<Divider style={ styles.divider } />
 					<FormLabel>標題</FormLabel>
 					<FormInput

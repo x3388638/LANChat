@@ -23,7 +23,7 @@ export default class MoreFuncModal extends React.Component {
 					<TouchableOpacity
 						onPress={ this.props.onPoll }
 					>
-						<Text style={styles.btn}>發起投票</Text>
+						<Text style={styles.btn}>建立票選活動</Text>
 					</TouchableOpacity>
 					<Divider />
 					<TouchableOpacity
