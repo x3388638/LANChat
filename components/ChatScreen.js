@@ -147,7 +147,7 @@ export default class ChatScreen extends React.Component {
 		const isLobby = this.props.navigation.state.params.groupID === 'LOBBY';
 		return (
 			<View style={ styles.container }>
-				<MsgList messages={ this.state.messages } />
+				<MsgList messages={ this.state.messages } { ...this.props.navigation.state.params } />
 				<InputBar { ...this.props.navigation.state.params } />
 				{ Platform.OS === 'ios' && <KeyboardSpacer /> }
 				{ !isLobby &&

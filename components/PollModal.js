@@ -78,7 +78,7 @@ export default class PollModal extends React.Component {
 								backgroundColor="#007aff"
 								title='送出'
 								containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
-								onPress={() => {}}
+								onPress={() => { this.props.onSend(this.state.selected) }}
 							/>
 						</View>
 					</View>

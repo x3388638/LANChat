@@ -256,6 +256,10 @@ export default class HomeScreen extends React.Component {
 					msg = '發起了一個票選活動';
 				}
 
+				if (type === 'vote') {
+					msg = '進行了投票';
+				}
+
 				if (last) {
 					lastMsg[gid] = {
 						msg,

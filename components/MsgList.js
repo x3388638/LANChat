@@ -72,6 +72,12 @@ class MsgItem extends React.PureComponent {
 							</View>
 						}
 
+						{ type === 'vote' &&
+							<Text style={[styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency]}>
+								投票投票RRRRR
+							</Text>
+						}
+
 						{ type === 'img' &&
 							<TouchableOpacity onPress={() => { this.props.onPressImg(this.props.item[type]) }}>
 								<Image
@@ -102,11 +108,13 @@ export default class MsgList extends React.Component {
 
 		this.scrolling = false;
 		this.scrollTimeout = null;
+		this.pollID = null;
 		this.renderMsg = this.renderMsg.bind(this);
 		this.handleScrollStart = this.handleScrollStart.bind(this);
 		this.handleScrollEnd = this.handleScrollEnd.bind(this);
 		this.handleContentSizeChange = this.handleContentSizeChange.bind(this);
 		this.handleViewImg = this.handleViewImg.bind(this);
+		this.handleVote = this.handleVote.bind(this);
 		this.openPollModal = this.openPollModal.bind(this);
 	}
 
@@ -140,7 +148,27 @@ export default class MsgList extends React.Component {
 		});
 	}
 
+	handleVote(optionID) {
+		Util.sendMsg({
+			type: 'vote',
+			bssid: this.props.bssid,
+			groupID: this.props.groupID,
+			msg: {
+				pollID: this.pollID,
+				optionID
+			}
+		});
+
+		this.setState({
+			poll: null,
+			pollModalOpen: false
+		});
+
+		this.pollID = null;
+	}
+
 	async openPollModal(pollID) {
+		this.pollID = pollID;
 		const poll = await Storage.getPoll(pollID);
 		this.setState({
 			poll,
@@ -178,6 +206,7 @@ export default class MsgList extends React.Component {
 					poll={ this.state.poll }
 					isOpen={ this.state.pollModalOpen }
 					hide={() => { this.setState({ pollModalOpen: false }) }}
+					onSend={ this.handleVote }
 				/>
 			]
 		);
