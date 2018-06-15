@@ -5,7 +5,8 @@ import {
 	Image,
 	TouchableOpacity,
 	FlatList,
-	StyleSheet
+	StyleSheet,
+	Platform
 } from 'react-native';
 import {
 	Divider,
@@ -24,14 +25,14 @@ class MsgItem extends React.PureComponent {
 		return (
 			<View style={ styles.msgContainer }>
 				<View>
-					<Text style={ [styles.msgUsername, this.props.isSelf ? styles.msgUsername_right : styles.msgUsername_left ] }>
+					<Text style={[styles.msgUsername, this.props.isSelf ? styles.msgUsername_right : styles.msgUsername_left ]}>
 						{ this.props.item.username }
 					</Text>
 				</View>
-				<View style={ [styles.msgBUbbleContainer, this.props.isSelf && styles.msgBubbleContainer_right] }>
+				<View style={[styles.msgBUbbleContainer, this.props.isSelf && styles.msgBubbleContainer_right]}>
 					<View style={[styles.msgBubble, this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left, type === 'emergency' && styles.msgBubble_emergency, type === 'poll' && styles.msgBubble_poll] }>
 						{ (type === 'text' || type === 'emergency') &&
-							<Text style={ [styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency] }>
+							<Text style={[styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency]}>
 								{ this.props.item[type] }
 							</Text>
 						}
@@ -44,7 +45,7 @@ class MsgItem extends React.PureComponent {
 										color="#5ba19b"
 										name="poll"
 									/>
-									<View style={ styles.pollTextContainer }>
+									<View style={[styles.pollTextContainer, Platform.OS === 'ios' && styles.pollTextContainer_ios]}>
 										<Text style={ styles.pollText }>票選活動</Text>
 									</View>
 								</View>
@@ -224,7 +225,9 @@ const styles = StyleSheet.create({
 		justifyContent: 'center'
 	},
 	pollTextContainer: {
-		minWidth: 50,
+		minWidth: 50
+	},
+	pollTextContainer_ios: {
 		paddingTop: 3
 	},
 	pollText: {
