@@ -103,7 +103,7 @@ class MsgItem extends React.PureComponent {
 											key={ option.id }
 											style={ styles.msgBubbleText }
 										>
-											{ i + 1 }. { option.text } ({ count } 票, { count * 100 / votesOfPoll.length }%)
+											{ i + 1 }. { option.text } ({ count } 票, { (count * 100 / votesOfPoll.length).toFixed(2) }%)
 										</Text>
 									)
 								}) }

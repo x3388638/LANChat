@@ -93,11 +93,23 @@ export default class ChatScreen extends React.Component {
 
 			const users = await Storage.getUsers();
 			msgData.username = users[msgData.sender].username;
-			this.setState((prevState) => ({
-				messages: [...prevState.messages, msgData]
-			}));
-
 			Storage.setMsgRead(this.props.navigation.state.params.bssid, this.props.navigation.state.params.groupID);
+
+			if (msgData.type === 'vote') {
+				setTimeout(async () => {
+					const votes = await Storage.getVote();
+					const polls = await Storage.getPoll();
+					this.setState((prevState) => ({
+						messages: [...prevState.messages, msgData],
+						votes,
+						polls
+					}));
+				}, 300);
+			} else {
+				this.setState((prevState) => ({
+					messages: [...prevState.messages, msgData]
+				}));
+			}
 		});
 	}
 
