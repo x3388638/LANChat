@@ -445,6 +445,18 @@ export default (() => {
 					data: msgData.poll
 				});
 			}
+
+			// if type is `vote`, store to @LANChat:vote
+			if (msgData.type === 'vote') {
+				Storage.addVote({
+					bssid,
+					groupID: payload.groupID,
+					voteID: msgData.vote.voteID,
+					voter: msgData.sender,
+					timestamp: msgData.timestamp,
+					data: msgData.vote
+				})
+			}
 		});
 	}
 

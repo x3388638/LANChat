@@ -32,7 +32,13 @@ class MsgItem extends React.PureComponent {
 					</Text>
 				</View>
 				<View style={[styles.msgBUbbleContainer, this.props.isSelf && styles.msgBubbleContainer_right]}>
-					<View style={[styles.msgBubble, this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left, type === 'emergency' && styles.msgBubble_emergency, type === 'poll' && styles.msgBubble_poll] }>
+					<View 
+						style={[
+							styles.msgBubble, this.props.isSelf ? styles.msgBubble_right : styles.msgBubble_left,
+							type === 'emergency' && styles.msgBubble_emergency,
+							(type === 'poll' || type === 'vote') && styles.msgBubble_poll
+						]}
+					>
 						{ (type === 'text' || type === 'emergency') &&
 							<Text style={[styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency]}>
 								{ this.props.item[type] }
@@ -73,8 +79,8 @@ class MsgItem extends React.PureComponent {
 						}
 
 						{ type === 'vote' &&
-							<Text style={[styles.msgBubbleText, type === 'emergency' && styles.msgBubbleText_emergency]}>
-								投票投票RRRRR
+							<Text style={ styles.msgBubbleText }>
+								{ this.props.item.username } 在 XXX 票選活動中投票給 OOO
 							</Text>
 						}
 
@@ -154,6 +160,7 @@ export default class MsgList extends React.Component {
 			bssid: this.props.bssid,
 			groupID: this.props.groupID,
 			msg: {
+				voteID: Util.genUUID(),
 				pollID: this.pollID,
 				optionID
 			}

@@ -229,6 +229,30 @@ export default (() => {
 
 		AsyncStorage.setItem('@LANChat:poll', JSON.stringify(polls));
 	}
+
+	async function getVote(voteID) {
+		let votes = await AsyncStorage.getItem('@LANChat:vote');
+		votes = votes ? JSON.parse(votes) : {};
+		if (!voteID) {
+			return votes;
+		} else {
+			return votes[voteID];
+		}
+	}
+
+	async function addVote({ bssid, groupID, voteID, voter, timestamp, data }) {
+		const votes = await getVote();
+		votes[voteID] = {
+            bssid,
+            groupID,
+            voter,
+            timestamp,
+            pollID: data.pollID,
+            optionID: data.optionID,
+		};
+
+		AsyncStorage.setItem('@LANChat:vote', JSON.stringify(votes));
+	}
 	
 	return {
 		setLastLogin,
@@ -251,6 +275,8 @@ export default (() => {
 		setMsgRead,
 		msgSync,
 		getPoll,
-		addPoll
+		addPoll,
+		getVote,
+		addVote
 	};
 })();
