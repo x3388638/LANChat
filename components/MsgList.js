@@ -141,7 +141,9 @@ export default class MsgList extends React.Component {
 			imgPreview: null,
 			imgPreviewModalOpen: false,
 			poll: null,
-			pollModalOpen: false
+			pollModalOpen: false,
+			votedVoteID: null,
+			votedOptionID: null
 		};
 
 		this.scrolling = false;
@@ -192,7 +194,7 @@ export default class MsgList extends React.Component {
 			bssid: this.props.bssid,
 			groupID: this.props.groupID,
 			msg: {
-				voteID: Util.genUUID(),
+				voteID: this.state.votedVoteID || Util.genUUID(),
 				pollID: this.pollID,
 				optionID
 			}
@@ -209,9 +211,18 @@ export default class MsgList extends React.Component {
 	async openPollModal(pollID) {
 		this.pollID = pollID;
 		const poll = await Storage.getPoll(pollID);
+		const votes = await Storage.getVote();
+		const myVote = Object.keys(votes).find((voteID) => {
+			if (votes[voteID].pollID === pollID && votes[voteID].voter === Util.getUid()) {
+				return true;
+			}
+		});
+
 		this.setState({
 			poll,
-			pollModalOpen: true
+			pollModalOpen: true,
+			votedVoteID: myVote,
+			votedOptionID: myVote ? votes[myVote].optionID : null
 		});
 	}
 
@@ -266,6 +277,7 @@ export default class MsgList extends React.Component {
 				<PollModal
 					key="pollModal"
 					poll={ this.state.poll }
+					voted={ this.state.votedOptionID }
 					isOpen={ this.state.pollModalOpen }
 					hide={() => { this.setState({ pollModalOpen: false }) }}
 					onSend={ this.handleVote }

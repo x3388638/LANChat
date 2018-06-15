@@ -104,7 +104,7 @@ export default class ChatScreen extends React.Component {
 						votes,
 						polls
 					}));
-				}, 300);
+				}, 500);
 			} else {
 				this.setState((prevState) => ({
 					messages: [...prevState.messages, msgData]

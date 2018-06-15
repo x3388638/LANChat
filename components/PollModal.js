@@ -21,12 +21,29 @@ export default class PollModal extends React.Component {
 		};
 
 		this.handleSelect = this.handleSelect.bind(this);
+		this.handleVote = this.handleVote.bind(this);
+		this.handleVoted = this.handleVoted.bind(this);
 	}
 
 	handleSelect(optionID) {
 		this.setState({
 			selected: optionID
 		});
+	}
+
+	handleVote() {
+		this.props.onSend(this.state.selected);
+		this.setState({
+			selected: null
+		});
+	}
+
+	handleVoted() {
+		if (this.props.voted) {
+			this.setState({
+				selected: this.props.voted
+			});
+		}
 	}
 
 	render() {
@@ -38,6 +55,7 @@ export default class PollModal extends React.Component {
 					isVisible={ this.props.isOpen }
 					onBackButtonPress={ this.props.hide }
 					onBackdropPress={ this.props.hide }
+					onModalShow={ this.handleVoted }
 				>
 					<ScrollView style={ styles.container }>
 						<Text style={ styles.header }>{ this.props.poll.title }</Text>
@@ -78,7 +96,7 @@ export default class PollModal extends React.Component {
 								backgroundColor="#007aff"
 								title='送出'
 								containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
-								onPress={() => { this.props.onSend(this.state.selected) }}
+								onPress={ this.handleVote }
 							/>
 						</View>
 					</View>
