@@ -41,7 +41,8 @@ Ad Hoc Group Communication Based on Multicast in Wireless LAN
 - 一鍵發送緊急訊息
 
 ## 安裝方式
-### 1. 依照官方文件 (https://facebook.github.io/react-native/docs/getting-started.html Building Projects with Native Code) 架設環境
+### 1. 依照官方文件架設環境
+https://facebook.github.io/react-native/docs/getting-started.html Building Projects with Native Code
 - Android
     - react-native-cli
     - Java JDK
@@ -50,8 +51,9 @@ Ad Hoc Group Communication Based on Multicast in Wireless LAN
     - react-native-cli
     - watchman
     - Xcode
+
 ### 2. clone project
-`clone https://github.com/x3388638/LANChat.git`
+`git clone https://github.com/x3388638/LANChat.git`
 
 ### 3. 安裝 node modules
 ```
