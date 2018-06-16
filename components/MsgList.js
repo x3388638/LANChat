@@ -238,7 +238,7 @@ export default class MsgList extends React.Component {
 				if (this.props.votes[voteID].pollID === voteData.pollID) {
 					return this.props.votes[voteID];
 				}
-			});
+			}).filter((voteObj) => !!voteObj);
 		}
 
 		return (
