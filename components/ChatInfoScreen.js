@@ -43,17 +43,19 @@ export default class ChatInfoScreen extends React.Component {
 	}
 
 	handleLeave() {
+		const bssid = JSON.parse(this.props.navigation.state.params.groupInfo).net.bssid;
+		const groupID = this.props.navigation.state.params.groupID;
 		Alert.alert('確定退出?', null, [
 			{ text: '取消', onPress: () => {} },
 			{ text: '確定', onPress: () => {
-				Storage.leaveGroup(
-					JSON.parse(this.props.navigation.state.params.groupInfo).net.bssid,
-					this.props.navigation.state.params.groupID,
-					() => {
-						Util.sendUserData();
-						this.props.navigation.goBack();
-					}
-				)
+				Storage.leaveGroup(bssid, groupID, () => {
+					Util.sendUserData();
+					// delete votes belong to the group
+					Storage.deleteVotesByGroup(bssid, groupID);
+					// delete polls belong to the group
+					Storage.deletePollsByGroup(bssid, groupID);
+					this.props.navigation.goBack();
+				})
 			} }
 		]);
 	}

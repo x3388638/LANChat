@@ -248,6 +248,18 @@ export default (() => {
         AsyncStorage.setItem('@LANChat:poll', JSON.stringify(polls));
 	}
 
+	async function deletePollsByGroup(bssid, groupID) {
+		const polls = await getPoll();
+		Object.keys(polls).forEach((pollID) => {
+			if (polls[pollID].bssid === bssid &&
+				polls[pollID].groupID === groupID) {
+				delete polls[pollID];
+			}
+		});
+
+		AsyncStorage.setItem('@LANChat:poll', JSON.stringify(polls));
+	}
+
 	async function getVote(voteID) {
 		let votes = await AsyncStorage.getItem('@LANChat:vote');
 		votes = votes ? JSON.parse(votes) : {};
@@ -297,6 +309,18 @@ export default (() => {
 
         AsyncStorage.setItem('@LANChat:vote', JSON.stringify(votes));
 	}
+
+	async function deleteVotesByGroup(bssid, groupID) {
+		const votes = await getVote();
+		Object.keys(votes).forEach((voteID) => {
+			if (votes[voteID].bssid === bssid &&
+				votes[voteID].groupID === groupID) {
+				delete votes[voteID];
+			}
+		});
+
+		AsyncStorage.setItem('@LANChat:vote', JSON.stringify(votes));
+	}
 	
 	return {
 		setLastLogin,
@@ -320,9 +344,11 @@ export default (() => {
 		msgSync,
 		getPoll,
 		addPoll,
-        addPolls,
+		addPolls,
+		deletePollsByGroup,
 		getVote,
 		addVote,
-		addVotes
+		addVotes,
+		deleteVotesByGroup
 	};
 })();
