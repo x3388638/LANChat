@@ -29,7 +29,7 @@ Ad Hoc Group Communication Based on Multicast in Wireless LAN
     - [發送緊急訊息](#發送緊急訊息)
 - [資料格式](#資料格式)
     - [封包](#封包)
-    - [儲存](#儲存-AsyncStorage--global)
+    - [儲存](#儲存-asyncstorage--global)
 
 ## 特色
 - 支援 Android、iOS 雙系統
