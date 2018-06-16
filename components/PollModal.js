@@ -60,7 +60,7 @@ export default class PollModal extends React.Component {
 					<ScrollView style={ styles.container }>
 						<Text style={ styles.header }>{ this.props.poll.title }</Text>
 						<Divider style={ styles.divider } />
-						{ this.props.poll.desc &&
+						{ !!this.props.poll.desc &&
 							<View style={ styles.descContainer }>
 								<Text style={ styles.desc }>{ this.props.poll.desc }</Text>
 							</View>
