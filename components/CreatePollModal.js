@@ -76,12 +76,14 @@ export default class CreatePollModal extends React.Component {
 					<FormLabel>標題</FormLabel>
 					<FormInput
 						maxLength={ 15 }
+						inputStyle={{ width: '100%' }}
 						value={ Platform.OS === 'ios' ? null : this.state.title }
 						onChangeText={(title) => { this.setState({ title }) }}
 					/>
 					<FormLabel>描述</FormLabel>
 					<FormInput
 						multiline
+						inputStyle={{ width: '100%' }}
 						maxLength={ 150 }
 						value={ Platform.OS === 'ios' ? null : this.state.desc }
 						onChangeText={(desc) => { this.setState({ desc }) }}

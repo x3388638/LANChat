@@ -121,12 +121,15 @@ export default class SettingsScreen extends React.Component {
 						<FormLabel>姓名*</FormLabel>
 						<FormInput
 							value={ this.state.username }
+							inputStyle={{ width: '100%' }}
 							maxLength={10}
 							onChangeText={(text) => { this.handleChangeText('username', text, 1) }}
 							onEndEditing={(e) => { this.handleChangeText('username', e.nativeEvent.text, 2) }}
 						/>
 						<FormLabel>簡介</FormLabel>
 						<FormInput
+							multiline
+							inputStyle={{ width: '100%' }}
 							value={ this.state.selfIntro }
 							maxLength={150}
 							onChangeText={(text) => { this.handleChangeText('selfIntro', text, 1) }}
@@ -139,6 +142,7 @@ export default class SettingsScreen extends React.Component {
 						<FormLabel>真實姓名</FormLabel>
 						<FormInput
 							value={ this.state.name }
+							inputStyle={{ width: '100%' }}
 							maxLength={15}
 							onChangeText={(text) => { this.handleChangeText('name', text, 1) }}
 							onEndEditing={(e) => { this.handleChangeText('name', e.nativeEvent.text, 2) }}
@@ -155,7 +159,12 @@ export default class SettingsScreen extends React.Component {
 							/>
 						</View>
 						<FormLabel>電話</FormLabel>
-						<FormInput value={ this.state.phone } maxLength={15} onChangeText={(phone) => {this.setState({ phone })}} />
+						<FormInput
+							value={ this.state.phone }
+							inputStyle={{ width: '100%' }}
+							maxLength={15}
+							onChangeText={(phone) => {this.setState({ phone })}}
+						/>
 						<FormLabel>性別</FormLabel>
 						<View style={ styles.checkboxesContainer }>
 							<View style={ styles.checkboxes }>
@@ -226,13 +235,16 @@ export default class SettingsScreen extends React.Component {
 						<FormLabel>住址</FormLabel>
 						<FormInput
 							value={ this.state.address }
+							inputStyle={{ width: '100%' }}
 							maxLength={30}
 							onChangeText={(text) => { this.handleChangeText('address', text, 1) }}
 							onEndEditing={(e) => { this.handleChangeText('address', e.nativeEvent.text, 2) }}
 						/>
 						<FormLabel>補充資訊</FormLabel>
 						<FormInput
+							multiline
 							value={ this.state.memo }
+							inputStyle={{ width: '100%' }}
 							maxLength={150}
 							onChangeText={(text) => { this.handleChangeText('memo', text, 1) }}
 							onEndEditing={(e) => { this.handleChangeText('memo', e.nativeEvent.text, 2) }}

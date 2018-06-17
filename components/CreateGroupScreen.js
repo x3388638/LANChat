@@ -82,18 +82,21 @@ export default class CreateGroupScreen extends React.Component {
 				<FormLabel>群組名稱</FormLabel>
 				<FormInput
 					maxLength={15}
+					inputStyle={{ width: '100%' }}
 					value={ Platform.OS === 'ios' ? null : this.state.groupName }
 					onChangeText={(groupName) => { this.setState({ groupName }) }}
 				/>
 				<FormLabel>群組密碼</FormLabel>
 				<FormInput
 					maxLength={20}
+					inputStyle={{ width: '100%' }}
 					value={ Platform.OS === 'ios' ? null : this.state.pass }
 					onChangeText={(pass) => { this.setState({ pass }) }}
 				/>
 				<FormLabel>群組簡介</FormLabel>
 				<FormInput
 					multiline
+					inputStyle={{ width: '100%' }}
 					maxLength={150}
 					value={ Platform.OS === 'ios' ? null : this.state.groupDesc }
 					onChangeText={(groupDesc) => { this.setState({ groupDesc }) }}

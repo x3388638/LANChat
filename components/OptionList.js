@@ -69,6 +69,7 @@ export default class OptionList extends React.Component {
 					<View style={{ flex: 1 }}>
 						<FormInput
 							ref={(ref) => { this.newOption = ref }}
+							inputStyle={{ width: '100%' }}
 							maxLength={ 15 }
 							value={ Platform.OS === 'ios' ? null : this.state.newOption }
 							onChangeText={(newOption) => { this.setState({ newOption }) }}
