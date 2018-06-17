@@ -20,11 +20,10 @@ export default class EmergencyModal extends React.Component {
 		return (
 			<Modal
 				isVisible={ this.props.isOpen }
-				style={ styles.container }
 				onBackButtonPress={ this.props.hide }
 				onBackdropPress={ this.props.hide }
 			>
-				<ScrollView>
+				<ScrollView style={ styles.container }>
 					<Text style={ styles.title }>緊急訊息</Text>
 					<Divider style={ styles.divider } />
 					<View style={ styles.blockContainer }>
@@ -69,29 +68,27 @@ export default class EmergencyModal extends React.Component {
 							<Text style={ styles.fieldValue}>{ lat }</Text>
 						</View>
 					</View>
-					<View style={ styles.blockContainer }>
-						<View style={ styles.btnContainer }>
-							<View style={ styles.btn }>
-								<Button
-									icon={{ name: 'close' }}
-									backgroundColor="#ff3b30"
-									title='取消'
-									containerViewStyle={{ marginLeft: 5, marginRight: 5 }}
-									onPress={ this.props.hide }
-								/>
-							</View>
-							<View style={ styles.btn }>
-								<Button
-									icon={{ name: 'send' }}
-									backgroundColor="#007aff"
-									title='送出'
-									containerViewStyle={{ marginLeft: 5, marginRight: 5 }}
-									onPress={ this.props.onSubmit }
-								/>
-							</View>
-						</View>
-					</View>
 				</ScrollView>
+				<View style={ styles.btnContainer }>
+					<View style={ styles.btn }>
+						<Button
+							icon={{ name: 'close' }}
+							backgroundColor="#ff3b30"
+							title='取消'
+							containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
+							onPress={ this.props.hide }
+						/>
+					</View>
+					<View style={ styles.btn }>
+						<Button
+							icon={{ name: 'send' }}
+							backgroundColor="#007aff"
+							title='送出'
+							containerViewStyle={{ marginRight: 5, marginLeft: 5 }}
+							onPress={ this.props.onSubmit }
+						/>
+					</View>
+				</View>
 			</Modal>
 		);
 	}
@@ -99,11 +96,11 @@ export default class EmergencyModal extends React.Component {
 
 const styles = StyleSheet.create({
 	container: {
-		maxWidth: 800,
-		maxHeight: 600,
-		alignSelf: 'center',
 		backgroundColor: '#fff',
-		padding: 30
+		padding: 20,
+		width: 500,
+		maxWidth: '100%',
+		alignSelf: 'center'
 	},
 	divider: {
 		marginBottom: 10
@@ -149,8 +146,11 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 	},
 	btnContainer: {
-		marginTop: 20,
+		marginTop: 10,
+		width: 500,
+		maxWidth: '100%',
 		flexDirection: 'row',
+		alignSelf: 'center',
 		alignItems: 'flex-start'
 	},
 	btn: {
