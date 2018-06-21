@@ -259,6 +259,7 @@ export default class MsgList extends React.Component {
 			[
 				<FlatList
 					key="msgList"
+					removeClippedSubviews
 					ref={(ref) => { this.list = ref }}
 					style={{ marginBottom: 5 }}
 					initialNumToRender={ 20 }
@@ -290,7 +291,8 @@ export default class MsgList extends React.Component {
 const styles = StyleSheet.create({
 	msgContainer: {
 		margin: 10,
-		marginBottom: 0
+		marginBottom: 0,
+		overflow: 'hidden'
 	},
 	msgUsername: {
 		color: '#666',
