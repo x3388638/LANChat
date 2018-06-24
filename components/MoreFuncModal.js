@@ -9,6 +9,7 @@ import {
 	Divider
 } from 'react-native-elements';
 import Modal from 'react-native-modal';
+import FilePickerManager from 'react-native-file-picker';
 
 export default class MoreFuncModal extends React.PureComponent {
 	render() {
@@ -33,7 +34,23 @@ export default class MoreFuncModal extends React.PureComponent {
 					</TouchableOpacity>
 					<Divider />
 					<TouchableOpacity
-						onPress={() => { }}
+						onPress={() => {
+							FilePickerManager.showFilePicker(null, (response) => {
+								console.warn('Response = ', response);
+
+								if (response.didCancel) {
+									console.warn('User cancelled file picker');
+								}
+								else if (response.error) {
+									console.warn('FilePickerManager Error: ', response.error);
+								}
+								else {
+									this.setState({
+										file: response
+									});
+								}
+							});
+						}}
 					>
 						<Text style={styles.btn}>選擇檔案</Text>
 					</TouchableOpacity>
