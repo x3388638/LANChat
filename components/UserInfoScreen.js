@@ -10,7 +10,7 @@ import MemberOnlineStatus from './MemberOnlineStatus.js';
 
 import Storage from '../modules/Storage';
 
-export default class UserInfoScreen extends React.Component {
+export default class UserInfoScreen extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

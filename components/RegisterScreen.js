@@ -10,7 +10,7 @@ import { Button } from 'react-native-elements';
 import Util from '../modules/util.js';
 import Storage from '../modules/Storage.js';
 
-export default class RegisterScreen extends React.Component {
+export default class RegisterScreen extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

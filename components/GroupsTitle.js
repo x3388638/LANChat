@@ -5,7 +5,7 @@ import {
 	StyleSheet
 } from 'react-native';
 
-export default class GroupsTitle extends React.Component {
+export default class GroupsTitle extends React.PureComponent {
 	render() {
 		return (
 			<View style={ styles.container }>

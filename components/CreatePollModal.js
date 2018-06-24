@@ -17,7 +17,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import OptionList from './OptionList.js';
 import Util from '../modules/util.js';
 
-export default class CreatePollModal extends React.Component {
+export default class CreatePollModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

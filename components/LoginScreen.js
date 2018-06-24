@@ -12,7 +12,7 @@ import {
 import Util from '../modules/util.js';
 import Storage from '../modules/Storage.js';
 
-export default class LoginScreen extends React.Component {
+export default class LoginScreen extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

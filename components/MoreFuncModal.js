@@ -10,7 +10,7 @@ import {
 } from 'react-native-elements';
 import Modal from 'react-native-modal';
 
-export default class MoreFuncModal extends React.Component {
+export default class MoreFuncModal extends React.PureComponent {
 	render() {
 		return (
 			<Modal

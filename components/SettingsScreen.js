@@ -20,7 +20,7 @@ import DatePicker from 'react-native-datepicker';
 import Storage from '../modules/Storage.js';
 import Util from '../modules/util.js';
 
-export default class SettingsScreen extends React.Component {
+export default class SettingsScreen extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

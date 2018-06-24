@@ -12,7 +12,7 @@ import {
 } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default class OptionList extends React.Component {
+export default class OptionList extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

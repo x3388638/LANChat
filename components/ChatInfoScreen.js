@@ -12,16 +12,14 @@ import {
 	Divider
 } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import MIcon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 
-import QRCodeModal from './QRCodeModal.js';
 import MemberOnlineStatus from './MemberOnlineStatus.js';
 import Storage from '../modules/Storage.js';
 import Util from '../modules/util.js';
 
-export default class ChatInfoScreen extends React.Component {
+export default class ChatInfoScreen extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

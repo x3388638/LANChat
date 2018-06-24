@@ -9,7 +9,7 @@ import {
 } from 'react-native-elements';
 import Modal from 'react-native-modal';
 
-export default class ImgPreviewModal extends React.Component {
+export default class ImgPreviewModal extends React.PureComponent {
 	render() {
 		return (
 			<Modal

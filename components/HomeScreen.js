@@ -22,7 +22,7 @@ import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
 import Util from '../modules/util.js';
 
-export default class HomeScreen extends React.Component {
+export default class HomeScreen extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

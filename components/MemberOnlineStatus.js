@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Util from '../modules/util';
 
-export default class MemberOnlineStatus extends React.Component {
+export default class MemberOnlineStatus extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

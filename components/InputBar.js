@@ -17,7 +17,7 @@ import CreatePollModal from './CreatePollModal.js';
 
 import Util from '../modules/util.js';
 
-class MoreFunc extends React.Component {
+class MoreFunc extends React.PureComponent {
 	render() {
 		return (
 			<TouchableOpacity
@@ -36,7 +36,7 @@ class MoreFunc extends React.Component {
 	}
 }
 
-class SendButton extends React.Component {
+class SendButton extends React.PureComponent {
 	render() {
 		return (
 			<TouchableOpacity style={ styles.btnContainer } onPress={() => { !this.props.readOnly && this.props.onPress() }}>
@@ -52,7 +52,7 @@ class SendButton extends React.Component {
 	}
 }
 
-export default class InputBar extends React.Component {
+export default class InputBar extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

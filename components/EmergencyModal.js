@@ -11,7 +11,7 @@ import {
 } from 'react-native-elements';
 import Modal from 'react-native-modal';
 
-export default class EmergencyModal extends React.Component {
+export default class EmergencyModal extends React.PureComponent {
 	render() {
 		const { lat, lng } = JSON.parse(this.props.location);
 		const personalInfo = JSON.parse(this.props.personalInfo);

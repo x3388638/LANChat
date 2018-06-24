@@ -15,7 +15,7 @@ import MsgList from './MsgList.js';
 import Storage from '../modules/Storage';
 import Util from '../modules/util';
 
-export default class ChatScreen extends React.Component {
+export default class ChatScreen extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

@@ -17,7 +17,7 @@ import moment from 'moment';
 import Util from '../modules/util.js';
 import Storage from '../modules/Storage.js';
 
-export default class CreateGroupScreen extends React.Component {
+export default class CreateGroupScreen extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

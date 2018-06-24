@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Storage from '../modules/Storage.js';
 import Util from '../modules/util.js';
 
-export default class QRCodeScannerModal extends React.Component {
+export default class QRCodeScannerModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.onRead = this.onRead.bind(this);

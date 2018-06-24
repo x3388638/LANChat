@@ -11,7 +11,7 @@ import Modal from 'react-native-modal';
 import QRCode from 'react-native-qrcode-svg';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default class QRCodeModal extends React.Component {
+export default class QRCodeModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {

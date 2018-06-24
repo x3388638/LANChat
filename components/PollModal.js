@@ -13,7 +13,7 @@ import {
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default class PollModal extends React.Component {
+export default class PollModal extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
