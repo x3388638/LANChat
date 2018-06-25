@@ -3,7 +3,8 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
-	StyleSheet
+	StyleSheet,
+	Platform
 } from 'react-native';
 import {
 	Divider
@@ -12,6 +13,29 @@ import Modal from 'react-native-modal';
 import FilePickerManager from 'react-native-file-picker';
 
 export default class MoreFuncModal extends React.PureComponent {
+	constructor(props) {
+		super(props);
+		this.handleFile = this.handleFile.bind(this);
+	}
+
+	handleFile() {
+		FilePickerManager.showFilePicker(null, (response) => {
+			console.warn('Response = ', response);
+
+			if (response.didCancel) {
+				console.warn('User cancelled file picker');
+			}
+			else if (response.error) {
+				console.warn('FilePickerManager Error: ', response.error);
+			}
+			else {
+				this.setState({
+					file: response
+				});
+			}
+		});
+	}
+
 	render() {
 		return (
 			<Modal
@@ -32,28 +56,16 @@ export default class MoreFuncModal extends React.PureComponent {
 					>
 						<Text style={styles.btn}>選擇圖片</Text>
 					</TouchableOpacity>
-					<Divider />
-					<TouchableOpacity
-						onPress={() => {
-							FilePickerManager.showFilePicker(null, (response) => {
-								console.warn('Response = ', response);
-
-								if (response.didCancel) {
-									console.warn('User cancelled file picker');
-								}
-								else if (response.error) {
-									console.warn('FilePickerManager Error: ', response.error);
-								}
-								else {
-									this.setState({
-										file: response
-									});
-								}
-							});
-						}}
-					>
-						<Text style={styles.btn}>選擇檔案</Text>
-					</TouchableOpacity>
+					{ Platform.OS !== 'ios' &&
+						<View>
+							<Divider />
+							<TouchableOpacity
+								onPress={ this.handleFile }
+							>
+								<Text style={styles.btn}>選擇檔案</Text>
+							</TouchableOpacity>
+						</View>
+					}
 				</View>
 			</Modal>
 		)
