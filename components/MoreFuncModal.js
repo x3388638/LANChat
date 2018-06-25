@@ -20,18 +20,13 @@ export default class MoreFuncModal extends React.PureComponent {
 
 	handleFile() {
 		FilePickerManager.showFilePicker(null, (response) => {
-			console.warn('Response = ', response);
-
+			const { fileName, path } = response;
 			if (response.didCancel) {
-				console.warn('User cancelled file picker');
-			}
-			else if (response.error) {
-				console.warn('FilePickerManager Error: ', response.error);
-			}
-			else {
-				this.setState({
-					file: response
-				});
+				console.log('User cancelled file picker');
+			} else if (response.error) {
+				console.log('FilePickerManager Error: ', response.error);
+			} else {
+				this.props.onFile(fileName, path);
 			}
 		});
 	}

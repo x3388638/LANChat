@@ -32,6 +32,7 @@ export default class LoginScreen extends React.PureComponent {
 		// Storage.removeItem('messages');
 		// Storage.removeItem('poll');
 		// Storage.removeItem('vote');
+		// Storage.removeItem('file');
 	}
 
 	static navigationOptions = {

@@ -68,6 +68,7 @@ export default class InputBar extends React.PureComponent {
 		this.pickImg = this.pickImg.bind(this);
 		this.sendImg = this.sendImg.bind(this);
 		this.sendPoll = this.sendPoll.bind(this);
+		this.sendFile = this.sendFile.bind(this);
 	}
 
 	handleOpenPollModal() {
@@ -177,6 +178,27 @@ export default class InputBar extends React.PureComponent {
 		});
 	}
 
+	sendFile(fileName, filePath) {
+		const fileID = Util.genUUID();
+		Storage.addFile({
+			bssid: this.props.bssid,
+			groupID: this.props.groupID,
+			fileID,
+			fileName,
+			filePath
+		});
+
+		Util.sendMsg({
+			type: 'file',
+			bssid: this.props.bssid,
+			groupID: this.props.groupID,
+			msg: {
+				fileID,
+				fileName
+			}
+		});
+	}
+
 	render() {
 		const readOnly = this.props.currentBssid !== this.props.bssid;
 		return (
@@ -201,6 +223,7 @@ export default class InputBar extends React.PureComponent {
 					hide={() => { this.setState({ moreFuncModalOpen: false }) }}
 					onImg={ this.pickImg }
 					onPoll={ this.handleOpenPollModal }
+					onFile={ this.sendFile }
 				/>
 				<ImgPreviewModal
 					img={ this.state.imgSelected }
