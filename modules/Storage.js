@@ -321,6 +321,38 @@ export default (() => {
 
 		AsyncStorage.setItem('@LANChat:vote', JSON.stringify(votes));
 	}
+
+	async function getFile(fileID) {
+		let files = await AsyncStorage.getItem('@LANChat:file');
+		files = files ? JSON.parse(files) : {};
+		if (fileID) {
+			Object.values(files).some((groupObj) => {
+				return Object.values(groupObj).some((fileObj) => {
+					return Object.keys(fileObj).some((id) => {
+						if (id === fileID) {
+							files = fileObj[id];
+							return true;
+						}
+					});
+				});
+			});
+		}
+
+		return files;
+	}
+
+	async function addFile({ bssid, groupID, fileID, fileName, filePath }) {
+		let files = getFile();
+		files[bssid] = files[bssid] || {};
+		files[bssid][groupID] = files[bssid][groupID] || {};
+		files[bssid][groupID][fileID] = {
+			fileID,
+			filePath,
+			fileName
+		};
+
+		AsyncStorage.setItem('@LANChat:file', JSON.stringify(files));
+	}
 	
 	return {
 		setLastLogin,
@@ -349,6 +381,8 @@ export default (() => {
 		getVote,
 		addVote,
 		addVotes,
-		deleteVotesByGroup
+		deleteVotesByGroup,
+		getFile,
+		addFile,
 	};
 })();
