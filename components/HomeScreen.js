@@ -247,17 +247,22 @@ export default class HomeScreen extends React.PureComponent {
 				const last = Object.values(messages[bssid][groupID]).sort((a, b) => moment(a.timestamp).diff(moment(b.timestamp))).pop();
 				const gid = groupID === 'LOBBY' ? `LOBBY-${bssid}` : groupID;
 				const type = last.type;
-				let msg = last[type];
-				if (type === 'img') {
-					msg = '傳送了一張圖片';
-				}
-
-				if (type === 'poll') {
-					msg = '發起了一個票選活動';
-				}
-
-				if (type === 'vote') {
-					msg = '進行了投票';
+				let msg;
+				switch (type) {
+					case 'img':
+						msg = '傳送了一張圖片';
+						break;
+					case 'poll':
+						msg = '發起了一個票選活動';
+						break;
+					case 'vote':
+						msg = '進行了投票';
+						break;
+					case 'file':
+						msg = '傳送了檔案';
+						break;
+					default:
+						msg = last[type];
 				}
 
 				if (last) {

@@ -124,6 +124,10 @@ class MsgItem extends React.PureComponent {
 								/>
 							</TouchableOpacity>
 						}
+
+						{ type === 'file' &&
+							<Text>file la</Text>
+						}
 						<View style={ styles.timeWrapper }>
 							<Text style={ styles.time }>{ moment(this.props.item.timestamp).format('HH:mm') }</Text>
 						</View>

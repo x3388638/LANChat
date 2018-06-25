@@ -16,6 +16,7 @@ import ImgPreviewModal from './ImgPreviewModal.js';
 import CreatePollModal from './CreatePollModal.js';
 
 import Util from '../modules/util.js';
+import Storage from '../modules/Storage.js';
 
 class MoreFunc extends React.PureComponent {
 	render() {
