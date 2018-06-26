@@ -3,6 +3,7 @@ package com.lanchat;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
 import fr.snapp.imagebase64.RNImgToBase64Package;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.peel.react.rnos.RNOSModule;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFSPackage(),
             new RNImgToBase64Package(),
             new ImageResizerPackage(),
             new RNOSModule(),

@@ -13,6 +13,8 @@ import {
 
 import Storage from './Storage.js';
 
+const RNFS = require('react-native-fs');
+
 export default (() => {
 	/**
 	 * private variable
@@ -629,6 +631,9 @@ export default (() => {
 			}
 
 			// TODO: read file
+			RNFS.readFile(fileData.filePath).then((data) => {
+				console.warn(data);
+			})
 		});
 	}
 
