@@ -1,3 +1,6 @@
+<h1 align="center"> <br><img src="logo/logotype.png?raw=true" alt="nabo" width="512"> <br>
+
+
 # LANChat
 [Project and README are both WIP]  
   
