@@ -134,6 +134,10 @@ export default (() => {
 	}
 
 	function decrypt(encrypted, key) {
+		if (!key) {
+			return encrypted;
+		}
+
 		const decipher = crypto.createDecipher('aes192', key);
 		let decrypted = decipher.update(encrypted, 'hex', 'utf8');
 		decrypted += decipher.final('utf8');
@@ -592,7 +596,7 @@ export default (() => {
 			key = joinedGroups[bssid][groupID].key;
 		}
 
-		const data = {
+		const data = JSON.stringify({
 			type: 'fileReq',
 			payload: {
 				groupID,
@@ -601,11 +605,31 @@ export default (() => {
 					reqID
 				}), key)
 			}
-		};
+		});
 
-		console.warn(JSON.stringify(data, null, 4));
-		// TODO: send packet
-		// global.TcpSocket.connectAndWrite(ip, new Buffer(data));
+		global.TcpSocket.connectAndWrite(ip, new Buffer(data));
+	}
+
+	function parseFileReq() {
+		global.PubSub.on('newMsg:fileReq', async (parsedData) => {
+			const [ssid, bssid] = await getWifi();
+			let { ip, groupID, data } = parsedData.payload;
+			let key;
+			if (groupID !== 'LOBBY') {
+				const joinedGroups = await Storage.getJoinedGroups();
+				key = joinedGroups[bssid][groupID].key;
+			}
+
+			const { fileID, reqID } = JSON.parse(decrypt(data, key));
+			const fileData = await Storage.getFile(fileID);
+			if (!fileData) {
+				// file data doesnt exist @LANChat:file
+				// TODO: return error msg
+				return;
+			}
+
+			// TODO: read file
+		});
 	}
 
 	return {
@@ -638,6 +662,7 @@ export default (() => {
 		sendMsgSync,
 		parseMsgSync,
 		sendEmergency,
-		sendFileReq
+		sendFileReq,
+		parseFileReq
 	}
 })();

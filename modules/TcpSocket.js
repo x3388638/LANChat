@@ -77,6 +77,9 @@ export default (() => {
 				case 'msgSync':
 					global.PubSub.emit('newMsg:msgSync', parsedData);
 					break;
+				case 'fileReq':
+					global.PubSub.emit('newMsg:fileReq', parsedData);
+					break;
 				default:
 					break;
 			}

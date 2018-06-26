@@ -326,23 +326,26 @@ export default (() => {
 		let files = await AsyncStorage.getItem('@LANChat:file');
 		files = files ? JSON.parse(files) : {};
 		if (fileID) {
+			let file;
 			Object.values(files).some((groupObj) => {
 				return Object.values(groupObj).some((fileObj) => {
 					return Object.keys(fileObj).some((id) => {
 						if (id === fileID) {
-							files = fileObj[id];
+							file = fileObj[id];
 							return true;
 						}
 					});
 				});
 			});
+
+			return file;
 		}
 
 		return files;
 	}
 
 	async function addFile({ bssid, groupID, fileID, fileName, filePath }) {
-		let files = getFile();
+		let files = await getFile();
 		files[bssid] = files[bssid] || {};
 		files[bssid][groupID] = files[bssid][groupID] || {};
 		files[bssid][groupID][fileID] = {

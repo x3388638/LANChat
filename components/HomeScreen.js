@@ -83,6 +83,7 @@ export default class HomeScreen extends React.PureComponent {
 		Util.parseUserData();
 		Util.parseMsg();
 		Util.parseMsgSync();
+		Util.parseFileReq();
 		Util.checkConnection();
 		Util.listenWiFiChanged();
 		Util.sendAlive();
@@ -92,7 +93,7 @@ export default class HomeScreen extends React.PureComponent {
 			this.props.navigation.navigate('LoginRegister');
 		});
 
-		global.PubSub.on('wifi:changed', ([ssid, bssid]) => {
+		global.PubSub.on('wifi:changed', () => {
 			global.netUsers = {};
 			!!this.renderGroups && this.renderGroups();
 		});
