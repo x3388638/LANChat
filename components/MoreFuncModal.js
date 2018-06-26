@@ -3,6 +3,7 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
+	Alert,
 	StyleSheet,
 	Platform
 } from 'react-native';
@@ -20,13 +21,17 @@ export default class MoreFuncModal extends React.PureComponent {
 
 	handleFile() {
 		FilePickerManager.showFilePicker(null, (response) => {
-			const { fileName, path } = response;
 			if (response.didCancel) {
 				console.log('User cancelled file picker');
 			} else if (response.error) {
 				console.log('FilePickerManager Error: ', response.error);
 			} else {
-				this.props.onFile(fileName, path);
+				this.props.hide();
+				const { fileName, path } = response;
+				Alert.alert('傳送檔案', fileName, [
+					{ text: '取消', onPress: () => {} },
+					{ text: '確定', onPress: () => { this.props.onFile(fileName, path); } }
+				]);
 			}
 		});
 	}
