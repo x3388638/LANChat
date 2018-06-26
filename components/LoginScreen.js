@@ -11,6 +11,7 @@ import {
 } from 'react-native-elements';
 import Util from '../modules/util.js';
 import Storage from '../modules/Storage.js';
+import SplashScreen from 'react-native-splash-screen';
 
 export default class LoginScreen extends React.PureComponent {
 	constructor(props) {
@@ -40,6 +41,7 @@ export default class LoginScreen extends React.PureComponent {
 	}
 
 	componentDidMount() {
+		SplashScreen.hide();
 		Util.checkLogin().then(async (isLogin) => {
 			const wifiConnected = await Util.isWiFiConnected();
 			if (isLogin && wifiConnected) {
