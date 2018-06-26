@@ -630,9 +630,12 @@ export default (() => {
 				return;
 			}
 
-			// TODO: read file
+			// TODO: file exist?
 			RNFS.readFile(fileData.filePath).then((data) => {
 				console.warn(data);
+			}).catch((err) => {
+				console.warn('not utf8 la');
+				// TODO: return error msg
 			})
 		});
 	}
