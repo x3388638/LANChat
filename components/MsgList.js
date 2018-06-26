@@ -126,7 +126,9 @@ class MsgItem extends React.PureComponent {
 						}
 
 						{ type === 'file' &&
-							<Text>file la</Text>
+							<TouchableOpacity onPress={() => { this.props.onFileClick(this.props.item.sender, this.props.item[type].fileID) }}>
+								<Text style={ styles.fileText }>💾 { this.props.item[type].fileName }</Text>
+							</TouchableOpacity>
 						}
 						<View style={ styles.timeWrapper }>
 							<Text style={ styles.time }>{ moment(this.props.item.timestamp).format('HH:mm') }</Text>
@@ -160,6 +162,7 @@ export default class MsgList extends React.PureComponent {
 		this.handleViewImg = this.handleViewImg.bind(this);
 		this.handleVote = this.handleVote.bind(this);
 		this.openPollModal = this.openPollModal.bind(this);
+		this.getFile = this.getFile.bind(this);
 	}
 
 	handleScrollStart() {
@@ -230,6 +233,10 @@ export default class MsgList extends React.PureComponent {
 		});
 	}
 
+	getFile(uid, fileID) {
+
+	}
+
 	renderMsg({ item }) {
 		const isSelf = item.sender === Util.getUid();
 		let voteData;
@@ -254,6 +261,7 @@ export default class MsgList extends React.PureComponent {
 				votesOfPoll={ votesOfPoll }
 				onPressImg={ this.handleViewImg }
 				toVote={ this.openPollModal }
+				onFileClick={ this.getFile }
 			/>
 		);
 	}
@@ -390,5 +398,8 @@ const styles = StyleSheet.create({
 	},
 	textBold: {
 		fontWeight: 'bold'
+	},
+	fileText: {
+		color: '#007aff'
 	}
 });
