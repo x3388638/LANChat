@@ -585,6 +585,29 @@ export default (() => {
 		});
 	}
 
+	async function sendFileReq(ip, bssid, groupID, fileID, reqID) {
+		let key;
+		if (groupID !== 'LOBBY') {
+			const joinedGroups = await Storage.getJoinedGroups();
+			key = joinedGroups[bssid][groupID].key;
+		}
+
+		const data = {
+			type: 'fileReq',
+			payload: {
+				groupID,
+				data: encrypt(JSON.stringify({
+					fileID,
+					reqID
+				}), key)
+			}
+		};
+
+		console.warn(JSON.stringify(data, null, 4));
+		// TODO: send packet
+		// global.TcpSocket.connectAndWrite(ip, new Buffer(data));
+	}
+
 	return {
 		genPass,
 		login,
@@ -614,6 +637,7 @@ export default (() => {
 		parseMsg,
 		sendMsgSync,
 		parseMsgSync,
-		sendEmergency
+		sendEmergency,
+		sendFileReq
 	}
 })();

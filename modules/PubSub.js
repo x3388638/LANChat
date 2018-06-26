@@ -16,8 +16,13 @@ export default (() => {
 		typeof _events[eventName] === 'function' && _events[eventName](data);
 	}
 
+	function off(eventName) {
+		delete _events[eventName];
+	}
+
 	return {
 		emit,
-		on
+		on,
+		off
 	}
 })();

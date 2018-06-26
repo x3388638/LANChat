@@ -76,7 +76,7 @@ export default class ChatScreen extends React.PureComponent {
 
 	componentWillUnmount() {
 		clearInterval(this.getOnlineCountInterval);
-		global.PubSub.on('msgInChat', () => {});
+		global.PubSub.off('msgInChat');
 	}
 
 	handleShowQRCode() {

@@ -3,6 +3,7 @@ import {
 	View,
 	Text,
 	Image,
+	Alert,
 	TouchableOpacity,
 	FlatList,
 	StyleSheet,
@@ -234,7 +235,21 @@ export default class MsgList extends React.PureComponent {
 	}
 
 	getFile(uid, fileID) {
+		// check user online
+		const fileOwner = Object.values(global.netUsers).find((user) => user.uid === uid);
+		if (!fileOwner) {
+			Alert.alert('檔案擁有者不線上');
+			return;
+		}
 
+		const reqID = Util.genUUID();
+		// TODO: handle file got
+		global.PubSub.on(`file:${ reqID }`, function () {
+			console.warn('receive PubSub file');
+			global.PubSub.off(`file:${ reqID }`);
+		});
+
+		Util.sendFileReq(fileOwner.ip, this.props.bssid, this.props.groupID, fileID, reqID);
 	}
 
 	renderMsg({ item }) {
