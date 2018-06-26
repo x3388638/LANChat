@@ -18,6 +18,9 @@ Ad Hoc Group Communication Based on Multicast in Wireless LAN
 使用者於群組內可取得由群組資訊與加密金鑰組成之 QR Code，  
 其他使用者透過掃描 QR Code 方可加入群組。  
 
+## Special thanks
+Logo designed by [ihtiht](https://github.com/ihtiht).
+
 ## 目錄
 - [特色](#特色)
 - [安裝方式](#安裝方式)
