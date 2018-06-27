@@ -114,8 +114,11 @@ export default class ChatScreen extends React.PureComponent {
 		});
 	}
 
-	handleReadFile() {
-		this.props.navigation.navigate('FileReader');
+	handleReadFile(fileName, file) {
+		this.props.navigation.navigate('FileReader', {
+			fileName,
+			file
+		});
 	}
 
 	async checkGroup() {

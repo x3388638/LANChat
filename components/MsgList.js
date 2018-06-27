@@ -251,8 +251,7 @@ export default class MsgList extends React.PureComponent {
 				return;
 			}
 
-			// TODO: navigate to file route
-			this.props.onReadFile();
+			this.props.onReadFile(fileName, file);
 		});
 
 		Util.sendFileReq(fileOwner.ip, this.props.bssid, this.props.groupID, fileID, reqID);
