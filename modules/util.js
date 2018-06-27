@@ -624,19 +624,62 @@ export default (() => {
 
 			const { fileID, reqID } = JSON.parse(decrypt(data, key));
 			const fileData = await Storage.getFile(fileID);
-			if (!fileData) {
-				// file data doesnt exist @LANChat:file
-				// TODO: return error msg
-				return;
-			}
 
-			// TODO: file exist?
-			RNFS.readFile(fileData.filePath).then((data) => {
-				console.warn(data);
-			}).catch((err) => {
-				console.warn('not utf8 la');
-				// TODO: return error msg
-			})
+			new Promise((resolve, reject) => {
+				if (!fileData) {
+					reject('檔案不存在');
+					return;
+				}
+
+				resolve()
+			}).then(() => {
+				return RNFS.exists(fileData.filePath);
+			}).then((exist) => {
+				if (!exist) {
+					return Promise.reject('檔案已失傳');
+				}
+
+				return Promise.resolve();
+			}).then(() => {
+				return new Promise((resolve, reject) => {
+					RNFS.readFile(fileData.filePath).then((data) => {
+						resolve(data);
+					}).catch((err) => {
+						reject('不支援此檔案格式或編碼');
+					});
+				});
+			}).then((content) => {
+				// send fileRes
+				const data = JSON.stringify({
+					type: 'fileRes',
+					payload: {
+						groupID,
+						data: encrypt(JSON.stringify({
+							reqID,
+							error: null,
+							fileName: fileData.fileName,
+							file: content
+						}), key)
+					}
+				});
+
+				global.TcpSocket.connectAndWrite(ip, new Buffer(data));
+			}).catch((error) => {
+				const data = JSON.stringify({
+					type: 'fileRes',
+					payload: {
+						groupID,
+						data: encrypt(JSON.stringify({
+							reqID,
+							error,
+							fileName: fileData.fileName,
+							file: null
+						}), key)
+					}
+				});
+
+				global.TcpSocket.connectAndWrite(ip, new Buffer(data));
+			});
 		});
 	}
 

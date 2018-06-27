@@ -80,6 +80,9 @@ export default (() => {
 				case 'fileReq':
 					global.PubSub.emit('newMsg:fileReq', parsedData);
 					break;
+				case 'fileRes':
+					console.warn(JSON.stringify(parsedData, null, 4));
+					break;
 				default:
 					break;
 			}
