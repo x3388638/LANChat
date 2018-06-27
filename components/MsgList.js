@@ -243,7 +243,7 @@ export default class MsgList extends React.PureComponent {
 		}
 
 		const reqID = Util.genUUID();
-		global.PubSub.on(`file:${ reqID }`, function (fileObj) {
+		global.PubSub.on(`file:${ reqID }`, (fileObj) => {
 			global.PubSub.off(`file:${ reqID }`);
 			const { error, fileName, file } = fileObj;
 			if (error) {
@@ -252,6 +252,7 @@ export default class MsgList extends React.PureComponent {
 			}
 
 			// TODO: navigate to file route
+			this.props.onReadFile();
 		});
 
 		Util.sendFileReq(fileOwner.ip, this.props.bssid, this.props.groupID, fileID, reqID);

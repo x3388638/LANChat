@@ -29,6 +29,7 @@ export default class ChatScreen extends React.PureComponent {
 
 		this.handleShowQRCode = this.handleShowQRCode.bind(this);
 		this.handleReceiveMsg = this.handleReceiveMsg.bind(this);
+		this.handleReadFile = this.handleReadFile.bind(this);
 		this.checkGroup = this.checkGroup.bind(this);
 		this.getOnlineCount = this.getOnlineCount.bind(this);
 		this.loadHistoryMsg = this.loadHistoryMsg.bind(this);
@@ -113,6 +114,10 @@ export default class ChatScreen extends React.PureComponent {
 		});
 	}
 
+	handleReadFile() {
+		this.props.navigation.navigate('FileReader');
+	}
+
 	async checkGroup() {
 		const joinedGroups = await Storage.getJoinedGroups();
 		const { bssid, groupID } = this.props.navigation.state.params;
@@ -169,6 +174,7 @@ export default class ChatScreen extends React.PureComponent {
 					messages={ this.state.messages }
 					votes={ this.state.votes }
 					polls={ this.state.polls }
+					onReadFile={ this.handleReadFile }
 					{ ...this.props.navigation.state.params }
 				/>
 				<InputBar { ...this.props.navigation.state.params } />

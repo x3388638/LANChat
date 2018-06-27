@@ -9,6 +9,7 @@ import QRScannerModal from './components/QRScannerModal';
 import SettingsScreen from './components/SettingsScreen';
 import CreateGroupScreen from './components/CreateGroupScreen';
 import ChatScreen from './components/ChatScreen';
+import FileReaderScreen from './components/FileReaderScreen';
 import ChatInfoScreen from './components/ChatInfoScreen';
 import UserInfoScreen from './components/UserInfoScreen';
 
@@ -38,6 +39,7 @@ export default SwitchNavigator({
 			Settings: SettingsScreen,
 			CreateGroup: CreateGroupScreen,
 			Chat: ChatScreen,
+			FileReader: FileReaderScreen,
 			ChatInfo: ChatInfoScreen,
 			UserInfo: UserInfoScreen
 		}, {
