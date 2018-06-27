@@ -1,6 +1,6 @@
-<h1 align="center"> <br><img src="logo/logotype.png?raw=true" alt="LANChat" width="512"><br>  
+<p align="center"><img src="logo/logotype.png?raw=true" alt="LANChat" width="512"></p>
   
-# LANChat  
+# LANChat
   
 基於無線區網群播之 Ad Hoc 群組通訊  
 Ad Hoc Group Communication Based on Multicast in Wireless LAN  
