@@ -356,6 +356,16 @@ export default (() => {
 
 		AsyncStorage.setItem('@LANChat:file', JSON.stringify(files));
 	}
+
+	async function deleteFilesByGroup(bssid, groupID) {
+		const files = await getFile();
+		delete files[bssid][groupID];
+		if (!Object.keys(files[bssid]).length) {
+			delete files[bssid];
+		}
+
+		AsyncStorage.setItem('@LANChat:file', JSON.stringify(files));
+	}
 	
 	return {
 		setLastLogin,
@@ -387,5 +397,6 @@ export default (() => {
 		deleteVotesByGroup,
 		getFile,
 		addFile,
+		deleteFilesByGroup
 	};
 })();

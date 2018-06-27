@@ -645,7 +645,7 @@ export default (() => {
 					RNFS.readFile(fileData.filePath).then((data) => {
 						resolve(data);
 					}).catch((err) => {
-						reject('不支援此檔案格式或編碼');
+						reject('目前不支援此檔案格式或編碼');
 					});
 				});
 			}).then((content) => {

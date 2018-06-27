@@ -52,6 +52,8 @@ export default class ChatInfoScreen extends React.PureComponent {
 					Storage.deleteVotesByGroup(bssid, groupID);
 					// delete polls belong to the group
 					Storage.deletePollsByGroup(bssid, groupID);
+					// delete files belongs to the group
+					Storage.deleteFilesByGroup(bssid, groupID);
 					this.props.navigation.goBack();
 				})
 			} }
