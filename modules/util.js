@@ -601,6 +601,7 @@ export default (() => {
 		const data = JSON.stringify({
 			type: 'fileReq',
 			payload: {
+				bssid,
 				groupID,
 				data: encrypt(JSON.stringify({
 					fileID,
@@ -614,8 +615,7 @@ export default (() => {
 
 	function parseFileReq() {
 		global.PubSub.on('newMsg:fileReq', async (parsedData) => {
-			const [ssid, bssid] = await getWifi();
-			let { ip, groupID, data } = parsedData.payload;
+			let { ip, bssid, groupID, data } = parsedData.payload;
 			let key;
 			if (groupID !== 'LOBBY') {
 				const joinedGroups = await Storage.getJoinedGroups();
