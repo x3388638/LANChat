@@ -1,8 +1,6 @@
-<h1 align="center"> <br><img src="logo/logotype.png?raw=true" alt="nabo" width="512"> <br>
+<h1 align="center"> <br><img src="logo/logotype.png?raw=true" alt="LANChat" width="512"><br>
 
-
-# LANChat
-[Project and README are both WIP]  
+**LANChat**  
   
 基於無線區網群播之 Ad Hoc 群組通訊  
 Ad Hoc Group Communication Based on Multicast in Wireless LAN  
@@ -43,7 +41,7 @@ Logo designed by [ihtiht](https://github.com/ihtiht).
 - 分散式，無中央伺服器
 - Ad Hoc 隨意群組
 - 訊息加密
-- 訊息形式支援純文字、圖片、檔案 (WIP)、票選活動、緊急訊息
+- 訊息形式支援純文字、圖片、檔案 (UTF8 文字檔)、票選活動、緊急訊息
 - 一鍵發送緊急訊息
 
 ## 安裝方式
@@ -127,7 +125,9 @@ Android device(s): ASUS_Z00AD (5.0)
   
 <img src="https://i.imgur.com/tSqYzHZ.png" height="400"> <img src="https://i.imgur.com/kTZBfc7.png" height="400"> <img src="https://i.imgur.com/RQEKn6A.png" height="400">
   
-<img src="https://i.imgur.com/XPJdwhR.png" height="400"> <img src="https://i.imgur.com/QtLYQNw.png" height="400"> <img src="https://i.imgur.com/tQ2Yihn.png" height="400">
+<img src="https://i.imgur.com/XPJdwhR.png" height="400"> <img src="https://i.imgur.com/K74rfMW.png" height="400"> <img src="https://i.imgur.com/ddiVHMR.png" height="400">
+
+<img src="https://i.imgur.com/QtLYQNw.png" height="400"> <img src="https://i.imgur.com/tQ2Yihn.png" height="400">
 
 ### 發送緊急訊息
 <img src="https://i.imgur.com/Q4G4rTt.png" height="400">
@@ -175,7 +175,7 @@ encrypted
             sender: 'user id string',
             timestamp: 'ISO 8601 string',
             type: 'text" || 'poll' || 'vote' || 'img' || 'file',
-            [type]: 'string' || 'img base64 string' || file Buffer
+            [type]: 'string' || 'img base64 string' || 'file string'
         }))
     }
 }
@@ -192,7 +192,7 @@ plain text
             sender: 'user id string',
             timestamp: 'ISO 8601 string',
             type: 'text' || 'emergency' || 'poll' || 'vote' || 'img' || 'file',
-            [type]: 'string' || 'img base64 string' || file Buffer
+            [type]: 'string' || 'img base64 string' || 'file string'
         }
     }
 }
@@ -237,6 +237,14 @@ vote: {
 }
 ```
 
+type: file
+```
+file: {
+    fileID: 'string',
+    fileName: 'string',
+}
+```
+
 #### `msgSync` (tcp)
 ```
 {
@@ -250,7 +258,7 @@ vote: {
                     sender: 'user id string',
                     timestamp: 'ISO 8601 string',
                     type: 'text' || 'poll' || 'vote' || 'img' || 'file',
-                    [type]: 'string' || 'img base64 string' || file Buffer
+                    [type]: 'string' || 'img base64 string' || 'file string'
                 }
             ]))
         },
@@ -261,10 +269,73 @@ vote: {
                     sender: 'user id string',
                     timestamp: 'ISO 8601 string',
                     type: 'text' || 'poll' || 'vote' || 'img' || 'file',
-                    [type]: 'string' || 'img base64 string' || file Buffer
+                    [type]: 'string' || 'img base64 string' || 'file string'
                 }
             ])
         }
+    }
+}
+```
+
+#### tcp `fileReq`
+encrypted
+```
+{
+    type: 'fileReq',
+    payload: {
+        bssid: {{ group's bssid }}
+        groupID: 'group id',
+        data: Encrypt('group key string', JSON.stringify({
+            fileID: 'file id string',
+            reqID: 'file request id string'
+        })
+    }
+}
+```
+
+plain text
+```
+{
+    type: 'fileReq',
+    payload: {
+        groupID: 'LOBBY',
+        data: JSON.stringify({
+            fileID: 'file id string',
+            reqID: 'file request id string'
+        })
+    }
+}
+```
+
+#### tcp `fileRes`
+encrypted
+```
+{
+    type: 'fileRes',
+    payload: {
+        groupID: 'group id',
+        data: Encrypted('group key string', JSON.stringify({
+            reqID: 'file request id plain text',
+            error: null || 'error msg',
+            fileName: 'string',
+            file: 'utf8 string'
+        })
+    }
+}
+```
+
+plain text
+```
+{
+    type: 'fileRes',
+    payload: {
+        groupID: 'group id',
+        data: JSON.stringify({
+            reqID: 'file request id plain text',
+            error: null || 'error msg',
+            fileName: 'string',
+            file: 'utf8 string'
+        })
     }
 }
 ```
@@ -370,6 +441,21 @@ vote: {
         optionID: 'option id string',
         voter: 'user id string',
         timestamp: 'ISO 8601 string'
+    }
+}
+```
+
+### @LANChat:file
+```
+{
+    [bssid]: {
+        [groupID]: {
+            [fileID]: {
+                fileID: 'string',
+                fileName: 'string',
+                filePath: 'string'
+            }
+        }
     }
 }
 ```
