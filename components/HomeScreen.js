@@ -84,6 +84,7 @@ export default class HomeScreen extends React.PureComponent {
 		Util.parseMsg();
 		Util.parseMsgSync();
 		Util.parseFileReq();
+		Util.parseFileRes();
 		Util.checkConnection();
 		Util.listenWiFiChanged();
 		Util.sendAlive();

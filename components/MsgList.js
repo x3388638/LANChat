@@ -243,10 +243,15 @@ export default class MsgList extends React.PureComponent {
 		}
 
 		const reqID = Util.genUUID();
-		// TODO: handle file got
-		global.PubSub.on(`file:${ reqID }`, function () {
-			console.warn('receive PubSub file');
+		global.PubSub.on(`file:${ reqID }`, function (fileObj) {
 			global.PubSub.off(`file:${ reqID }`);
+			const { error, fileName, file } = fileObj;
+			if (error) {
+				Alert.alert(error);
+				return;
+			}
+
+			// TODO: navigate to file route
 		});
 
 		Util.sendFileReq(fileOwner.ip, this.props.bssid, this.props.groupID, fileID, reqID);

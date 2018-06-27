@@ -683,6 +683,25 @@ export default (() => {
 		});
 	}
 
+	function parseFileRes() {
+		global.PubSub.on('newMsg:fileRes', async (data) => {
+			const [ssid, bssid] = await getWifi();
+			const groupID = data.payload.groupID;
+			let key;
+			if (groupID !== 'LOBBY') {
+				const joinedGroups = await Storage.getJoinedGroups();
+				key = joinedGroups[bssid][groupID];
+			}
+
+			const { reqID, error, fileName, file } = JSON.parse(decrypt(data.payload.data, key));
+			global.PubSub.emit(`file:${ reqID }`, {
+				error,
+				fileName,
+				file
+			});
+		});
+	}
+
 	return {
 		genPass,
 		login,
@@ -714,6 +733,7 @@ export default (() => {
 		parseMsgSync,
 		sendEmergency,
 		sendFileReq,
-		parseFileReq
+		parseFileReq,
+		parseFileRes
 	}
 })();
