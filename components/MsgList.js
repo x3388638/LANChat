@@ -234,11 +234,17 @@ export default class MsgList extends React.PureComponent {
 		});
 	}
 
-	getFile(uid, fileID) {
+	async getFile(uid, fileID) {
 		// check user online
 		const fileOwner = Object.values(global.netUsers).find((user) => user.uid === uid);
 		if (!fileOwner) {
 			Alert.alert('檔案擁有者不線上');
+			return;
+		}
+
+		const groupMembers = await Util.getGroupMembers(this.props.bssid, this.props.groupID);
+		if (!groupMembers[fileOwner.uid]) {
+			Alert.alert('檔案擁有者已離開群組');
 			return;
 		}
 

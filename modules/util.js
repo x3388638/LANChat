@@ -619,6 +619,10 @@ export default (() => {
 			let key;
 			if (groupID !== 'LOBBY') {
 				const joinedGroups = await Storage.getJoinedGroups();
+				if (!joinedGroups[bssid] || !joinedGroups[bssid][groupID]) {
+					return;
+				}
+
 				key = joinedGroups[bssid][groupID].key;
 			}
 
@@ -650,37 +654,41 @@ export default (() => {
 				});
 			}).then((content) => {
 				// send fileRes
-				const data = JSON.stringify({
-					type: 'fileRes',
-					payload: {
-						groupID,
-						data: encrypt(JSON.stringify({
-							reqID,
-							error: null,
-							fileName: fileData.fileName,
-							file: content
-						}), key)
-					}
+				sendFileRes({
+					ip,
+					groupID,
+					data: encrypt(JSON.stringify({
+						reqID,
+						error: null,
+						fileName: fileData.fileName,
+						file: content
+					}), key)
 				});
-
-				global.TcpSocket.connectAndWrite(ip, new Buffer(data));
 			}).catch((error) => {
-				const data = JSON.stringify({
-					type: 'fileRes',
-					payload: {
-						groupID,
-						data: encrypt(JSON.stringify({
-							reqID,
-							error,
-							fileName: null,
-							file: null
-						}), key)
-					}
+				sendFileRes({
+					ip,
+					groupID,
+					data: encrypt(JSON.stringify({
+						reqID,
+						error,
+						fileName: null,
+						file: null
+					}), key)
 				});
-
-				global.TcpSocket.connectAndWrite(ip, new Buffer(data));
 			});
 		});
+	}
+
+	function sendFileRes({ groupID, data, ip }) {
+		const packet = JSON.stringify({
+			type: 'fileRes',
+			payload: {
+				groupID,
+				data
+			}
+		});
+
+		global.TcpSocket.connectAndWrite(ip, new Buffer(packet));
 	}
 
 	function parseFileRes() {
@@ -733,6 +741,7 @@ export default (() => {
 		parseMsgSync,
 		sendEmergency,
 		sendFileReq,
+		sendFileRes,
 		parseFileReq,
 		parseFileRes
 	}
