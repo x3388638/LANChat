@@ -672,7 +672,7 @@ export default (() => {
 						data: encrypt(JSON.stringify({
 							reqID,
 							error,
-							fileName: fileData.fileName,
+							fileName: null,
 							file: null
 						}), key)
 					}
@@ -690,7 +690,7 @@ export default (() => {
 			let key;
 			if (groupID !== 'LOBBY') {
 				const joinedGroups = await Storage.getJoinedGroups();
-				key = joinedGroups[bssid][groupID];
+				key = joinedGroups[bssid][groupID].key;
 			}
 
 			const { reqID, error, fileName, file } = JSON.parse(decrypt(data.payload.data, key));
