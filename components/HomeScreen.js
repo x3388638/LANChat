@@ -3,6 +3,7 @@ import {
 	View,
 	Alert,
 	StyleSheet,
+	Platform,
 	PermissionsAndroid
 } from 'react-native';
 import {
@@ -21,6 +22,8 @@ import EmergencyModal from './EmergencyModal.js';
 import GroupsTitle from './GroupsTitle.js';
 import Storage from '../modules/Storage.js';
 import Util from '../modules/util.js';
+
+var PushNotification = require('react-native-push-notification');
 
 export default class HomeScreen extends React.PureComponent {
 	constructor(props) {
@@ -122,6 +125,25 @@ export default class HomeScreen extends React.PureComponent {
 		// 		)
 		// 	}
 		// });
+
+		if (Platform.OS !== 'ios') {
+			PushNotification.configure({
+				// (required) Called when a remote or local notification is opened or received
+				onNotification: function (notification) {
+					console.warn('NOTIFICATION:', notification);
+				}
+			});
+
+			setTimeout(() => {
+				PushNotification.localNotification({
+					subText: "This is a subText", // (optional) default: none
+					vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+					ongoing: false, // (optional) set whether this is an "ongoing" notification
+					title: "My Notification Title", // (optional) 
+					message: "My Notification Message", // (required)
+				});
+			}, 2000);
+		}
 	}
 
 	componentWillUnmount() {

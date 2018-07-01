@@ -35,3 +35,13 @@ subprojects {
      }
   }
 }
+
+ext {
+    googlePlayServicesVersion = "+" // default: "+"
+
+    // Other settings
+    compileSdkVersion = 23 // default: 23
+    buildToolsVersion = "23.0.1" // default: "23.0.1"
+    targetSdkVersion = 23 // default: 23
+    supportLibVersion = "23.1.1" // default: 23.1.1
+}

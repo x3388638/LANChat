@@ -3,6 +3,7 @@ package com.lanchat;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.rnfs.RNFSPackage;
 import fr.snapp.imagebase64.RNImgToBase64Package;
@@ -38,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativePushNotificationPackage(),
             new SplashScreenReactPackage(),
             new RNFSPackage(),
             new RNImgToBase64Package(),
