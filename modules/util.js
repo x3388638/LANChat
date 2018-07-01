@@ -440,6 +440,14 @@ export default (() => {
 				// })
 			});
 
+			// if type is `emergency`, push notification
+			if (msgData.type === 'emergency') {
+				const users = await Storage.getUsers();
+				const username = users[msgData.sender] ? users[msgData.sender].username : `Someone-${ msgData.sender.substring(0, 3) }`;
+				const content = msgData.emergency;
+				global.Notification.push('緊急訊息', content, `來自: ${ username }`);
+			}
+
 			// if type is `poll`, store to @LANChat:poll
 			if (msgData.type === 'poll') {
 				Storage.addPoll({

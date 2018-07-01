@@ -22,6 +22,9 @@ global.UdpSocket = UdpSocket;
 import TcpScoket from './modules/TcpSocket.js';
 global.TcpSocket = TcpScoket;
 
+import Notification from './modules/Notification.js';
+global.Notification = Notification;
+
 global.netUsers = {};
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
