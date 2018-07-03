@@ -3,7 +3,7 @@ import {
 	View,
 	Alert,
 	StyleSheet,
-	PermissionsAndroid
+	// PermissionsAndroid
 } from 'react-native';
 import {
 	List,
@@ -238,7 +238,6 @@ export default class HomeScreen extends React.PureComponent {
 	}
 
 	async getLastMsgAndCountUnread() {
-		const [ssid, bssid] = await Util.getWifi();
 		const messages = await Storage.getMsg();
 		const users = await Storage.getUsers();
 		const lastMsg = {};

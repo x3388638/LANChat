@@ -87,7 +87,7 @@ export default class ChatScreen extends React.PureComponent {
 	}
 
 	handleReceiveMsg() {
-		global.PubSub.on('msgInChat', async ({ bssid, groupID, msgData }) => {
+		global.PubSub.on('msgInChat', async ({ groupID, msgData }) => {
 			if (this.props.navigation.state.params.groupID !== groupID) {
 				return;
 			}
