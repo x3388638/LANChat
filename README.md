@@ -411,6 +411,15 @@ plain text
 }
 ```
 
+### @LANChat:usersByNet
+```
+{
+    [bssid]: {
+        [uid]: 1
+    }
+}
+```
+
 ### @LANChat:poll
 ```
 {
