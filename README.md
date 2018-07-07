@@ -130,7 +130,7 @@ Android device(s): ASUS_Z00AD (5.0)
 <img src="https://i.imgur.com/QtLYQNw.png" height="400"> <img src="https://i.imgur.com/tQ2Yihn.png" height="400">
 
 ### 發送緊急訊息
-<img src="https://i.imgur.com/Q4G4rTt.png" height="400">
+<img src="https://i.imgur.com/2K0BSa8.png" height="400">
 
 ## 資料格式
 ### 封包
